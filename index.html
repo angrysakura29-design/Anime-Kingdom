@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anime Kingdom</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com">
+</head>
+<body>
+
+    <!-- Hero Section -->
+    <div class="hero-banner" id="heroBanner">
+        <div class="overlay"></div>
+        <nav class="top-nav">
+            <div class="logo">A<span>K</span></div>
+            <div class="nav-icons">
+                <i class="fas fa-search"></i>
+                <i class="fas fa-bell"></i>
+            </div>
+        </nav>
+        <div class="hero-info">
+            <h1 id="heroTitle">Jujutsu Kaisen</h1>
+            <p class="genres">Action, Drama, Shounen, Supernatural</p>
+            <div class="hero-btns">
+                <button class="play-btn"><i class="fas fa-play"></i> Play</button>
+                <button class="list-btn"><i class="fas fa-plus"></i> My List</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <!-- Continue Watching Section -->
+        <section class="section">
+            <h2 class="section-title">Continue watching</h2>
+            <div class="horizontal-scroll" id="continueWatching"></div>
+        </section>
+
+        <!-- Top Airing Section -->
+        <section class="section">
+            <div class="section-header">
+                <h2 class="section-title">Top Airing</h2>
+                <span class="see-all">See all</span>
+            </div>
+            <div class="anime-grid" id="animeGrid"></div>
+        </section>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <div class="bottom-nav">
+        <div class="nav-item active"><i class="fas fa-home"></i><span>Home</span></div>
+        <div class="nav-item"><i class="fas fa-calendar-alt"></i><span>Schedule</span></div>
+        <div class="nav-item"><i class="fas fa-list"></i><span>My List</span></div>
+        <div class="nav-item"><i class="fas fa-user"></i><span>Profile</span></div>
+    </div>
+
+    <!-- Episode Modal -->
+    <div id="animeModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2 id="modalTitle"></h2>
+            <select id="seasonSelect" onchange="loadEpisodes()"></select>
+            <div class="episode-list" id="episodeList"></div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
