@@ -1,35 +1,24 @@
-const animeData =, "Season 2": ["Ep 1", "Ep 2"] } },
-    { id: 2, title: "Black Clover", tag: "HD", image: "https://m.media-amazon.com", seasons: { "Season 1": ["Ep 1", "Ep 2"] } },
-    { id: 3, title: "Demon Slayer", tag: "R", image: "https://m.media-amazon.com", seasons: { "Season 1": ["Ep 1"] } },
-    // මෙලෙස තවත් 20ක් දක්වා items එකතු කරන්න...
-];
+// ඇනිමේ 30 ක දත්ත ලැයිස්තුව
+const animeData =;
 
+// ඇනිමේ පෝස්ටර් Screen එකට පෙන්වන Function එක
 function initApp() {
     const grid = document.getElementById('animeGrid');
-    grid.innerHTML = animeData.map(anime => `
-        <div class="anime-card" onclick="openAnime(${anime.id})">
-            <span class="tag">${anime.tag}</span>
-            <img src="${anime.image}">
-        </div>
-    `).join('');
+    
+    // කලින් තිබූ දේවල් මකා දමයි
+    grid.innerHTML = "";
+
+    // ඇනිමේ 30 ම පෙන්වයි
+    animeData.forEach(anime => {
+        const card = document.createElement('div');
+        card.className = 'anime-card';
+        card.innerHTML = `
+            <img src="${anime.image}" alt="${anime.title}">
+            <h3>${anime.title}</h3>
+        `;
+        grid.appendChild(card);
+    });
 }
 
-let currentAnime = null;
-
-function openAnime(id) {
-    currentAnime = animeData.find(a => a.id === id);
-    document.getElementById('modalTitle').innerText = currentAnime.title;
-    const select = document.getElementById('seasonSelect');
-    select.innerHTML = Object.keys(currentAnime.seasons).map(s => `<option value="${s}">${s}</option>`).join('');
-    loadEpisodes();
-    document.getElementById('animeModal').style.display = "block";
-}
-
-function loadEpisodes() {
-    const s = document.getElementById('seasonSelect').value;
-    document.getElementById('episodeList').innerHTML = currentAnime.seasons[s].map(ep => `<div class="episode-item" style="padding:10px; border-bottom:1px solid #333;">${ep}</div>`).join('');
-}
-
-function closeModal() { document.getElementById('animeModal').style.display = "none"; }
-
+// වෙබ් අඩවිය Load වන විට මෙය ක්‍රියාත්මක වේ
 initApp();
