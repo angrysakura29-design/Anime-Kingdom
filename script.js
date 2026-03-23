@@ -1,20 +1,8 @@
 window.onload = async () => {
     console.log("Anime Kingdom loading with AniList API...");
     
-    // ඔබේ වෙබ් අඩවියේ ඇති සෑම කොටසකටම අදාළ දත්ත ලබා ගැනීම
-        const sections = [
-        ['TRENDING_DESC', 'latestAnime', 2],      // උඩම ඇති පින්තූර 2 සඳහා
-        ['POPULARITY_DESC', 'trendingAnime', 10], // Trending කොටස සඳහා
-        ['SCORE_DESC', 'popularAnime', 10],      // Most Popular සඳහා
-        ['UPDATED_AT_DESC', 'tvSeriesList', 10],  // TV Anime Series සඳහා
-        ['START_DATE_DESC', 'recentEpisodes', 10] // New Episodes සඳහා
-    ];
-
-    for (const [sort, id, limit] of sections) {
-        await fetchAniListData(sort, id, limit);
-        // API එකට බරක් නොවීමට කුඩා විරාමයක්
-        await new Promise(res => setTimeout(res, 500)); 
-    }
+    // මුල් පිටුවේ දත්ත පෙන්වීම ආරම්භ කරයි
+    loadHomePage();
 
     // සර්ච් බාර් එකේ Enter එබූ විට සෙවීම සඳහා
     const searchInput = document.getElementById('searchInput');
@@ -25,13 +13,32 @@ window.onload = async () => {
     }
 };
 
+// මුල් පිටුවේ (Home) දත්ත ලබා ගැනීමේ Function එක
+async function loadHomePage() {
+    // මුලින්ම සඟවා ඇති අංශ (Rows) පෙන්වන්න
+    document.querySelectorAll('.row-header, .anime-row').forEach(el => el.style.display = 'flex');
+    const resultsContainer = document.getElementById('results-container');
+    if(resultsContainer) resultsContainer.innerHTML = ""; // Search results මකන්න
+
+    const sections = [
+        ['TRENDING_DESC', 'latestAnime', 2],      
+        ['POPULARITY_DESC', 'trendingAnime', 10], 
+        ['SCORE_DESC', 'popularAnime', 10],      
+        ['UPDATED_AT_DESC', 'tvSeriesList', 10],  
+        ['START_DATE_DESC', 'recentEpisodes', 10] 
+    ];
+
+    for (const [sort, id, limit] of sections) {
+        await fetchAniListData(sort, id, limit);
+        await new Promise(res => setTimeout(res, 500)); 
+    }
+}
+
 async function fetchAniListData(sortType, containerId, limit) {
     const container = document.getElementById(containerId);
     if (!container) return;
 
-    // TV Series සඳහා පමණක් විශේෂ Filter එකක්
     const isTV = containerId === 'tvSeriesList' ? ', format: TV' : '';
-
     const query = `
     query ($sort: [MediaSort], $limit: Int) {
       Page(page: 1, perPage: $limit) {
@@ -81,6 +88,9 @@ async function searchAnime() {
     const resultsContainer = document.getElementById('results-container');
     if (!queryText) return alert("කරුණාකර නමක් ටයිප් කරන්න!");
 
+    // මුල් පිටුවේ අංශ හංගන්න
+    document.querySelectorAll('.row-header, .anime-row').forEach(el => el.style.display = 'none');
+    resultsContainer.style.display = "flex";
     resultsContainer.innerHTML = "<p style='color:white; text-align:center; width:100%;'>Searching...</p>";
 
     const searchQuery = `
@@ -103,8 +113,36 @@ async function searchAnime() {
         });
         const json = await res.json();
         renderAnimeCards(json.data.Page.media, resultsContainer);
-        resultsContainer.scrollIntoView({ behavior: 'smooth' });
     } catch (e) {
         resultsContainer.innerHTML = "<p style='color:red;'>Error searching.</p>";
     }
+}
+
+// --- Navigation Functions (Navigation Bar එක සඳහා) ---
+
+// 1. Home බොත්තම සඳහා
+function goHome() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    loadHomePage();
+}
+
+// 2. My List පෙන්වීම සඳහා
+function showMyList() {
+    const resultsContainer = document.getElementById('results-container');
+    // මුල් පිටුවේ පේළි හංගන්න
+    document.querySelectorAll('.row-header, .anime-row').forEach(el => el.style.display = 'none');
+    
+    resultsContainer.style.display = "flex";
+    resultsContainer.innerHTML = `
+        <h2 style="color:white; width:100%; padding:20px;">My List</h2>
+        <p style="color:gray; text-align:center; width:100%; margin-top:20px;">
+            ඔබ තවම ඇනිමේ කිසිවක් එක් කර නැත.
+        </p>
+    `;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// 3. Profile පෙන්වීම සඳහා
+function showProfile() {
+    alert("ලියාපදිංචි වීමේ පද්ධතිය (Login System) ළඟදීම පැමිණේ!");
 }
