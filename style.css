@@ -278,13 +278,13 @@ body {
     overflow: hidden;
     text-overflow: ellipsis; /* නම දිග වැඩි නම් තිත් පෙන්වයි */
 }
-/* සෙවුම් ප්‍රතිඵල සහ My List පෙන්වන කොටස සිරස් අතට පෙළගැස්වීමට */
+/* සෙවුම් ප්‍රතිඵල (Search Results) පහළට පෙන්වීමට */
 #results-container {
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: wrap; /* පේළිය ඉවර වූ විට ඊළඟ පේළියට යාමට */
     justify-content: center;
-    gap: 20px;
-    padding: 20px;
+    gap: 15px;
+    padding: 20px 10px;
     width: 100%;
 }
 
