@@ -24,7 +24,16 @@
     <p>සෑම ඇනිමේ රසිකයෙකුටම ගැලපෙන අපූරු තෝතැන්න.</p>
 
     <!-- මෙය ඔබේ index.html හි ඇති search-btn එකට එක් කරන්න -->
-<button class="search-btn" onclick="window.location.href='search.html'"> Search</button>
+<!-- Search Box Section -->
+<div style="text-align: center; margin: 20px 0;">
+    <input type="text" id="searchInput" placeholder="Search Anime..." style="padding: 10px; width: 250px; border-radius: 20px; border: 1px solid #ff416c; background: #222; color: white;">
+    <button onclick="searchAnime()" style="padding: 10px 20px; border-radius: 20px; background: #ff416c; color: white; border: none; cursor: pointer; font-weight: bold;">
+        SEARCH
+    </button>
+</div>
+
+<!-- සෙවුම් ප්‍රතිඵල පෙන්වන තැන -->
+<div id="results-container" class="anime-row" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; padding: 20px;"></div>
 
    <div class="main-content">
         <!-- Section 1 -->
