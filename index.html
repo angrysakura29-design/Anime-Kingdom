@@ -3,163 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ANIME KINGDOM | සීමාවක් නැති ඇනිමේ</title>
-    
-    <!-- Icons -->
+    <title>ANIME KINGDOM | ඔබේ ඇනිමේ තෝතැන්න</title>
+    <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com">
-
-    <style>
-        :root { --accent: #e50914; --bg: #08080a; --card-bg: #14141d; --text: #ffffff; }
-        body { margin: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--bg); color: var(--text); overflow-x: hidden; }
-        
-        /* Navigation */
-        header { display: flex; justify-content: center; padding: 15px 0; background: rgba(0,0,0,0.9); border-bottom: 1px solid #222; position: sticky; top: 0; z-index: 1000; }
-        .logo { font-size: 26px; font-weight: 900; letter-spacing: 2px; }
-
-        /* Search Section */
-        .hero { padding: 60px 5%; text-align: center; background: linear-gradient(rgba(0,0,0,0.7), var(--bg)), url('https://wallpaperaccess.com') center/cover; }
-        .hero h1 { font-size: 2.5rem; margin-bottom: 20px; }
-        .search-container { display: flex; max-width: 600px; margin: 0 auto; background: rgba(255,255,255,0.1); border-radius: 30px; padding: 5px; border: 1px solid #444; backdrop-filter: blur(10px); }
-        #searchInput { flex: 1; height: 45px; padding: 0 20px; border: none; background: transparent; color: white; outline: none; font-size: 16px; }
-        .search-btn { background: var(--accent); color: white; border: none; padding: 0 30px; border-radius: 25px; cursor: pointer; font-weight: bold; transition: 0.3s; }
-        .search-btn:hover { transform: scale(1.05); background: #ff0000; }
-
-        /* Content Grid */
-        .container { padding: 30px 5%; }
-        .section-title { font-size: 22px; margin-bottom: 25px; border-left: 5px solid var(--accent); padding-left: 15px; }
-        .anime-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 20px; }
-        
-        /* Anime Card */
-        .card { background: var(--card-bg); border-radius: 12px; overflow: hidden; cursor: pointer; transition: 0.4s; border: 1px solid #222; position: relative; }
-        .card:hover { transform: translateY(-10px); border-color: var(--accent); box-shadow: 0 10px 25px rgba(229, 9, 20, 0.4); }
-        .card img { width: 100%; height: 240px; object-fit: cover; }
-        .card-title { padding: 12px; font-size: 13px; text-align: center; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-
-        /* Embed Player Modal */
-        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.98); z-index: 2000; flex-direction: column; align-items: center; justify-content: center; }
-        .player-container { width: 95%; max-width: 1000px; aspect-ratio: 16/9; background: #000; position: relative; border: 2px solid #333; border-radius: 15px; overflow: hidden; box-shadow: 0 0 50px rgba(0,0,0,1); }
-        iframe { width: 100%; height: 100%; border: none; }
-        .close-btn { position: absolute; top: -50px; right: 0; color: white; font-size: 35px; cursor: pointer; background: none; border: none; }
-
-        /* Loader */
-        .loader { display: none; width: 50px; height: 50px; border: 5px solid #222; border-top-color: var(--accent); border-radius: 50%; animation: spin 1s linear infinite; margin: 40px auto; }
-        @keyframes spin { to { transform: rotate(360deg); } }
-
-        @media (max-width: 600px) {
-            .anime-grid { grid-template-columns: repeat(2, 1fr); gap: 15px; }
-            .hero h1 { font-size: 1.8rem; }
-        }
-    </style>
 </head>
 <body>
 
-    <header><div class="logo">ANIME<span style="color:var(--accent)">KINGDOM</span></div></header>
+    <nav class="top-nav">
+        <div class="logo">ANIME<span class="brand-text">KINGDOM</span></div>
+    </nav>
 
-    <div class="hero">
-        <h1>Unlimited Anime Streaming</h1>
-        <div class="search-container">
-            <input type="text" id="searchInput" placeholder="Search anime name..." onkeypress="if(event.key === 'Enter') searchAnime()">
-            <button class="search-btn" onclick="searchAnime()">සොයන්න</button>
+    <div class="hero-banner">
+        <img src="https://images.alphacoders.com" class="banner-img">
+        <div class="hero-info">
+            <h1>UNLIMITED <span class="brand-text">ANIME</span> STREAMING</h1>
+            <div class="search-container">
+                <input type="text" id="searchInput" placeholder="ඇනිමේ නම මෙතැන ලියන්න..." onkeypress="if(event.key === 'Enter') searchAnime()">
+                <button onclick="searchAnime()">සොයන්න</button>
+            </div>
         </div>
     </div>
 
-    <div class="container">
-        <h2 class="section-title" id="statusTitle">Trending Now</h2>
-        <div id="loader" class="loader"></div>
-        <div class="anime-grid" id="animeGrid"></div>
+    <div class="row-section">
+        <div class="row-header"><h2 id="rowTitle">Trending Anime</h2></div>
+        <div id="loader" class="loader">පූරණය වෙමින්...</div>
+        <div class="anime-row" id="animeGrid"></div>
     </div>
 
-    <!-- Video Modal -->
-    <div id="playerModal" class="modal">
-        <div class="player-container">
-            <button class="close-btn" onclick="closePlayer()">&times;</button>
+    <!-- Episode Modal -->
+    <div id="anime-modal" class="modal">
+        <div class="modal-content">
+            <button class="close-modal-x" onclick="closeModal()">&times;</button>
+            <h2 id="modalTitle"></h2>
+            <div id="episode-list" class="ep-grid"></div>
+        </div>
+    </div>
+
+    <!-- Player Modal -->
+    <div id="video-modal">
+        <div class="player-box">
+            <button class="close-player-btn" onclick="closeVideo()">&times;</button>
             <iframe id="videoFrame" src="" allowfullscreen></iframe>
         </div>
-        <h2 id="playingTitle" style="color: white; margin-top: 20px; text-align: center; padding: 0 20px;"></h2>
+        <h3 id="playingTitle" style="margin-top:20px; color:white; text-align: center;"></h3>
     </div>
 
-    <script>
-        // GitHub Pages වල දත්ත ප්‍රශ්න නැති වෙන්න පාවිච්චි කරන ලේසිම Proxy එක
-        const PROXY = "https://api.allorigins.win";
-        const JIKAN_API = "https://api.jikan.moe";
+    <div class="bottom-nav">
+        <div class="nav-item active" onclick="location.reload()"><i class="fas fa-home"></i>Home</div>
+        <div class="nav-item"><i class="fas fa-fire"></i>Trending</div>
+        <div class="nav-item"><i class="fas fa-bookmark"></i>Watchlist</div>
+    </div>
 
-        window.onload = () => { loadTrending(); };
-
-        // 1. Trending Anime පූරණය (Jikan API හරහා)
-        async function loadTrending() {
-            toggleLoader(true);
-            try {
-                const res = await fetch(`${JIKAN_API}/top/anime?limit=20`);
-                const data = await res.json();
-                if(data.data) renderCards(data.data);
-            } catch (e) {
-                document.getElementById('statusTitle').innerText = "දත්ත ලබා ගැනීමේ දෝෂයකි. කරුණාකර Refresh කරන්න.";
-            }
-            toggleLoader(false);
-        }
-
-        // 2. සෙවීමේ කාර්යය
-        async function searchAnime() {
-            const query = document.getElementById('searchInput').value;
-            if(!query) return;
-
-            toggleLoader(true);
-            document.getElementById('statusTitle').innerText = `'${query}' සඳහා ප්‍රතිඵල...`;
-            document.getElementById('animeGrid').innerHTML = "";
-
-            try {
-                const res = await fetch(`${JIKAN_API}/anime?q=${encodeURIComponent(query)}&limit=20`);
-                const data = await res.json();
-                if(data.data && data.data.length > 0) {
-                    renderCards(data.data);
-                } else {
-                    document.getElementById('statusTitle').innerText = "කිසිවක් සොයාගත නොහැකි විය.";
-                }
-            } catch (e) {
-                alert("සෙවීමේදී දෝෂයක් ඇති විය!");
-            }
-            toggleLoader(false);
-        }
-
-        // 3. Grid එක නිර්මාණය
-        function renderCards(list) {
-            const grid = document.getElementById('animeGrid');
-            grid.innerHTML = list.map(anime => {
-                const title = anime.title_english || anime.title;
-                const cleanTitle = title.replace(/'/g, "");
-                return `
-                <div class="card" onclick="playAnime('${cleanTitle}')">
-                    <img src="${anime.images.jpg.large_image_url}" alt="${title}">
-                    <div class="card-title">${title}</div>
-                </div>`;
-            }).join('');
-        }
-
-        // 4. Embed Player එකෙන් වීඩියෝව ප්ලේ කිරීම (Option 1)
-        function playAnime(title) {
-            const modal = document.getElementById('playerModal');
-            const iframe = document.getElementById('videoFrame');
-            const titleDisplay = document.getElementById('playingTitle');
-
-            // Embed Link එක (Vidsrc භාවිතා කර ඇත)
-            // මේකෙන් Episodes සහ Servers ඔක්කොම ප්ලේයර් එක ඇතුළෙම ලැබෙනවා
-            const embedUrl = `https://vidsrc.to{encodeURIComponent(title)}`;
-            
-            iframe.src = embedUrl;
-            titleDisplay.innerText = "නරඹමින්: " + title;
-            modal.style.display = "flex";
-            document.body.style.overflow = "hidden";
-        }
-
-        function closePlayer() {
-            document.getElementById('playerModal').style.display = "none";
-            document.getElementById('videoFrame').src = ""; // වීඩියෝව නවත්වයි
-            document.body.style.overflow = "auto";
-        }
-
-        function toggleLoader(show) {
-            document.getElementById('loader').style.display = show ? "block" : "none";
-        }
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
