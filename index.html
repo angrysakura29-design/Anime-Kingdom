@@ -5,81 +5,104 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ANIME KINGDOM</title>
     <link rel="stylesheet" href="style.css">
+    <!-- Font Awesome Icons සඳහා -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com">
 </head>
 <body>
 
     <nav class="top-nav">
-    <!-- පැරණි පේළිය වෙනුවට මෙය දමන්න -->
-    <div class="logo" style="font-size:28px; letter-spacing:2px;">
-<span style="color:white;">ANIME</span><span style="color:red;">KINGDOM</span>
-    </div>
-</nav>
+        <div class="logo" style="font-size:28px; letter-spacing:2px;">
+            <span style="color:white;">ANIME</span><span style="color:red;">KINGDOM</span>
+        </div>
+    </nav>
 
     <!-- Banner -->
     <div class="hero-banner">
         <img src="IMG_20260322_225449_963.jpg" class="banner-img">
         <div class="hero-info">
-    <h1>WELCOME TO <span class="brand-text">ANIME KINGDOM</span></h1>
-    <p>සෑම ඇනිමේ රසිකයෙකුටම ගැලපෙන අපූරු තෝතැන්න.</p>
+            <h1>WELCOME TO <span class="brand-text">ANIME KINGDOM</span></h1>
+            <p>සෑම ඇනිමේ රසිකයෙකුටම ගැලපෙන අපූරු තෝතැන්න.</p>
 
-    <!-- මෙය පමණක් ඇතුළත් කරන්න -->
-<div style="text-align: center; margin: 20px 0;">
-    <input type="text" id="searchInput" placeholder="Search Anime..." style="padding: 10px; width: 200px; border-radius: 5px; border: 1px solid red; background: #222; color: white;">
-    <button onclick="searchAnime()" style="padding: 10px 20px; background: red; color: white; border: none; cursor: pointer; border-radius: 5px; font-weight: bold;">SEARCH</button>
-</div>
-
-<!-- ප්‍රතිඵල පෙන්වන තැන -->
-<div id="results-container" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; padding: 20px;"></div>
-
-   <div class="main-content" style="background: #000; padding-bottom: 80px;">
-    <!-- 1. Latest Anime -->
-    <section class="row-section">
-        <div class="row-header"><h2>✨ Latest Anime</h2><span style="color: red;">See all</span></div>
-        <div class="anime-row" id="latestAnime"></div>
-    </section>
-
-    <!-- 2. Trending -->
-    <section class="row-section">
-        <div class="row-header"><h2>🔥 Trending</h2><span style="color: red;">See all</span></div>
-        <div class="anime-row" id="trendingAnime"></div>
-    </section>
-
-    <!-- 3. Most Popular -->
-    <section class="row-section">
-        <div class="row-header"><h2>🏆 Most Popular</h2><span style="color: red;">See all</span></div>
-        <div id="popularAnime" class="anime-row"></div>
-    </section>
-
-    <!-- 4. TV Anime Series -->
-    <section class="row-section">
-        <div class="row-header"><h2>📺 TV Anime Series</h2><span style="color: red;">See all</span></div>
-        <div id="tvSeriesList" class="anime-row"></div>
-    </section>
-
-    <!-- 5. New Episodes -->
-    <section class="row-section">
-        <div class="row-header"><h2>🎬 New Episodes</h2><span style="color: red;">See all</span></div>
-        <div id="recentEpisodes" class="anime-row"></div>
-    </section>
-</div>
-
-  <!-- Bottom Navigation එක සම්පූර්ණයෙන්ම මේ කේතයෙන් Replace කරන්න -->
-<div class="bottom-nav" style="cursor: pointer; user-select: none;">
-    <div class="nav-item active" onclick="goHome(); event.stopPropagation();">
-        <i class="fas fa-home"></i><span>Home</span>
+            <div style="text-align: center; margin: 20px 0;">
+                <input type="text" id="searchInput" placeholder="Search Anime..." style="padding: 10px; width: 200px; border-radius: 5px; border: 1px solid red; background: #222; color: white;">
+                <button onclick="searchAnime()" style="padding: 10px 20px; background: red; color: white; border: none; cursor: pointer; border-radius: 5px; font-weight: bold;">SEARCH</button>
+            </div>
+        </div>
     </div>
-    <div class="nav-item" onclick="alert('Schedule එක ළඟදීම පැමිණේ!'); event.stopPropagation();">
-        <i class="fas fa-calendar-alt"></i><span>Schedule</span>
-    </div>
-    <div class="nav-item" onclick="showMyList(); event.stopPropagation();">
-        <i class="fas fa-list"></i><span>My List</span>
-    </div>
-    <div class="nav-item" onclick="showProfile(); event.stopPropagation();">
-        <i class="fas fa-user"></i><span>Profile</span>
-    </div>
-</div>
 
-   <script src="script.js"></script>
+    <!-- සෙවුම් ප්‍රතිඵල සහ See All පෙන්වන තැන -->
+    <div id="results-container" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; padding: 20px;"></div>
+
+    <div class="main-content" style="background: #000; padding-bottom: 80px;">
+        <!-- 1. Latest Anime -->
+        <section class="row-section">
+            <div class="row-header">
+                <h2>✨ Latest Anime</h2>
+                <span class="see-all" style="color: red; cursor: pointer;" onclick="showSeeAll('START_DATE_DESC', 'Latest Anime')">See all</span>
+            </div>
+            <div class="anime-row" id="latestAnime"></div>
+        </section>
+
+        <!-- 2. Trending -->
+        <section class="row-section">
+            <div class="row-header">
+                <h2>🔥 Trending</h2>
+                <span class="see-all" style="color: red; cursor: pointer;" onclick="showSeeAll('TRENDING_DESC', 'Trending Anime')">See all</span>
+            </div>
+            <div class="anime-row" id="trendingAnime"></div>
+        </section>
+
+        <!-- 3. Most Popular -->
+        <section class="row-section">
+            <div class="row-header">
+                <h2>🏆 Most Popular</h2>
+                <span class="see-all" style="color: red; cursor: pointer;" onclick="showSeeAll('POPULARITY_DESC', 'Most Popular Anime')">See all</span>
+            </div>
+            <div id="popularAnime" class="anime-row"></div>
+        </section>
+
+        <!-- 4. TV Anime Series -->
+        <section class="row-section">
+            <div class="row-header">
+                <h2>📺 TV Anime Series</h2>
+                <span class="see-all" style="color: red; cursor: pointer;" onclick="showSeeAll('SCORE_DESC', 'TV Series')">See all</span>
+            </div>
+            <div id="tvSeriesList" class="anime-row"></div>
+        </section>
+
+        <!-- 5. New Episodes -->
+        <section class="row-section">
+            <div class="row-header">
+                <h2>🎬 New Episodes</h2>
+                <span class="see-all" style="color: red; cursor: pointer;" onclick="showSeeAll('UPDATED_AT_DESC', 'New Episodes')">See all</span>
+            </div>
+            <div id="recentEpisodes" class="anime-row"></div>
+        </section>
+    </div>
+
+    <!-- ඇනිමේ විස්තර සහ Episodes පෙන්වන Modal (Pop-up) -->
+    <div id="anime-modal" style="display: none; position: fixed; z-index: 10000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); justify-content: center; align-items: center; overflow-y: auto; padding: 20px;">
+        <div id="modal-body" style="background: #111; color: white; width: 95%; max-width: 600px; padding: 20px; border-radius: 15px; position: relative;">
+            <!-- මෙතනට දත්ත JavaScript මගින් පිරවේ -->
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <div class="bottom-nav" style="cursor: pointer; user-select: none;">
+        <div class="nav-item active" onclick="goHome(); event.stopPropagation();">
+            <i class="fas fa-home"></i><span>Home</span>
+        </div>
+        <div class="nav-item" onclick="alert('Schedule එක ළඟදීම පැමිණේ!'); event.stopPropagation();">
+            <i class="fas fa-calendar-alt"></i><span>Schedule</span>
+        </div>
+        <div class="nav-item" onclick="showMyList(); event.stopPropagation();">
+            <i class="fas fa-list"></i><span>My List</span>
+        </div>
+        <div class="nav-item" onclick="showProfile(); event.stopPropagation();">
+            <i class="fas fa-user"></i><span>Profile</span>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
 </body>
 </html>
