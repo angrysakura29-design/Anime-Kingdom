@@ -1,3 +1,4 @@
+console.log("Script connected!");
 const tvData = [
     { title: "One Piece", img: "https://s4.anilist.co", rate: "PG-13" },
     { title: "Naruto", img: "https://s4.anilist.co", rate: "PG-13" },
