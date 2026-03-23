@@ -139,7 +139,7 @@
         /* Episode Buttons */
         .ep-grid {
             display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; 
-            max-height: 150px; overflow-y: auto; margin-top: 15px;
+            max-height: 180px; overflow-y: auto; margin-top: 15px; padding: 5px;
         }
         .ep-btn {
             background: #222; color: white; border: 1px solid var(--accent);
@@ -171,7 +171,6 @@
     </nav>
 
     <div class="hero-banner">
-        <!-- ඔබේ මුල් බැනර් රූපය (IMG_20260322_225449_963.jpg) මෙතැනට ඇතුළත් කර ඇත -->
         <img src="IMG_20260322_225449_963.jpg" class="banner-img" id="heroImg" onerror="this.src='https://wallpaperaccess.com'">
         <div class="hero-info">
             <h1>WELCOME TO <span style="color:red;">ANIME KINGDOM</span></h1>
@@ -193,19 +192,16 @@
         </section>
     </div>
 
-    <!-- Details Modal -->
     <div id="anime-modal" class="modal">
         <div class="modal-content" id="modal-body"></div>
     </div>
 
-    <!-- Video Modal -->
     <div id="video-modal" class="modal">
         <span onclick="closeVideo()" style="position:absolute; right:20px; top:20px; font-size:40px; color:white; cursor:pointer; z-index:1001;">&times;</span>
         <video id="main-player" controls></video>
         <h3 id="video-title" style="margin-top:15px; color:white; text-align:center;"></h3>
     </div>
 
-    <!-- Bottom Nav -->
     <div class="bottom-nav">
         <div class="nav-item active" onclick="location.reload()"><i class="fas fa-home"></i><br>Home</div>
         <div class="nav-item"><i class="fas fa-search"></i><br>Search</div>
@@ -213,7 +209,7 @@
     </div>
 
     <script>
-        const ANIFY_API = "https://api.anify.tv";
+        const CONSUMET_URL = "https://consumet-api-production-e852.up.railway.app";
 
         window.onload = () => {
             loadHomePage();
@@ -246,14 +242,14 @@
             list.forEach(anime => {
                 const title = anime.title.english || anime.title.romaji;
                 container.innerHTML += `
-                    <div class="card" onclick="showDetails(${anime.id})">
+                    <div class="card" onclick="showDetails(${anime.id}, '${title}')">
                         <img src="${anime.coverImage.large}">
                         <div class="card-title">${title}</div>
                     </div>`;
             });
         }
 
-        async function showDetails(id) {
+        async function showDetails(id, title) {
             const modal = document.getElementById('anime-modal');
             const modalBody = document.getElementById('modal-body');
             modal.style.display = "flex";
@@ -268,14 +264,13 @@
                 });
                 const json = await response.json();
                 const anime = json.data.Media;
-                const title = anime.title.english || anime.title.romaji;
 
                 modalBody.innerHTML = `
                     <span style="position:absolute; right:15px; top:10px; font-size:30px; cursor:pointer; color:red; font-weight:bold; z-index:100;" onclick="closeModal()">&times;</span>
                     <img src="${anime.coverImage.large}" style="width:100%; border-radius:10px; max-height:200px; object-fit:cover;">
                     <h2 style="font-size:18px; margin:10px 0; color:white; text-align:center;">${title}</h2>
                     <div id="episode-list" class="ep-grid">
-                        <p style="color:yellow; font-size:12px;">Episodes පූරණය වෙමින්...</p>
+                        <p style="color:yellow; font-size:12px;">Episodes සොයමින්...</p>
                     </div>
                 `;
                 loadEpisodes(title);
@@ -285,11 +280,9 @@
         async function loadEpisodes(title) {
             const epContainer = document.getElementById('episode-list');
             try {
-                // Anify API හරහා Episodes සෙවීම
-                const searchRes = await fetch(`${ANIFY_API}/search/anime/${encodeURIComponent(title)}`);
+                // 1. Search Anime via GogoAnime
+                const searchRes = await fetch(`${CONSUMET_URL}/${encodeURIComponent(title)}`);
                 const searchData = await searchRes.json();
-                
-                // .results යනු array එකක් බැවින් පළමු අගය ලබා ගැනීම (සමහර විට .results.id ලෙස එයි)
                 const animeId = searchData.results && searchData.results.length > 0 ? searchData.results[0].id : null;
 
                 if (!animeId) {
@@ -297,11 +290,10 @@
                     return;
                 }
 
-                const infoRes = await fetch(`${ANIFY_API}/info/${animeId}`);
+                // 2. Get Info
+                const infoRes = await fetch(`${CONSUMET_URL}/info/${animeId}`);
                 const infoData = await infoRes.json();
-                
-                // Anify API එකේ episodes ඇත්තේ infoData.episodes.data තුළයි
-                const episodes = infoData.episodes && infoData.episodes.data ? infoData.episodes.data : [];
+                const episodes = infoData.episodes || [];
 
                 if (episodes.length === 0) {
                     epContainer.innerHTML = "<p style='color:red;'>Episodes නොමැත.</p>";
@@ -313,28 +305,28 @@
                     const btn = document.createElement('button');
                     btn.className = "ep-btn";
                     btn.innerText = `EP ${ep.number}`;
-                    btn.onclick = () => startStreaming(animeId, ep.number, title);
+                    btn.onclick = () => startStreaming(ep.id, title, ep.number);
                     epContainer.appendChild(btn);
                 });
             } catch (e) { 
                 console.error(e);
-                epContainer.innerHTML = "<p style='color:red;'>API දෝෂයකි!</p>"; 
+                epContainer.innerHTML = "<p style='color:red;'>Error loading episodes!</p>"; 
             }
         }
 
-        async function startStreaming(id, num, title) {
+        async function startStreaming(episodeId, title, num) {
             try {
-                const res = await fetch(`${ANIFY_API}/sources?id=${id}&episodeNumber=${num}&subType=sub&type=ANIME`);
+                const res = await fetch(`${CONSUMET_URL}/watch/${episodeId}`);
                 const data = await res.json();
-                // Anify sources බොහෝ විට sources[0].url ලෙස එයි
-                const videoUrl = data.sources && data.sources.url ? data.sources.url : null;
+                // Get HLS source (.m3u8)
+                const source = data.sources.find(s => s.quality === 'default') || data.sources[0];
                 
-                if(videoUrl) {
-                    playAnime(videoUrl, `${title} - Episode ${num}`);
+                if(source && source.url) {
+                    playAnime(source.url, `${title} - Episode ${num}`);
                 } else {
-                    alert("වීඩියෝව ලබාගත නොහැක!");
+                    alert("Streaming link සොයාගත නොහැක!");
                 }
-            } catch (e) { alert("Video Error!"); }
+            } catch (e) { alert("Video streaming error!"); }
         }
 
         function playAnime(url, title) {
@@ -365,7 +357,7 @@
             const queryText = document.getElementById('searchInput').value;
             if(!queryText) return;
             const container = document.getElementById('popularAnime');
-            container.innerHTML = "<p style='color:white;'>සොයමින් පවතී...</p>";
+            container.innerHTML = "<p style='color:white; text-align:center;'>සොයමින් පවතී...</p>";
             
             const query = `query ($search: String) { Page(page: 1, perPage: 15) { media(search: $search, type: ANIME, isAdult: false) { id title { romaji english } coverImage { large } } } }`;
             try {
