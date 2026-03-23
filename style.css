@@ -278,3 +278,20 @@ body {
     overflow: hidden;
     text-overflow: ellipsis; /* නම දිග වැඩි නම් තිත් පෙන්වයි */
 }
+/* සෙවුම් ප්‍රතිඵල සහ My List පෙන්වන කොටස සිරස් අතට පෙළගැස්වීමට */
+#results-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    padding: 20px;
+    width: 100%;
+}
+
+/* දැනට ඇති ඇනිමේ පේළි (Rows) අවශ්‍ය විට සැඟවීමට */
+.anime-row {
+    display: flex;
+    overflow-x: auto;
+    padding: 10px;
+    gap: 15px;
+}
