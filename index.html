@@ -1,163 +1,326 @@
 <!DOCTYPE html>
 <html lang="si">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ANIME KINGDOM | ඔබේ ඇනිමේ තෝතැන්න</title>
-    
-    <!-- වීඩියෝ ප්ලේ වීමට අවශ්‍ය HLS Library -->
-    <script src="https://cdn.jsdelivr.net"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ANIME KINGDOM</title>
 
-    <style>
-        :root { --accent: #e50914; --bg: #0b0b0f; --card-bg: #1a1a22; --text: #ffffff; }
-        body { margin: 0; font-family: 'Segoe UI', sans-serif; background-color: var(--bg); color: var(--text); overflow-x: hidden; padding-bottom: 50px; }
-        .top-nav { display: flex; justify-content: center; padding: 15px 0; background: #000; border-bottom: 1px solid #222; position: sticky; top: 0; z-index: 1000; }
-        .logo { font-size: 24px; font-weight: 900; letter-spacing: 2px; }
-        .hero { position: relative; height: 300px; display: flex; align-items: center; justify-content: center; background: #000; overflow: hidden; }
-        .hero-img { position: absolute; width: 100%; height: 100%; object-fit: cover; opacity: 0.4; filter: brightness(0.6); }
-        .hero-info { position: relative; z-index: 10; text-align: center; width: 90%; }
-        .search-container { display: flex; justify-content: center; max-width: 500px; margin: 25px auto; width: 90%; background: rgba(255,255,255,0.1); border-radius: 30px; padding: 5px; border: 1px solid rgba(255,255,255,0.2); }
-        #searchInput { flex: 1; height: 40px; padding: 0 20px; border: none; background: transparent; color: white; outline: none; font-size: 16px; }
-        .search-btn { height: 40px; padding: 0 25px; background: var(--accent); border: none; color: white; font-weight: bold; cursor: pointer; border-radius: 25px; }
-        .anime-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 20px; padding: 20px; }
-        .card { background: var(--card-bg); border-radius: 15px; overflow: hidden; cursor: pointer; transition: 0.3s; }
-        .card:hover { transform: translateY(-8px); box-shadow: 0 10px 25px rgba(229, 9, 20, 0.4); }
-        .card img { width: 100%; height: 230px; object-fit: cover; }
-        .card-title { padding: 10px; font-size: 13px; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .modal { display: none; position: fixed; inset: 0; background: var(--bg); z-index: 2000; flex-direction: column; overflow-y: auto; }
-        .modal-header { position: relative; height: 250px; background: #000; }
-        .modal-banner { width: 100%; height: 100%; object-fit: cover; opacity: 0.5; }
-        .back-btn { position: absolute; top: 20px; left: 20px; background: var(--accent); color: white; padding: 10px 20px; border-radius: 30px; cursor: pointer; font-weight: bold; z-index: 2100; border: none; display: flex; align-items: center; gap: 8px; }
-        .modal-body { padding: 30px 20px; margin-top: -50px; position: relative; z-index: 10; background: var(--bg); border-radius: 40px 40px 0 0; }
-        .ep-grid { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-top: 20px; max-height: 300px; overflow-y: auto; }
-        .ep-btn { background: #1a1a22; color: white; border: 1px solid #333; padding: 10px 15px; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.2s; }
-        .ep-btn:hover { background: var(--accent); transform: scale(1.1); }
-        #video-modal { display:none; position:fixed; inset:0; background:#000; z-index:3000; flex-direction:column; align-items:center; justify-content:center; }
-        #main-player { width: 100%; max-width: 900px; aspect-ratio: 16/9; background: #000; border: 1px solid #222; }
-    </style>
+<!-- ✅ HLS Player -->
+<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+
+<!-- ✅ Icons -->
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+:root{
+--accent:#e50914;
+--bg:#0b0b0f;
+--card-bg:#1a1a22;
+--text:#fff;
+}
+
+body{
+margin:0;
+font-family:'Segoe UI',sans-serif;
+background:var(--bg);
+color:var(--text);
+}
+
+.top-nav{
+display:flex;
+justify-content:center;
+padding:15px;
+background:#000;
+position:sticky;
+top:0;
+z-index:1000;
+}
+
+.logo{
+font-size:24px;
+font-weight:900;
+}
+
+.hero{
+height:250px;
+background:#000;
+display:flex;
+align-items:center;
+justify-content:center;
+}
+
+.search-container{
+display:flex;
+background:#111;
+border-radius:30px;
+padding:5px;
+}
+
+#searchInput{
+border:none;
+background:transparent;
+color:white;
+padding:10px;
+outline:none;
+}
+
+.search-btn{
+background:var(--accent);
+border:none;
+color:white;
+padding:10px 20px;
+border-radius:20px;
+cursor:pointer;
+}
+
+.anime-grid{
+display:grid;
+grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
+gap:20px;
+padding:20px;
+}
+
+.card{
+background:var(--card-bg);
+border-radius:12px;
+overflow:hidden;
+cursor:pointer;
+}
+
+.card img{
+width:100%;
+height:230px;
+object-fit:cover;
+}
+
+.card-title{
+padding:10px;
+text-align:center;
+font-size:13px;
+}
+
+.modal{
+display:none;
+position:fixed;
+inset:0;
+background:var(--bg);
+z-index:2000;
+flex-direction:column;
+overflow-y:auto;
+}
+
+.back-btn{
+position:absolute;
+top:20px;
+left:20px;
+background:var(--accent);
+color:white;
+padding:10px 20px;
+border:none;
+border-radius:30px;
+cursor:pointer;
+}
+
+.ep-grid{
+display:flex;
+flex-wrap:wrap;
+gap:10px;
+justify-content:center;
+padding:20px;
+}
+
+.ep-btn{
+background:#1a1a22;
+color:white;
+border:1px solid #333;
+padding:10px;
+border-radius:8px;
+cursor:pointer;
+}
+
+#video-modal{
+display:none;
+position:fixed;
+inset:0;
+background:#000;
+z-index:3000;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+}
+
+#main-player{
+width:100%;
+max-width:900px;
+aspect-ratio:16/9;
+}
+</style>
 </head>
+
 <body>
-    <nav class="top-nav"><div class="logo">ANIME<span style="color:var(--accent)">KINGDOM</span></div></nav>
-    <div class="hero">
-        <img src="IMG_20260322_225449_963.jpg" class="hero-img" onerror="this.src='https://wallpaperaccess.com'">
-        <div class="hero-info">
-            <div class="search-container">
-                <input type="text" id="searchInput" placeholder="Search anime...">
-                <button class="search-btn" onclick="searchAnime()">SEARCH</button>
-            </div>
-        </div>
-    </div>
-    <div class="anime-grid" id="popularAnime"></div>
-    <div id="anime-modal" class="modal">
-        <div class="modal-header">
-            <button class="back-btn" onclick="closeModal()"><i class="fas fa-arrow-left"></i> BACK</button>
-            <img id="modalBanner" class="modal-banner">
-        </div>
-        <div class="modal-body">
-            <h1 id="modalTitle"></h1>
-            <p style="color: var(--accent); font-weight: bold;">High Quality Streaming</p>
-            <div id="episodeList" class="ep-grid"></div>
-        </div>
-    </div>
-    <div id="video-modal">
-        <span onclick="closeVideo()" style="position:absolute; top:20px; right:20px; color:white; font-size:40px; cursor:pointer;">&times;</span>
-        <video id="main-player" controls></video>
-        <h4 id="videoTitle" style="color:white; margin-top:20px; text-align: center;"></h4>
-    </div>
 
-    <script>
-        // වැඩ කරන සර්වර් සහ CORS Proxy එකක් භාවිතය (වැදගත්!)
-        const CORS_PROXY = "https://corsproxy.io?";
-        const API_SERVERS = [
-            "https://api.consumet.org",
-            "https://api-consumet-org-five.vercel.app",
-            "https://consumet-api-production-e852.up.railway.app"
-        ];
+<nav class="top-nav">
+<div class="logo">ANIME<span style="color:#e50914">KINGDOM</span></div>
+</nav>
 
-        window.onload = () => { loadPopular(); };
+<div class="hero">
+<div class="search-container">
+<input id="searchInput" placeholder="Search anime...">
+<button class="search-btn" onclick="searchAnime()">SEARCH</button>
+</div>
+</div>
 
-        // සර්වර් කිහිපයක් එකවර පරීක්ෂා කිරීම
-        async function fetchWithFallback(endpoint) {
-            for (let server of API_SERVERS) {
-                try {
-                    const fullUrl = `${CORS_PROXY}${encodeURIComponent(server + endpoint)}`;
-                    const res = await fetch(fullUrl);
-                    if (res.ok) return await res.json();
-                } catch (e) { console.warn(`Trying next server...`); }
-            }
-            throw new Error("සියලුම සර්වර් අවහිර වී ඇත.");
-        }
+<div id="popularAnime" class="anime-grid"></div>
 
-        async function loadPopular() {
-            const res = await fetch('https://graphql.anilist.co', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ query: `query { Page(perPage: 12) { media(sort: TRENDING_DESC, type: ANIME) { id title { english romaji } coverImage { large } bannerImage } } }` })
-            });
-            const data = await res.json();
-            renderCards(data.data.Page.media);
-        }
+<!-- DETAILS MODAL -->
+<div id="anime-modal" class="modal">
+<button class="back-btn" onclick="closeModal()">BACK</button>
+<h1 id="modalTitle" style="text-align:center;margin-top:80px;"></h1>
+<div id="episodeList" class="ep-grid"></div>
+</div>
 
-        function renderCards(list) {
-            const container = document.getElementById('popularAnime');
-            container.innerHTML = list.map(anime => `
-                <div class="card" onclick="showDetails('${anime.title.english || anime.title.romaji}', '${anime.bannerImage || anime.coverImage.large}')">
-                    <img src="${anime.coverImage.large}">
-                    <div class="card-title">${anime.title.english || anime.title.romaji}</div>
-                </div>`).join('');
-        }
+<!-- VIDEO PLAYER -->
+<div id="video-modal">
+<span onclick="closeVideo()"
+style="position:absolute;top:20px;right:20px;font-size:40px;color:white;cursor:pointer;">&times;</span>
+<video id="main-player" controls></video>
+<h3 id="videoTitle" style="color:white;"></h3>
+</div>
 
-        async function showDetails(title, banner) {
-            const modal = document.getElementById('anime-modal');
-            document.getElementById('modalTitle').innerText = title;
-            document.getElementById('modalBanner').src = banner;
-            modal.style.display = "flex";
-            const epListDiv = document.getElementById('episodeList');
-            epListDiv.innerHTML = "<p>Episodes පූරණය වෙමින්...</p>";
+<script>
 
-            try {
-                const sData = await fetchWithFallback(`/${encodeURIComponent(title)}`);
-                const anime = sData.results?.[0] || sData.results;
-                if (!anime) throw new Error();
+// ✅ Stable proxy
+const CORS_PROXY="https://cors.isomorphic-git.org/";
 
-                const iData = await fetchWithFallback(`/info/${anime.id}`);
-                const episodes = iData.episodes || [];
+const API="https://api.consumet.org";
 
-                epListDiv.innerHTML = episodes.map(ep => 
-                    `<button class="ep-btn" onclick="playVideo('${ep.id}', '${title} - EP ${ep.number}')">EP ${ep.number}</button>`
-                ).join('');
-            } catch (e) { epListDiv.innerHTML = "<p style='color:red;'>සර්වර් කාර්යබහුලයි. කරුණාකර නැවත උත්සාහ කරන්න.</p>"; }
-        }
+// LOAD POPULAR
+window.onload=loadPopular;
 
-        async function playVideo(epId, title) {
-            try {
-                const data = await fetchWithFallback(`/watch/${epId}`);
-                const link = data.sources.find(s => s.quality === '720p' || s.quality === 'default')?.url || data.sources[0].url;
-                const player = document.getElementById('main-player');
-                document.getElementById('video-modal').style.display = "flex";
-                document.getElementById('videoTitle').innerText = title;
-                if (Hls.isSupported()) {
-                    const hls = new Hls(); hls.loadSource(link); hls.attachMedia(player);
-                    hls.on(Hls.Events.MANIFEST_PARSED, () => player.play());
-                } else { player.src = link; player.play(); }
-            } catch (e) { alert("වීඩියෝ දෝෂයකි!"); }
-        }
+async function fetchAPI(path){
+const res=await fetch(CORS_PROXY+API+path);
+return res.json();
+}
 
-        function closeModal() { document.getElementById('anime-modal').style.display = "none"; }
-        function closeVideo() { const p = document.getElementById('main-player'); p.pause(); p.src = ""; document.getElementById('video-modal').style.display = "none"; }
-        
-        async function searchAnime() {
-            const q = document.getElementById('searchInput').value;
-            if(!q) return;
-            const res = await fetch('https://graphql.anilist.co', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ query: `query ($q: String) { Page { media(search: $q, type: ANIME) { id title { english romaji } coverImage { large } bannerImage } } }`, variables: { q } })
-            });
-            const json = await res.json();
-            renderCards(json.data.Page.media);
-        }
-    </script>
+async function loadPopular(){
+
+const res=await fetch("https://graphql.anilist.co",{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({
+query:`query{
+Page(perPage:12){
+media(sort:TRENDING_DESC,type:ANIME){
+title{english romaji}
+coverImage{large}
+}
+}}`
+})
+});
+
+const data=await res.json();
+
+renderCards(data.data.Page.media);
+}
+
+// SHOW CARDS
+function renderCards(list){
+const container=document.getElementById("popularAnime");
+
+container.innerHTML=list.map(a=>`
+<div class="card"
+onclick="showDetails('${a.title.english||a.title.romaji}')">
+<img src="${a.coverImage.large}">
+<div class="card-title">${a.title.english||a.title.romaji}</div>
+</div>
+`).join("");
+}
+
+// DETAILS
+async function showDetails(title){
+
+const modal=document.getElementById("anime-modal");
+modal.style.display="flex";
+
+document.getElementById("modalTitle").innerText=title;
+
+const epDiv=document.getElementById("episodeList");
+epDiv.innerHTML="Loading...";
+
+try{
+
+const sData=await fetchAPI(`/anime/gogoanime/${encodeURIComponent(title)}`);
+const anime=sData.results[0];
+
+const iData=await fetchAPI(`/anime/gogoanime/info/${anime.id}`);
+
+const eps=iData.episodes;
+
+epDiv.innerHTML=eps.map(ep=>`
+<button class="ep-btn"
+onclick="playVideo('${ep.id}','${title} EP ${ep.number}')">
+EP ${ep.number}
+</button>
+`).join("");
+
+}catch{
+epDiv.innerHTML="Error loading episodes";
+}
+}
+
+// PLAY VIDEO
+async function playVideo(id,title){
+
+try{
+
+const data=await fetchAPI(`/anime/gogoanime/watch/${id}`);
+
+const link=data.sources[0].url;
+
+document.getElementById("video-modal").style.display="flex";
+document.getElementById("videoTitle").innerText=title;
+
+const player=document.getElementById("main-player");
+
+if(Hls.isSupported()){
+const hls=new Hls();
+hls.loadSource(link);
+hls.attachMedia(player);
+hls.on(Hls.Events.MANIFEST_PARSED,()=>player.play());
+}else{
+player.src=link;
+player.play();
+}
+
+}catch{
+alert("Video error");
+}
+}
+
+// SEARCH
+async function searchAnime(){
+
+const q=document.getElementById("searchInput").value;
+if(!q)return;
+
+const sData=await fetchAPI(`/anime/gogoanime/${encodeURIComponent(q)}`);
+
+renderCards(sData.results);
+}
+
+function closeModal(){
+document.getElementById("anime-modal").style.display="none";
+}
+
+function closeVideo(){
+const p=document.getElementById("main-player");
+p.pause();
+p.src="";
+document.getElementById("video-modal").style.display="none";
+}
+
+</script>
+
 </body>
 </html>
