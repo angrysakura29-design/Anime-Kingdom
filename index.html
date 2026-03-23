@@ -4,8 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ANIME KINGDOM | ඔබේ ඇනිමේ තෝතැන්න</title>
+    
+    <!-- වීඩියෝ ප්ලේ වීමට අවශ්‍ය HLS Library -->
     <script src="https://cdn.jsdelivr.net"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com">
+
     <style>
         :root { --accent: #e50914; --bg: #0b0b0f; --card-bg: #1a1a22; --text: #ffffff; }
         body { margin: 0; font-family: 'Segoe UI', sans-serif; background-color: var(--bg); color: var(--text); overflow-x: hidden; padding-bottom: 50px; }
@@ -64,26 +67,26 @@
     </div>
 
     <script>
-        // 5 Fallback API Instances (වැඩිපුර සර්වර් එකතු කළා)
+        // වැඩ කරන සර්වර් සහ CORS Proxy එකක් භාවිතය (වැදගත්!)
+        const CORS_PROXY = "https://corsproxy.io?";
         const API_SERVERS = [
+            "https://api.consumet.org",
             "https://api-consumet-org-five.vercel.app",
-            "https://consumet-api-production-e852.up.railway.app",
-            "https://consumet-org-clone.vercel.app",
-            "https://c.delusionz.xyz",
-            "https://api.consumet.org"
+            "https://consumet-api-production-e852.up.railway.app"
         ];
 
         window.onload = () => { loadPopular(); };
 
-        // Fallback Logic එක වැඩි දියුණු කළා
+        // සර්වර් කිහිපයක් එකවර පරීක්ෂා කිරීම
         async function fetchWithFallback(endpoint) {
             for (let server of API_SERVERS) {
                 try {
-                    const res = await fetch(`${server}${endpoint}`);
+                    const fullUrl = `${CORS_PROXY}${encodeURIComponent(server + endpoint)}`;
+                    const res = await fetch(fullUrl);
                     if (res.ok) return await res.json();
-                } catch (e) { console.warn(`Server Failed: ${server}`); }
+                } catch (e) { console.warn(`Trying next server...`); }
             }
-            throw new Error("All servers down");
+            throw new Error("සියලුම සර්වර් අවහිර වී ඇත.");
         }
 
         async function loadPopular() {
@@ -111,26 +114,20 @@
             document.getElementById('modalBanner').src = banner;
             modal.style.display = "flex";
             const epListDiv = document.getElementById('episodeList');
-            epListDiv.innerHTML = "<p>Episodes සොයමින්...</p>";
+            epListDiv.innerHTML = "<p>Episodes පූරණය වෙමින්...</p>";
 
             try {
-                // 1. Search Anime
                 const sData = await fetchWithFallback(`/${encodeURIComponent(title)}`);
-                const anime = sData.results && sData.results.length > 0 ? sData.results[0] : null;
+                const anime = sData.results?.[0] || sData.results;
+                if (!anime) throw new Error();
 
-                if (!anime) { epListDiv.innerHTML = "<p style='color:red;'>සොයාගත නොහැකි විය. වෙනත් නමකින් සොයන්න.</p>"; return; }
-
-                // 2. Get Info
                 const iData = await fetchWithFallback(`/info/${anime.id}`);
                 const episodes = iData.episodes || [];
-
-                if (episodes.length === 0) { epListDiv.innerHTML = "<p>Episodes නොමැත.</p>"; return; }
 
                 epListDiv.innerHTML = episodes.map(ep => 
                     `<button class="ep-btn" onclick="playVideo('${ep.id}', '${title} - EP ${ep.number}')">EP ${ep.number}</button>`
                 ).join('');
-
-            } catch (e) { epListDiv.innerHTML = "<p style='color:red;'>සර්වර් දෝෂයකි. කරුණාකර පිටුව Refresh කරන්න.</p>"; }
+            } catch (e) { epListDiv.innerHTML = "<p style='color:red;'>සර්වර් කාර්යබහුලයි. කරුණාකර නැවත උත්සාහ කරන්න.</p>"; }
         }
 
         async function playVideo(epId, title) {
@@ -144,7 +141,7 @@
                     const hls = new Hls(); hls.loadSource(link); hls.attachMedia(player);
                     hls.on(Hls.Events.MANIFEST_PARSED, () => player.play());
                 } else { player.src = link; player.play(); }
-            } catch (e) { alert("වීඩියෝව පූරණය කළ නොහැක!"); }
+            } catch (e) { alert("වීඩියෝ දෝෂයකි!"); }
         }
 
         function closeModal() { document.getElementById('anime-modal').style.display = "none"; }
