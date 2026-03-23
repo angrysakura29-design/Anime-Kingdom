@@ -16,9 +16,10 @@ body {
 /* Hero Banner */
 .hero-banner {
     height: 400px;
-    background: url('https://wallpapercave.com') center/cover;
+        background: url('https://static0.srcdn.com') center/cover no-repeat;
     position: relative;
 }
+
 
 .overlay {
     position: absolute; width: 100%; height: 100%;
