@@ -308,3 +308,17 @@ body {
     z-index: 9999; /* සැමවිටම උඩින්ම පෙනීමට */
     background: #000; /* පසුබිම කළු කිරීමට */
 }
+/* Bottom Nav එකේ ඇති අකුරු select වීම සහ නිල් පැහැ වීම වැළැක්වීමට */
+.bottom-nav {
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none;     /* IE 10 and IE 11 */
+    user-select: none;         /* Standard syntax */
+    -webkit-tap-highlight-color: transparent; /* Click කරන විට එන නිල් පාට ඉවත් කරයි */
+    touch-action: manipulation;
+    cursor: pointer;
+}
+
+.nav-item {
+    pointer-events: auto !important; /* Click එක නිවැරදිව ලබා ගැනීමට */
+    cursor: pointer;
+}
