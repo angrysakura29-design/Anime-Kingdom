@@ -45,43 +45,36 @@ body {
     width: 200px;
 }
 
-/* --- ඇනිමේ පේළිය (පැත්තට Scroll වීම - නිවැරදි කළ කොටස) --- */
+/* --- ඇනිමේ පේළිය (Horizontal Scroll) --- */
 .anime-row {
     display: flex !important;
-    flex-direction: row !important;
-    flex-wrap: nowrap !important; /* පේළිය කැඩීම වළක්වයි */
-    overflow-x: auto !important; /* පැත්තට ඇදීමට ඉඩ දෙයි */
+    flex-wrap: nowrap !important; 
+    overflow-x: auto !important; 
     gap: 15px;
     padding: 15px 5px;
     width: 100%;
     scrollbar-width: none;
     scroll-behavior: smooth;
-    -webkit-overflow-scrolling: touch;
 }
-
 .anime-row::-webkit-scrollbar { display: none; }
 
-/* --- ඇනිමේ කාඩ්පත් (Card Style - නිවැරදි කළ කොටස) --- */
+/* --- ඇනිමේ කාඩ්පත් (Card Style) --- */
 .card {
     position: relative;
-    min-width: 150px; /* සියලුම කාඩ්පත් වල ස්ථාවර පළල */
+    min-width: 150px;
     max-width: 150px;
     background: var(--card-bg);
     border-radius: 12px;
     overflow: hidden;
-    text-decoration: none;
     display: flex;
     flex-direction: column;
-    flex-shrink: 0; /* පින්තූර අතර හිස් ඉඩක් ඒම වළක්වන්නේ මෙයයි */
+    flex-shrink: 0;
     transition: transform 0.3s ease;
     border: 1px solid #222;
     cursor: pointer;
 }
 
-.card:hover {
-    transform: scale(1.05);
-    border-color: var(--accent);
-}
+.card:hover { transform: scale(1.05); border-color: var(--accent); }
 
 .card img {
     width: 100%;
@@ -111,6 +104,30 @@ body {
     text-overflow: ellipsis; text-align: center;
 }
 
+/* --- සෙවුම් ප්‍රතිඵල සහ See All Grid (මෙය අත්‍යවශ්‍යයි) --- */
+#results-container {
+    display: none; /* JS මගින් flex කරනු ලබයි */
+    flex-direction: column;
+    width: 100%;
+    background: var(--bg-dark);
+}
+
+/* See All පින්තූර පහළට පිළිවෙළකට පෙන්වීමට */
+#see-all-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+    padding: 20px 10px;
+    width: 100%;
+}
+
+/* See All පේජ් එකේ කාඩ්පත්වල ප්‍රමාණය ස්ථාවරව තබා ගැනීමට */
+#see-all-grid .card {
+    min-width: 140px;
+    max-width: 140px;
+}
+
 /* --- Bottom Navigation --- */
 .bottom-nav {
     position: fixed;
@@ -121,29 +138,16 @@ body {
     padding: 12px 0;
     border-top: 1px solid #222;
     z-index: 9999;
-    user-select: none;
-    -webkit-tap-highlight-color: transparent;
 }
 
 .nav-item {
     color: #888;
-    text-decoration: none;
     font-size: 11px;
     display: flex;
     flex-direction: column;
     align-items: center;
     flex: 1;
     cursor: pointer;
+    user-select: none;
 }
-
 .nav-item.active { color: var(--accent); }
-
-/* --- සෙවුම් ප්‍රතිඵල (Grid Style) --- */
-#results-container {
-    display: none; /* අවශ්‍ය විට JS මගින් flex කරයි */
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 15px;
-    padding: 20px 10px;
-    width: 100%;
-}
