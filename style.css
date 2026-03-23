@@ -7,21 +7,23 @@
 
 body {
     margin: 0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Segoe UI', Tahoma, sans-serif;
     background-color: var(--bg-dark);
     color: white;
     overflow-x: hidden;
-    padding-bottom: 70px; /* Bottom Nav එකට ඉඩ තැබීමට */
+    padding-bottom: 80px; /* Bottom Nav එකට ඉඩ තැබීමට */
 }
 
 /* --- Navigation & Logo --- */
 .top-nav {
     display: flex;
-    justify-content: center; /* Logo එක මැදට පෙන්වීමට */
+    justify-content: center;
     align-items: center;
     padding: 15px 0;
     background-color: #000;
-    width: 100%;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
 }
 
 .logo {
@@ -30,7 +32,7 @@ body {
     letter-spacing: 2px;
 }
 
-/* --- Banner & Welcome Section --- */
+/* --- Banner Section --- */
 .hero-banner {
     width: 100%;
     text-align: center;
@@ -39,7 +41,7 @@ body {
 
 .banner-img {
     width: 100%;
-    max-height: 350px;
+    max-height: 250px;
     object-fit: cover;
     display: block;
 }
@@ -48,26 +50,16 @@ body {
     padding: 20px;
 }
 
-/* Welcome Text එක කුඩා කර පිළිවෙළ කිරීම */
 .hero-info h1 {
-    font-size: 22px; /* 32px සිට 22px දක්වා කුඩා කළා */
+    font-size: 22px;
     font-weight: 800;
-    margin-bottom: 5px;
     text-transform: uppercase;
-    letter-spacing: 1px;
+    margin-bottom: 5px;
 }
 
-.brand-text {
-    color: var(--accent);
-}
+.brand-text { color: var(--accent); }
 
-.hero-info p {
-    font-size: 14px;
-    color: #ccc;
-    margin-bottom: 20px;
-}
-
-/* --- Advanced Search Bar --- */
+/* --- Search Bar --- */
 .search-box-section {
     text-align: center;
     margin-bottom: 30px;
@@ -88,7 +80,7 @@ body {
     padding: 10px 20px;
     color: white;
     outline: none;
-    width: 220px;
+    width: 180px;
 }
 
 .search-wrapper button {
@@ -101,41 +93,106 @@ body {
     font-weight: bold;
 }
 
-/* --- Anime Rows & Cards --- */
+/* --- Anime Row (Horizontal Scroll) --- */
+.row-section {
+    margin-bottom: 25px;
+    padding: 0 15px;
+}
+
+.row-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.row-header h2 { font-size: 18px; margin: 0; }
+.row-header span { font-size: 12px; color: var(--accent); cursor: pointer; }
+
 .anime-row {
-    padding: 15px;
     display: flex;
     overflow-x: auto;
     gap: 15px;
+    padding-bottom: 10px;
+    scrollbar-width: none;
 }
 
+.anime-row::-webkit-scrollbar { display: none; }
+
+/* --- Premium Anime Card --- */
 .card {
-    min-width: 140px;
+    position: relative;
+    min-width: 150px;
     background: var(--card-bg);
-    border-radius: 10px;
-    padding: 10px;
-    text-align: center;
+    border-radius: 12px;
+    overflow: hidden;
+    text-decoration: none;
+    display: block;
+    flex-shrink: 0;
+    transition: transform 0.3s ease;
+    border: 1px solid #222;
+}
+
+.card:hover {
+    transform: scale(1.03);
+    border-color: var(--accent);
 }
 
 .card img {
     width: 100%;
-    height: 200px;
-    border-radius: 8px;
+    height: 220px;
     object-fit: cover;
+    display: block;
 }
 
-/* --- Bottom Navigation (පේළියට සැකසීම) --- */
+/* Tags (HD & Rating) */
+.tag-hd {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: var(--accent);
+    color: white;
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: bold;
+    z-index: 5;
+}
+
+.tag-rating {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    background: white;
+    color: black;
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: bold;
+    z-index: 5;
+}
+
+.card-title {
+    color: white;
+    font-size: 13px;
+    padding: 10px 8px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: center;
+}
+
+/* --- Bottom Navigation --- */
 .bottom-nav {
     position: fixed;
     bottom: 0;
     left: 0;
     width: 100%;
     background-color: #111;
-    display: flex; /* අයිතම පේළියට පෙන්වයි */
-    justify-content: space-around; /* සමාන පරතරයක් ලබා දෙයි */
-    align-items: center;
-    padding: 10px 0;
-    border-top: 1px solid #333;
+    display: flex;
+    justify-content: space-around;
+    padding: 12px 0;
+    border-top: 1px solid #222;
     z-index: 1000;
 }
 
@@ -146,159 +203,8 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    cursor: pointer;
     flex: 1;
 }
 
-.nav-item.active {
-    color: var(--accent);
-}
-
-.nav-item i {
-    font-size: 20px;
-    margin-bottom: 4px;
-}
-
-/* සෙවුම් ප්‍රතිඵල සඳහා */
-#results-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 15px;
-    padding: 20px;
-}
-/* --- Anime Row (පින්තූර පේළියට සැකසීම) --- */
-.row-section {
-    margin-bottom: 30px;
-    padding: 0 15px;
-}
-
-.row-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
-}
-
-.row-header h2 {
-    font-size: 18px;
-    color: white;
-    margin: 0;
-}
-
-.row-header span {
-    font-size: 12px;
-    color: #ff416c; /* 'See all' සඳහා රතු පැහැය */
-    cursor: pointer;
-}
-
-/* පින්තූර 10 ම එක පේළියට ගෙන ඒම සහ Slide කිරීමේ පහසුකම */
-.anime-row {
-    display: flex;
-    overflow-x: auto; /* වමට දකුණට slide කිරීමට */
-    gap: 15px;
-    padding-bottom: 10px;
-    scrollbar-width: none; /* Scrollbar එක පෙන්වන්නේ නැත (Firefox) */
-    -ms-overflow-style: none; /* (IE/Edge) */
-}
-
-/* Chrome/Safari සඳහා Scrollbar එක ඉවත් කිරීම */
-.anime-row::-webkit-scrollbar {
-    display: none;
-}
-
-/* --- Anime Card (නිවැරදි ප්‍රමාණය) --- */
-.card {
-    min-width: 155px; /* කාඩ් එකක පළල */
-    background: #141414;
-    border-radius: 12px;
-    padding: 10px;
-    text-align: center;
-    flex-shrink: 0; /* කාඩ් එක කුඩා වීම වළක්වයි */
-    border: 1px solid #222;
-    transition: transform 0.3s ease;
-}
-
-.card:hover {
-    transform: scale(1.05); /* මවුස් එක ගෙන යන විට මදක් විශාල වේ */
-    border-color: #ff416c;
-}
-
-.card img {
-    width: 100%;
-    border-radius: 8px;
-    height: 215px;
-    object-fit: cover;
-}
-
-/* --- සෙවුම් ප්‍රතිඵල (Search Results) සඳහා --- */
-#results-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 15px;
-    padding: 20px;
-}
-/* Card Container */
-.card {
-    position: relative; /* Tags තැබීමට මෙය අවශ්‍යයි */
-    min-width: 150px;
-    background: #1a1a1a;
-    border-radius: 12px;
-    padding: 0; /* ඇතුළත padding ඉවත් කළා */
-    overflow: hidden;
-    cursor: pointer;
-    transition: 0.3s;
-    text-decoration: none; /* Link අකුරු යට ඉරි ඉවත් කරයි */
-    display: block;
-}
-
-.card:hover {
-    transform: scale(1.03);
-}
-
-.card img {
-    width: 100%;
-    height: 220px;
-    object-fit: cover;
-    display: block;
-}
-
-/* Tags (HD, Rating badges) */
-.tag-hd {
-    position: absolute;
-    top: 8px;
-    right: 8px;
-    background: #e50914;
-    color: white;
-    font-size: 10px;
-    padding: 2px 6px;
-    border-radius: 4px;
-    font-weight: bold;
-}
-
-.tag-rating {
-    position: absolute;
-    top: 8px;
-    left: 8px;
-    background: rgba(255, 255, 255, 0.9);
-    color: #333;
-    font-size: 10px;
-    padding: 2px 6px;
-    border-radius: 4px;
-    font-weight: bold;
-}
-
-.card-info {
-    padding: 10px;
-    text-align: left;
-}
-
-.card-title {
-    color: white;
-    font-size: 13px;
-    font-weight: 500;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis; /* දිගු නම් වලට තිත් තබයි */
-}
+.nav-item.active { color: var(--accent); }
+.nav-item i { font-size: 20px; margin-bottom: 4px; }
