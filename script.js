@@ -1,121 +1,91 @@
-// GitHub Pages සීමාවන් (CORS) මඟහැරීමට Proxy එකක් භාවිතා කිරීම අනිවාර්ය වේ
 const PROXY = "https://api.allorigins.win";
-const ANIFY_API = "https://api.anify.tv";
 const JIKAN_API = "https://api.jikan.moe";
+const ANIFY_API = "https://api.anify.tv";
 
-// පිටුව පූරණය වන විට මුලින්ම Trending ඇනිමේ ලබා ගැනීම
 window.onload = loadTrending;
 
-// 1. Trending Anime පූරණය කිරීම (Jikan API හරහා)
 async function loadTrending() {
-    toggleLoader('mainLoader', true);
+    showLoader(true);
     try {
-        const res = await fetch(`${JIKAN_API}/top/anime?limit=18`);
+        const res = await fetch(`${JIKAN_API}/top/anime?limit=15`);
         const data = await res.json();
         renderCards(data.data);
-    } catch (e) {
-        console.error("Trending Error:", e);
-        document.getElementById('statusTitle').innerText = "දත්ත ලබා ගැනීමේ දෝෂයකි!";
-    } finally {
-        toggleLoader('mainLoader', false);
-    }
+    } catch (e) { console.error(e); }
+    showLoader(false);
 }
 
-// 2. ඇනිමේ සෙවීම (Search Function)
 async function searchAnime() {
-    const query = document.getElementById('searchInput').value.trim();
-    if (!query) return;
-
-    document.getElementById('animeGrid').innerHTML = "";
-    toggleLoader('mainLoader', true);
-    document.getElementById('statusTitle').innerText = `'${query}' සඳහා ප්‍රතිඵල...`;
-
+    const query = document.getElementById('searchInput').value;
+    if(!query) return;
+    showLoader(true);
+    document.getElementById('rowTitle').innerText = "ප්‍රතිඵල: " + query;
     try {
-        const res = await fetch(`${JIKAN_API}/anime?q=${encodeURIComponent(query)}&limit=18`);
+        const res = await fetch(`${JIKAN_API}/anime?q=${encodeURIComponent(query)}&limit=15`);
         const data = await res.json();
         renderCards(data.data);
-    } catch (e) {
-        alert("සෙවීමේ දෝෂයකි!");
-    } finally {
-        toggleLoader('mainLoader', false);
-    }
+    } catch (e) { alert("Search Error!"); }
+    showLoader(false);
 }
 
-// 3. Grid එකට Cards එකතු කිරීම
 function renderCards(list) {
     const grid = document.getElementById('animeGrid');
-    grid.innerHTML = list.map(anime => {
-        // title එකේ ඇති ' ලකුණු ඉවත් කිරීම (Javascript error වළක්වා ගැනීමට)
-        const safeTitle = anime.title.replace(/'/g, "");
-        return `
-            <div class="card" onclick="openDetails('${safeTitle}', '${anime.images.jpg.large_image_url}')">
-                <img src="${anime.images.jpg.large_image_url}" alt="${anime.title}">
-                <div class="card-title">${anime.title}</div>
-            </div>`;
-    }).join('');
+    grid.innerHTML = list.map(anime => `
+        <div class="card" onclick="loadEpisodes('${anime.title.replace(/'/g, "")}')">
+            <img src="${anime.images.jpg.large_image_url}" loading="lazy">
+            <div class="card-title">${anime.title}</div>
+        </div>
+    `).join('');
 }
 
-// 4. Anify API භාවිතයෙන් Episode විස්තර ලබා ගැනීම
-async function openDetails(title, banner) {
-    const modal = document.getElementById('detailsModal');
+async function loadEpisodes(title) {
+    const modal = document.getElementById('anime-modal');
     const epContainer = document.getElementById('episode-list');
-    
     document.getElementById('modalTitle').innerText = title;
-    document.getElementById('modalBanner').src = banner;
     modal.style.display = "flex";
     epContainer.innerHTML = "<p>Episodes පූරණය වෙමින්...</p>";
 
     try {
-        // Anify හරහා ඇනිමේ එක සෙවීම (Proxy එක හරහා)
+        // Anify හරහා සෙවීම (Proxy එක අනිවාර්යයි)
         const searchUrl = `${PROXY}${encodeURIComponent(ANIFY_API + '/search/anime/' + title)}`;
-        const searchRes = await fetch(searchUrl);
-        const searchData = await searchRes.json();
+        const sRes = await fetch(searchUrl);
+        const sData = await sRes.json();
+        const animeId = sData?.[0]?.id || sData?.id;
+
+        if(!animeId) throw new Error();
+
+        const iUrl = `${PROXY}${encodeURIComponent(ANIFY_API + '/info/' + animeId)}`;
+        const iRes = await fetch(iUrl);
+        const iData = await iRes.json();
         
-        // පළමු ප්‍රතිඵලයේ ID එක ලබා ගැනීම
-        const animeId = searchData[0]?.id; 
+        // Episode දත්ත ලබා ගැනීම
+        const episodes = iData.episodes?.data?.[0]?.episodes || iData.episodes?.data || [];
 
-        if (!animeId) throw new Error("ID Not Found");
-
-        // Episodes විස්තර ලබා ගැනීම
-        const infoUrl = `${PROXY}${encodeURIComponent(ANIFY_API + '/info/' + animeId)}`;
-        const infoRes = await fetch(infoUrl);
-        const infoData = await infoRes.json();
-        
-        // Episode දත්ත ලිස්ට් එක ලබා ගැනීම
-        const episodes = infoData.episodes?.data[0]?.episodes || [];
-
-        if (episodes.length === 0) {
-            epContainer.innerHTML = "<p>Episodes සොයාගත නොහැකි විය.</p>";
+        if(episodes.length === 0) {
+            epContainer.innerHTML = `<button class="ep-btn" onclick="startStreaming('${title}', 1)">Watch Episode 1</button>`;
             return;
         }
 
-        // Episode බොත්තම් නිර්මාණය
         epContainer.innerHTML = episodes.map(ep => 
             `<button class="ep-btn" onclick="startStreaming('${title}', ${ep.number})">EP ${ep.number}</button>`
         ).join('');
 
     } catch (e) {
-        console.error("Anify Error:", e);
-        epContainer.innerHTML = "<p style='color:red;'>දත්ත ලබා ගැනීමේ API දෝෂයකි!</p>";
+        epContainer.innerHTML = `<button class="ep-btn" onclick="startStreaming('${title}', 1)">Play Video (Direct)</button>`;
     }
 }
 
-// 5. Embed Player (Vidsrc) හරහා වීඩියෝව ප්ලේ කිරීම
-function startStreaming(title, epNumber) {
-    const videoModal = document.getElementById('videoPlayerModal');
+function startStreaming(title, epNum) {
+    const playerModal = document.getElementById('video-modal');
     const iframe = document.getElementById('videoFrame');
-    
-    // Embed Player ලින්ක් එක (මෙහිදී Vidsrc භාවිතා කර ඇත)
-    const embedUrl = `https://vidsrc.to{encodeURIComponent(title)}/${epNumber}`;
-    
-    iframe.src = embedUrl;
-    videoModal.style.display = "flex";
+    // Vidsrc Embed Player එක භාවිතා කරයි
+    iframe.src = `https://vidsrc.to{encodeURIComponent(title)}/${epNum}`;
+    playerModal.style.display = "flex";
+    document.getElementById('playingTitle').innerText = title + " - Episode " + epNum;
 }
 
-// පාලක Functions (Modals close කිරීම)
-function closeModal() { document.getElementById('detailsModal').style.display = "none"; }
+function closeModal() { document.getElementById('anime-modal').style.display = "none"; }
 function closeVideo() { 
-    document.getElementById('videoFrame').src = ""; // වීඩියෝව නවත්වයි
-    document.getElementById('videoPlayerModal').style.display = "none"; 
+    document.getElementById('videoFrame').src = "";
+    document.getElementById('video-modal').style.display = "none"; 
 }
-function toggleLoader(id, show) { document.getElementById(id).style.display = show ? "block" : "none"; }
+function showLoader(show) { document.getElementById('loader').style.display = show ? "block" : "none"; }
