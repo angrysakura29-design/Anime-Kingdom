@@ -1,65 +1,249 @@
-/* --- කලින් තිබූ CSS වලට අමතරව මේවා එකතු කරන්න --- */
-
-/* Modal Backdrop (පසුබිම) */
-#anime-modal, #video-modal {
-    background: rgba(0, 0, 0, 0.95) !important;
-    backdrop-filter: blur(5px);
+/* --- මූලික සැකසුම් (General Styles) --- */
+:root {
+    --accent: #e50914; 
+    --bg-dark: #0b0b0f;
+    --card-bg: #1a1a22;
+    --text-white: #ffffff;
 }
 
-/* Modal Body සැකසුම */
-#modal-body {
-    border: 1px solid #333;
-    box-shadow: 0 0 30px rgba(229, 9, 20, 0.2);
-    animation: slideUp 0.3s ease-out;
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
-@keyframes slideUp {
-    from { transform: translateY(50px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--bg-dark);
+    color: var(--text-white);
+    overflow-x: hidden;
+    padding-bottom: 80px; 
+    line-height: 1.6;
 }
 
-/* Episode Buttons */
-#episode-list button {
-    transition: 0.2s;
-    font-weight: bold;
-    min-width: 60px;
+/* --- Navigation & Logo --- */
+.top-nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 15px 0;
+    background-color: rgba(0, 0, 0, 0.9);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    backdrop-filter: blur(10px);
 }
 
-#episode-list button:hover {
-    background: var(--accent) !important;
-    border-color: white !important;
-    transform: translateY(-2px);
+.logo { 
+    font-size: 26px; 
+    font-weight: 900; 
+    letter-spacing: 3px; 
+    text-shadow: 0 0 10px rgba(229, 9, 20, 0.5);
 }
 
-/* Video Player එක Responsive කිරීමට */
-#main-player {
-    width: 95%;
+/* --- Banner Section --- */
+.hero-banner { 
+    position: relative;
+    width: 100%; 
+    min-height: 350px;
+    background: #000; 
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.banner-img { 
+    position: absolute;
+    width: 100%; 
+    height: 100%; 
+    object-fit: cover; 
+    opacity: 0.5;
+    filter: brightness(0.6);
+}
+
+.hero-info { 
+    position: relative;
+    z-index: 10;
+    padding: 20px; 
+    text-align: center;
+    width: 100%;
     max-width: 800px;
+}
+
+.hero-info h1 { 
+    font-size: clamp(24px, 5vw, 42px);
+    font-weight: 800; 
+    text-transform: uppercase; 
+    margin-bottom: 10px; 
+    text-shadow: 2px 2px 15px rgba(0,0,0,0.8);
+}
+
+.brand-text { color: var(--accent); }
+
+/* --- Search Bar (නිවැරදි කළ කොටස) --- */
+.search-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0; /* අතර ඉඩ නැති කර එකට සම්බන්ධ කිරීම */
+    margin: 25px auto;
+    max-width: 500px;
+    width: 90%;
+}
+
+#searchInput {
+    flex: 1;
+    height: 50px;
+    background: rgba(0, 0, 0, 0.7);
     border: 2px solid var(--accent);
-    border-radius: 10px;
+    border-right: none;
+    padding: 0 20px;
+    color: white;
+    border-radius: 5px 0 0 5px;
+    font-size: 16px;
     outline: none;
 }
 
-/* Row Headers (Latest, Trending title එක ලස්සන කිරීමට) */
+.search-container button {
+    height: 50px;
+    padding: 0 25px;
+    background: var(--accent);
+    color: white;
+    border: 2px solid var(--accent);
+    cursor: pointer;
+    border-radius: 0 5px 5px 0;
+    font-weight: bold;
+    font-size: 16px;
+    transition: 0.3s;
+}
+
+.search-container button:hover {
+    background: #ff0000;
+}
+
+/* --- ඇනිමේ පේළිය (Horizontal Scroll) --- */
+.row-section { padding: 20px 0 0 15px; }
+
 .row-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 15px;
-    margin-top: 20px;
+    padding-right: 20px;
+    margin-bottom: 15px;
 }
 
 .row-header h2 {
-    font-size: 18px;
+    font-size: 20px;
     border-left: 4px solid var(--accent);
-    padding-left: 10px;
+    padding-left: 12px;
 }
 
-/* Scrollbar එක ලස්සන කිරීමට (Optional) */
-.anime-row::-webkit-scrollbar {
-    height: 3px;
+.anime-row {
+    display: flex;
+    overflow-x: auto;
+    gap: 15px;
+    padding: 10px 5px;
+    scrollbar-width: none; /* Firefox */
 }
-.anime-row::-webkit-scrollbar-thumb {
-    background: #333;
+
+.anime-row::-webkit-scrollbar { display: none; } /* Chrome/Safari */
+
+/* --- ඇනිමේ කාඩ්පත් (Card Style) --- */
+.card {
+    position: relative;
+    min-width: 160px;
+    max-width: 160px;
+    background: var(--card-bg);
     border-radius: 10px;
+    overflow: hidden;
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
+
+.card:hover { transform: scale(1.08); z-index: 10; }
+
+.card img {
+    width: 100%;
+    height: 230px;
+    object-fit: cover;
+    display: block;
+}
+
+.card-title {
+    color: white; 
+    font-size: 13px; 
+    padding: 10px 8px;
+    white-space: nowrap; 
+    overflow: hidden;
+    text-overflow: ellipsis; 
+    text-align: center;
+    font-weight: 500;
+}
+
+/* HD Tag */
+.tag-hd {
+    position: absolute; top: 10px; right: 10px;
+    background: var(--accent); color: white;
+    font-size: 10px; padding: 2px 6px; border-radius: 3px;
+    font-weight: bold;
+}
+
+/* --- Modal & Player --- */
+#anime-modal, #video-modal {
+    background: rgba(0, 0, 0, 0.95);
+    backdrop-filter: blur(8px);
+}
+
+#modal-body {
+    border: 1px solid #333;
+    box-shadow: 0 0 40px rgba(229, 9, 20, 0.3);
+}
+
+#episode-list button {
+    background: #222;
+    color: white;
+    border: 1px solid #444;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+#episode-list button:hover {
+    background: var(--accent);
+    border-color: white;
+}
+
+/* --- Bottom Navigation --- */
+.bottom-nav {
+    position: fixed;
+    bottom: 0; left: 0; width: 100%;
+    background: #000;
+    display: flex;
+    padding: 12px 0;
+    border-top: 1px solid #222;
+    z-index: 9999;
+}
+
+.nav-item {
+    flex: 1;
+    color: #888;
+    font-size: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+}
+
+.nav-item i { font-size: 20px; margin-bottom: 4px; }
+.nav-item.active { color: var(--accent); }
+
+/* --- Responsive Adjustments --- */
+@media (max-width: 600px) {
+    .search-container { flex-direction: row; }
+    #searchInput { height: 45px; font-size: 14px; }
+    .search-container button { height: 45px; padding: 0 15px; font-size: 14px; }
+    .card { min-width: 140px; }
 }
