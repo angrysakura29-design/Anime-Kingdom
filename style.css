@@ -11,7 +11,7 @@ body {
     background-color: var(--bg-dark);
     color: white;
     overflow-x: hidden;
-    padding-bottom: 80px; /* Bottom Nav එකට ඉඩ තැබීමට */
+    padding-bottom: 80px; 
 }
 
 /* --- Navigation & Logo --- */
@@ -26,115 +26,60 @@ body {
     z-index: 1000;
 }
 
-.logo {
-    font-size: 24px;
-    font-weight: bold;
-    letter-spacing: 2px;
-}
+.logo { font-size: 24px; font-weight: bold; letter-spacing: 2px; }
 
 /* --- Banner Section --- */
-.hero-banner {
-    width: 100%;
-    text-align: center;
-    background: #000;
-}
-
-.banner-img {
-    width: 100%;
-    max-height: 250px;
-    object-fit: cover;
-    display: block;
-}
-
-.hero-info {
-    padding: 20px;
-}
-
-.hero-info h1 {
-    font-size: 22px;
-    font-weight: 800;
-    text-transform: uppercase;
-    margin-bottom: 5px;
-}
-
+.hero-banner { width: 100%; text-align: center; background: #000; }
+.banner-img { width: 100%; max-height: 250px; object-fit: cover; display: block; }
+.hero-info { padding: 20px; }
+.hero-info h1 { font-size: 22px; font-weight: 800; text-transform: uppercase; margin-bottom: 5px; }
 .brand-text { color: var(--accent); }
 
 /* --- Search Bar --- */
-.search-box-section {
-    text-align: center;
-    margin-bottom: 30px;
-}
-
-.search-wrapper {
-    display: inline-flex;
-    background: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(10px);
-    border-radius: 50px;
-    padding: 5px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
 #searchInput {
-    background: transparent;
-    border: none;
-    padding: 10px 20px;
+    background: #222;
+    border: 1px solid var(--accent);
+    padding: 10px;
     color: white;
-    outline: none;
-    width: 180px;
+    border-radius: 5px;
+    width: 200px;
 }
 
-.search-wrapper button {
-    background: var(--accent);
-    border: none;
-    color: white;
-    padding: 10px 20px;
-    border-radius: 50px;
-    cursor: pointer;
-    font-weight: bold;
-}
-
-/* --- Anime Row (Horizontal Scroll) --- */
-.row-section {
-    margin-bottom: 25px;
-    padding: 0 15px;
-}
-
-.row-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 12px;
-}
-
-.row-header h2 { font-size: 18px; margin: 0; }
-.row-header span { font-size: 12px; color: var(--accent); cursor: pointer; }
-
+/* --- ඇනිමේ පේළිය (පැත්තට Scroll වීම - නිවැරදි කළ කොටස) --- */
 .anime-row {
-    display: flex;
-    overflow-x: auto;
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important; /* පේළිය කැඩීම වළක්වයි */
+    overflow-x: auto !important; /* පැත්තට ඇදීමට ඉඩ දෙයි */
     gap: 15px;
-    padding-bottom: 10px;
+    padding: 15px 5px;
+    width: 100%;
     scrollbar-width: none;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
 }
 
 .anime-row::-webkit-scrollbar { display: none; }
 
-/* --- Premium Anime Card --- */
+/* --- ඇනිමේ කාඩ්පත් (Card Style - නිවැරදි කළ කොටස) --- */
 .card {
     position: relative;
-    min-width: 150px;
+    min-width: 150px; /* සියලුම කාඩ්පත් වල ස්ථාවර පළල */
+    max-width: 150px;
     background: var(--card-bg);
     border-radius: 12px;
     overflow: hidden;
     text-decoration: none;
-    display: block;
-    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0; /* පින්තූර අතර හිස් ඉඩක් ඒම වළක්වන්නේ මෙයයි */
     transition: transform 0.3s ease;
     border: 1px solid #222;
+    cursor: pointer;
 }
 
 .card:hover {
-    transform: scale(1.03);
+    transform: scale(1.05);
     border-color: var(--accent);
 }
 
@@ -147,53 +92,37 @@ body {
 
 /* Tags (HD & Rating) */
 .tag-hd {
-    position: absolute;
-    top: 8px;
-    right: 8px;
-    background: var(--accent);
-    color: white;
-    font-size: 10px;
-    padding: 2px 6px;
-    border-radius: 4px;
-    font-weight: bold;
-    z-index: 5;
+    position: absolute; top: 8px; right: 8px;
+    background: var(--accent); color: white;
+    font-size: 10px; padding: 3px 8px; border-radius: 4px;
+    font-weight: bold; z-index: 5;
 }
 
 .tag-rating {
-    position: absolute;
-    top: 8px;
-    left: 8px;
-    background: white;
-    color: black;
-    font-size: 10px;
-    padding: 2px 6px;
-    border-radius: 4px;
-    font-weight: bold;
-    z-index: 5;
+    position: absolute; top: 8px; left: 8px;
+    background: white; color: black;
+    font-size: 10px; padding: 3px 8px; border-radius: 4px;
+    font-weight: bold; z-index: 5;
 }
 
 .card-title {
-    color: white;
-    font-size: 13px;
-    padding: 10px 8px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    text-align: center;
+    color: white; font-size: 13px; padding: 10px 8px;
+    white-space: nowrap; overflow: hidden;
+    text-overflow: ellipsis; text-align: center;
 }
 
 /* --- Bottom Navigation --- */
 .bottom-nav {
     position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background-color: #111;
+    bottom: 0; left: 0; width: 100%;
+    background-color: #000;
     display: flex;
     justify-content: space-around;
     padding: 12px 0;
     border-top: 1px solid #222;
-    z-index: 1000;
+    z-index: 9999;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
 }
 
 .nav-item {
@@ -204,130 +133,17 @@ body {
     flex-direction: column;
     align-items: center;
     flex: 1;
+    cursor: pointer;
 }
 
 .nav-item.active { color: var(--accent); }
-.nav-item i { font-size: 20px; margin-bottom: 4px; }
-/* Anime Card ප්‍රධාන සැකසුම */
-.card {
-    position: relative; /* Labels පින්තූරය මත තැබීමට මෙය අත්‍යවශ්‍යයි */
-    min-width: 160px;
-    background: transparent;
-    border-radius: 12px;
-    overflow: hidden;
-    text-decoration: none;
-    display: flex;
-    flex-direction: column;
-    flex-shrink: 0;
-    transition: 0.3s;
-}
 
-/* ඇනිමේ පින්තූරය සහ එහි රාමුව */
-.card-img-wrapper {
-    position: relative;
-    width: 100%;
-    height: 230px;
-    border-radius: 12px;
-    overflow: hidden;
-    border: 1px solid #333;
-}
-
-.card-img-wrapper img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-}
-
-/* වම් පැත්තේ සුදු පැහැති Rating Tag එක (උදා: PG-13) */
-.tag-rating {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    background: white;
-    color: black;
-    font-size: 10px;
-    padding: 3px 8px;
-    border-radius: 5px;
-    font-weight: bold;
-    z-index: 5;
-}
-
-/* දකුණු පැත්තේ රතු පැහැති HD Tag එක */
-.tag-hd {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: #e50914; /* රතු පැහැය */
-    color: white;
-    font-size: 10px;
-    padding: 3px 8px;
-    border-radius: 5px;
-    font-weight: bold;
-    z-index: 5;
-}
-
-/* පින්තූරයට යටින් ඇති නම */
-.card-title {
-    color: white;
-    font-size: 15px;
-    margin-top: 10px;
-    text-align: left;
-    font-weight: 500;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis; /* නම දිග වැඩි නම් තිත් පෙන්වයි */
-}
-/* සෙවුම් ප්‍රතිඵල (Search Results) පහළට පෙන්වීමට */
+/* --- සෙවුම් ප්‍රතිඵල (Grid Style) --- */
 #results-container {
-    display: flex;
-    flex-wrap: wrap; /* පේළිය ඉවර වූ විට ඊළඟ පේළියට යාමට */
+    display: none; /* අවශ්‍ය විට JS මගින් flex කරයි */
+    flex-wrap: wrap;
     justify-content: center;
     gap: 15px;
     padding: 20px 10px;
-    width: 100%;
-}
-
-/* දැනට ඇති ඇනිමේ පේළි (Rows) අවශ්‍ය විට සැඟවීමට */
-.anime-row {
-    display: flex;
-    overflow-x: auto;
-    padding: 10px;
-    gap: 15px;
-}
-.nav-item {
-    cursor: pointer;
-    -webkit-tap-highlight-color: transparent; /* Mobile වල click කරන විට එන නිල් පාට ඉවත් කරයි */
-    user-select: none; /* අකුරු select වීම වළක්වයි, එවිට Google search එක එන්නේ නැත */
-    touch-action: manipulation; /* Mobile touch වඩාත් හොඳින් වැඩ කිරීමට */
-}
-
-.bottom-nav {
-    position: fixed;
-    bottom: 0;
-    z-index: 9999; /* සැමවිටම උඩින්ම පෙනීමට */
-    background: #000; /* පසුබිම කළු කිරීමට */
-}
-/* Bottom Nav එකේ ඇති අකුරු select වීම සහ නිල් පැහැ වීම වැළැක්වීමට */
-.bottom-nav {
-    -webkit-user-select: none; /* Safari */
-    -ms-user-select: none;     /* IE 10 and IE 11 */
-    user-select: none;         /* Standard syntax */
-    -webkit-tap-highlight-color: transparent; /* Click කරන විට එන නිල් පාට ඉවත් කරයි */
-    touch-action: manipulation;
-    cursor: pointer;
-}
-
-.nav-item {
-    pointer-events: auto !important; /* Click එක නිවැරදිව ලබා ගැනීමට */
-    cursor: pointer;
-}
-/* සියලුම ඇනිමේ පේළි අනිවාර්යයෙන්ම පැත්තට පෙළගැසීමට */
-.anime-row {
-    display: flex !important;
-    flex-wrap: nowrap !important; /* පේළිය කැඩී පහළට යාම වළක්වයි */
-    overflow-x: auto !important; /* පැත්තට scroll වීමට ඉඩ දෙයි */
-    gap: 15px;
-    padding: 10px 5px;
     width: 100%;
 }
