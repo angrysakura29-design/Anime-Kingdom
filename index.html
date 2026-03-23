@@ -4,8 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ANIME KINGDOM</title>
+    
+    <!-- වීඩියෝ නිවැරදිව ප්ලේ වීමට අවශ්‍ය HLS Library එක -->
+    <script src="https://cdn.jsdelivr.net"></script>
+    
     <link rel="stylesheet" href="style.css">
-    <!-- Icons පෙනීමට මේ ලින්ක් එක අත්‍යවශ්‍යයි -->
+    <!-- Font Awesome Icons සඳහා නිවැරදි Link එක -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com">
 </head>
 <body>
@@ -80,23 +84,25 @@
         </section>
     </div>
 
-    <!-- ඇනිමේ විස්තර Modal -->
+    <!-- ඇනිමේ විස්තර සහ Episodes පෙන්වන Modal (Pop-up) -->
     <div id="anime-modal" style="display: none; position: fixed; z-index: 10000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); justify-content: center; align-items: center; overflow-y: auto; padding: 20px;">
-        <div id="modal-body" style="background: #111; color: white; width: 95%; max-width: 600px; padding: 20px; border-radius: 15px; position: relative;"></div>
+        <div id="modal-body" style="background: #111; color: white; width: 95%; max-width: 600px; padding: 20px; border-radius: 15px; position: relative;">
+            <!-- දත්ත JavaScript මගින් මෙතැනට පිරවේ (Episodes ඇතුළුව) -->
+        </div>
     </div>
 
     <!-- Bottom Navigation -->
     <div class="bottom-nav" style="cursor: pointer; user-select: none;">
-        <div class="nav-item active" onclick="goHome(); event.stopPropagation();">
+        <div class="nav-item active" onclick="goHome();">
             <i class="fas fa-home"></i><span>Home</span>
         </div>
-        <div class="nav-item" onclick="alert('Schedule එක ළඟදීම පැමිණේ!'); event.stopPropagation();">
+        <div class="nav-item" onclick="alert('Schedule එක ළඟදීම පැමිණේ!');">
             <i class="fas fa-calendar-alt"></i><span>Schedule</span>
         </div>
-        <div class="nav-item" onclick="showMyList(); event.stopPropagation();">
+        <div class="nav-item" onclick="showMyList();">
             <i class="fas fa-list"></i><span>My List</span>
         </div>
-        <div class="nav-item" onclick="showProfile(); event.stopPropagation();">
+        <div class="nav-item" onclick="showProfile();">
             <i class="fas fa-user"></i><span>Profile</span>
         </div>
     </div>
@@ -104,11 +110,10 @@
     <!-- Video Player Modal -->
     <div id="video-modal" style="display: none; position: fixed; z-index: 20000; left: 0; top: 0; width: 100%; height: 100%; background: #000; justify-content: center; align-items: center; flex-direction: column;">
         <span style="position: absolute; right: 20px; top: 20px; font-size: 40px; color: white; cursor: pointer; z-index: 101;" onclick="closeVideo()">&times;</span>
-        <video id="main-player" controls style="width: 95%; max-width: 900px; border: 2px solid red; border-radius: 10px;">
-            <source id="video-source" src="" type="video/mp4">
-            <track id="video-sub" label="Sinhala" kind="subtitles" srclang="si" src="" default>
-        </video>
-        <h2 id="video-title" style="color: white; margin-top: 20px; font-family: sans-serif;"></h2>
+        
+        <video id="main-player" controls style="width: 95%; max-width: 900px; border: 2px solid red; border-radius: 10px; box-shadow: 0 0 20px rgba(255,0,0,0.5);"></video>
+        
+        <h2 id="video-title" style="color: white; margin-top: 20px; font-family: sans-serif; text-align: center; padding: 0 10px;"></h2>
     </div>
 
     <script src="script.js"></script>
