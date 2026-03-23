@@ -1,24 +1,16 @@
-// ඇනිමේ 30 ක දත්ත ලැයිස්තුව
 const animeData =;
 
-// ඇනිමේ පෝස්ටර් Screen එකට පෙන්වන Function එක
 function initApp() {
     const grid = document.getElementById('animeGrid');
-    
-    // කලින් තිබූ දේවල් මකා දමයි
-    grid.innerHTML = "";
+    if (!grid) return; // Grid එක නැත්නම් මෙතනින් නවතී
 
-    // ඇනිමේ 30 ම පෙන්වයි
-    animeData.forEach(anime => {
-        const card = document.createElement('div');
-        card.className = 'anime-card';
-        card.innerHTML = `
-            <img src="${anime.image}" alt="${anime.title}">
+    grid.innerHTML = animeData.map(anime => `
+        <div class="anime-card">
+            <img src="${anime.image}" alt="${anime.title}" onerror="this.src='https://via.placeholder.com'">
             <h3>${anime.title}</h3>
-        `;
-        grid.appendChild(card);
-    });
+        </div>
+    `).join('');
 }
 
-// වෙබ් අඩවිය Load වන විට මෙය ක්‍රියාත්මක වේ
-initApp();
+// පිටුව Load වූ පසු පමණක් මෙය ක්‍රියාත්මක වේ
+window.onload = initApp;
