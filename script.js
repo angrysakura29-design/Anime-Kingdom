@@ -1,66 +1,35 @@
-console.log("Script Connected!");
-
 window.onload = () => {
-    console.log("Loading Home Data...");
-    // එක් එක් කාණ්ඩයට අදාළ දත්ත API එකෙන් ලබා ගැනීම
-    fetchHomeData('airing', 'latestAnime', 10);
-    fetchHomeData('upcoming', 'trendingAnime', 10);
-    fetchHomeData('bypopularity', 'popularAnime', 10);
-    fetchHomeData('tv', 'tvSeriesList', 10);
-    fetchHomeData('airing', 'recentEpisodes', 10);
+    fetchAnimeData('airing', 'latestAnime', 12);
+    fetchAnimeData('upcoming', 'trendingAnime', 12);
+    fetchAnimeData('favorite', 'popularAnime', 12);
 };
 
-async function fetchHomeData(filter, containerId, limit) {
+async function fetchAnimeData(filter, containerId, limit) {
     const container = document.getElementById(containerId);
-    if (!container) {
-        console.error("Container not found: " + containerId);
-        return;
-    }
+    if (!container) return;
 
     try {
-        const url = `https://api.jikan.moe{filter}&limit=${limit}`;
-        const response = await fetch(url);
+        const response = await fetch(`https://api.jikan.moe{filter}&limit=${limit}`);
         const data = await response.json();
         const animeList = data.data;
 
-        if (!animeList) return;
-
-        container.innerHTML = ""; // පරණ දත්ත මකන්න
+        container.innerHTML = ""; 
 
         animeList.forEach(anime => {
+            // Rating එක කෙටි කර පෙන්වීමට (උදා: PG-13)
+            const rating = anime.rating ? anime.rating.split(' ')[0] : 'G';
+
             container.innerHTML += `
-                <div class="card" style="min-width: 155px; background: #141414; padding: 10px; border-radius: 12px; text-align: center; flex-shrink: 0; border: 1px solid #222; margin-right: 10px;">
-                    <img src="${anime.images.jpg.image_url}" style="width: 100%; border-radius: 8px; height: 215px; object-fit: cover;">
-                    <div style="font-size: 13px; margin-top: 10px; color: white; height: 35px; overflow: hidden; line-height: 1.2;">
-                        ${anime.title}
-                    </div>
-                    <div style="margin-top: 5px; font-size: 11px; color: #ff416c;">
-                        ⭐ ${anime.score || 'N/A'}
-                    </div>
-                </div>
+                <a href="${anime.url}" target="_blank" class="card">
+                    <span class="tag-rating">${rating}</span>
+                    <span class="tag-hd">HD</span>
+                    <img src="${anime.images.jpg.image_url}" alt="${anime.title}">
+                    <div class="card-title">${anime.title}</div>
+                    <div style="font-size: 11px; color: #ff416c; padding-left: 5px; padding-bottom: 10px;">⭐ ${anime.score || 'N/A'}</div>
+                </a>
             `;
         });
     } catch (error) {
-        console.error("Error loading " + containerId + ": ", error);
+        console.error("Error:", error);
     }
-}
-
-// Search Function (මෙයද ගොනුවේ අගටම දාන්න)
-async function searchAnime() {
-    const query = document.getElementById('searchInput').value;
-    const resultsContainer = document.getElementById('results-container');
-    if (!query) return alert("Please enter anime name!");
-    resultsContainer.innerHTML = "<p style='color:white; text-align:center; width:100%;'>Searching...</p>";
-    try {
-        const res = await fetch(`https://api.jikan.moe{query}&limit=12`);
-        const d = await res.json();
-        resultsContainer.innerHTML = "";
-        d.data.forEach(anime => {
-            resultsContainer.innerHTML += `
-                <div class="card" style="width: 155px; background: #141414; padding: 10px; border-radius: 12px; margin-bottom:15px; text-align:center;">
-                    <img src="${anime.images.jpg.image_url}" style="width:100%; height:215px; object-fit:cover; border-radius:8px;">
-                    <h4 style="color:white; font-size:13px; height:35px; overflow:hidden;">${anime.title}</h4>
-                </div>`;
-        });
-    } catch (e) { resultsContainer.innerHTML = "<p style='color:red;'>Error</p>"; }
 }
