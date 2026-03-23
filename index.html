@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ANIME KINGDOM</title>
+<title>ANIME KINGDOM | ඔබේ ඇනිමේ පාරාදීසය</title>
 
 <!-- ✅ HLS Player -->
 <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
@@ -25,6 +25,7 @@ margin:0;
 font-family:'Segoe UI',sans-serif;
 background:var(--bg);
 color:var(--text);
+overflow-x:hidden;
 }
 
 .top-nav{
@@ -40,19 +41,32 @@ z-index:1000;
 .logo{
 font-size:24px;
 font-weight:900;
+letter-spacing:2px;
 }
 
 .hero{
-height:250px;
-background:#000;
+position:relative;
+height:300px;
 display:flex;
 align-items:center;
 justify-content:center;
+background:#000;
+overflow:hidden;
+}
+
+.hero-img{
+position:absolute;
+width:100%;
+height:100%;
+object-fit:cover;
+opacity:0.4;
 }
 
 .search-container{
+position:relative;
+z-index:10;
 display:flex;
-background:#111;
+background:rgba(255,255,255,0.1);
 border-radius:30px;
 padding:5px;
 }
@@ -86,6 +100,11 @@ background:var(--card-bg);
 border-radius:12px;
 overflow:hidden;
 cursor:pointer;
+transition:.3s;
+}
+
+.card:hover{
+transform:translateY(-6px);
 }
 
 .card img{
@@ -120,6 +139,13 @@ padding:10px 20px;
 border:none;
 border-radius:30px;
 cursor:pointer;
+}
+
+.modal-banner{
+width:100%;
+height:250px;
+object-fit:cover;
+opacity:0.5;
 }
 
 .ep-grid{
@@ -165,6 +191,7 @@ aspect-ratio:16/9;
 </nav>
 
 <div class="hero">
+<img src="https://wallpaperaccess.com/full/7053702.jpg" class="hero-img">
 <div class="search-container">
 <input id="searchInput" placeholder="Search anime...">
 <button class="search-btn" onclick="searchAnime()">SEARCH</button>
@@ -176,7 +203,8 @@ aspect-ratio:16/9;
 <!-- DETAILS MODAL -->
 <div id="anime-modal" class="modal">
 <button class="back-btn" onclick="closeModal()">BACK</button>
-<h1 id="modalTitle" style="text-align:center;margin-top:80px;"></h1>
+<img id="modalBanner" class="modal-banner">
+<h1 id="modalTitle" style="text-align:center;"></h1>
 <div id="episodeList" class="ep-grid"></div>
 </div>
 
@@ -190,12 +218,9 @@ style="position:absolute;top:20px;right:20px;font-size:40px;color:white;cursor:p
 
 <script>
 
-// ✅ Stable proxy
 const CORS_PROXY="https://cors.isomorphic-git.org/";
-
 const API="https://api.consumet.org";
 
-// LOAD POPULAR
 window.onload=loadPopular;
 
 async function fetchAPI(path){
@@ -203,6 +228,7 @@ const res=await fetch(CORS_PROXY+API+path);
 return res.json();
 }
 
+// 🔥 POPULAR
 async function loadPopular(){
 
 const res=await fetch("https://graphql.anilist.co",{
@@ -214,36 +240,39 @@ Page(perPage:12){
 media(sort:TRENDING_DESC,type:ANIME){
 title{english romaji}
 coverImage{large}
+bannerImage
 }
 }}`
 })
 });
 
 const data=await res.json();
-
 renderCards(data.data.Page.media);
 }
 
-// SHOW CARDS
+// 🔥 CARDS
 function renderCards(list){
+
 const container=document.getElementById("popularAnime");
 
 container.innerHTML=list.map(a=>`
 <div class="card"
-onclick="showDetails('${a.title.english||a.title.romaji}')">
+onclick="showDetails(
+'${a.title.english||a.title.romaji}',
+'${a.bannerImage||a.coverImage.large}'
+)">
 <img src="${a.coverImage.large}">
 <div class="card-title">${a.title.english||a.title.romaji}</div>
 </div>
 `).join("");
 }
 
-// DETAILS
-async function showDetails(title){
+// 🔥 DETAILS
+async function showDetails(title,banner){
 
-const modal=document.getElementById("anime-modal");
-modal.style.display="flex";
-
+document.getElementById("anime-modal").style.display="flex";
 document.getElementById("modalTitle").innerText=title;
+document.getElementById("modalBanner").src=banner;
 
 const epDiv=document.getElementById("episodeList");
 epDiv.innerHTML="Loading...";
@@ -255,9 +284,7 @@ const anime=sData.results[0];
 
 const iData=await fetchAPI(`/anime/gogoanime/info/${anime.id}`);
 
-const eps=iData.episodes;
-
-epDiv.innerHTML=eps.map(ep=>`
+epDiv.innerHTML=iData.episodes.map(ep=>`
 <button class="ep-btn"
 onclick="playVideo('${ep.id}','${title} EP ${ep.number}')">
 EP ${ep.number}
@@ -265,17 +292,16 @@ EP ${ep.number}
 `).join("");
 
 }catch{
-epDiv.innerHTML="Error loading episodes";
+epDiv.innerHTML="Server error";
 }
 }
 
-// PLAY VIDEO
+// 🔥 VIDEO
 async function playVideo(id,title){
 
 try{
 
 const data=await fetchAPI(`/anime/gogoanime/watch/${id}`);
-
 const link=data.sources[0].url;
 
 document.getElementById("video-modal").style.display="flex";
@@ -298,15 +324,30 @@ alert("Video error");
 }
 }
 
-// SEARCH
+// 🔥 SEARCH
 async function searchAnime(){
 
 const q=document.getElementById("searchInput").value;
 if(!q)return;
 
-const sData=await fetchAPI(`/anime/gogoanime/${encodeURIComponent(q)}`);
+const res=await fetch("https://graphql.anilist.co",{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({
+query:`query ($q:String){
+Page(perPage:20){
+media(search:$q,type:ANIME){
+title{english romaji}
+coverImage{large}
+bannerImage
+}
+}}`,
+variables:{q}
+})
+});
 
-renderCards(sData.results);
+const data=await res.json();
+renderCards(data.data.Page.media);
 }
 
 function closeModal(){
