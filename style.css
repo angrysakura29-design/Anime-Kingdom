@@ -102,63 +102,80 @@ body { background: var(--bg); color: white; font-family: sans-serif; margin: 0; 
 .nav-item.active { color: var(--accent); }
 .nav-item i { display: block; font-size: 20px; margin-bottom: 2px; }
 
-/* --- Advanced Search Bar Section --- */
-
-.search-container {
+/* Search Page Styles */
+.search-page-header {
     display: flex;
     align-items: center;
-    background: rgba(255, 255, 255, 0.1); /* මඳක් විනිවිද පෙනෙන (Glass effect) */
-    backdrop-filter: blur(10px);        /* පසුබිම Blur කිරීමට */
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 50px;
-    width: 90%;
-    max-width: 550px;
-    margin: 20px auto;
-    padding: 8px 12px;
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37); /* ලස්සන හෙවනැල්ලක් (Shadow) */
-    transition: all 0.3s ease;
+    padding: 15px;
+    gap: 10px;
+    background: #1e1e26;
 }
 
-/* Mouse එක ගෙන ගිය විට සිදුවන වෙනස */
-.search-container:hover {
-    background: rgba(255, 255, 255, 0.15);
-    box-shadow: 0 10px 40px 0 rgba(229, 9, 20, 0.2); /* රතු පැහැති මෘදු ආලෝකයක් */
-    transform: translateY(-2px);
-}
-
-.hero-search {
+.search-bar-advanced {
     flex: 1;
-    background: transparent; /* සුදු පැහැය වෙනුවට විනිවිද පෙනෙන ලෙස */
+    background: #2a2a35;
+    border-radius: 10px;
+    padding: 5px 15px;
+}
+
+.search-bar-advanced input {
+    width: 100%;
+    background: transparent;
     border: none;
-    outline: none;
-    padding: 12px 20px;
-    font-size: 16px;
-    color: #fff; /* අකුරු සුදු පැහැයෙන් */
-}
-
-/* Placeholder අකුරු වල පැහැය */
-.hero-search::placeholder {
-    color: rgba(255, 255, 255, 0.6);
-}
-
-.search-btn {
-    background: #e50914;
     color: white;
-    border: none;
-    padding: 12px 25px;
-    border-radius: 40px;
-    font-weight: 700;
-    cursor: pointer;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    transition: 0.3s;
-    box-shadow: 0 4px 15px rgba(229, 9, 20, 0.3);
+    padding: 10px;
+    outline: none;
 }
 
-.search-btn:hover {
-    background: #ff0000;
-    transform: scale(1.05); /* මඳක් විශාල වීමට */
-    box-shadow: 0 6px 20px rgba(229, 9, 20, 0.5);
+/* Anime List Cards */
+.anime-list-container {
+    padding: 15px;
 }
+
+.search-card {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 15px;
+    background: transparent;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.img-wrapper {
+    position: relative;
+    width: 120px;
+    height: 70px;
+}
+
+.img-wrapper img {
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    object-fit: cover;
+}
+
+/* Play Icon එක පින්තූරය මැදට */
+.play-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(255, 255, 255, 0.8);
+    color: black;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+}
+
+.search-card h3 {
+    font-size: 16px;
+    font-weight: 400;
+}
+
 
 
