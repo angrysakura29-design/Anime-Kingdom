@@ -322,3 +322,12 @@ body {
     pointer-events: auto !important; /* Click එක නිවැරදිව ලබා ගැනීමට */
     cursor: pointer;
 }
+/* සියලුම ඇනිමේ පේළි අනිවාර්යයෙන්ම පැත්තට පෙළගැසීමට */
+.anime-row {
+    display: flex !important;
+    flex-wrap: nowrap !important; /* පේළිය කැඩී පහළට යාම වළක්වයි */
+    overflow-x: auto !important; /* පැත්තට scroll වීමට ඉඩ දෙයි */
+    gap: 15px;
+    padding: 10px 5px;
+    width: 100%;
+}
