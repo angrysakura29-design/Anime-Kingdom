@@ -158,6 +158,21 @@ function playAnime(videoUrl, subUrl, title) {
     const sub = document.getElementById('video-sub');
     const vTitle = document.getElementById('video-title');
 
+    source.src = videoUrl; 
+    sub.src = subUrl;      
+    vTitle.innerText = title;
+
+    player.load(); 
+    vModal.style.display = "flex";
+    player.play();
+}
+
+function closeVideo() {
+    document.getElementById('video-modal').style.display = "none";
+    document.getElementById('main-player').pause();
+}
+
+
     // ප්ලේයර් එකට දත්ත ඇතුළත් කිරීම
     source.src = videoUrl; 
     sub.src = subUrl;      
