@@ -32,28 +32,39 @@
 <!-- ප්‍රතිඵල පෙන්වන තැන -->
 <div id="results-container" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; padding: 20px;"></div>
 
-   <div class="main-content">
-        <!-- Section 1 -->
-        <section class="row-section">
-            <div class="row-header"><h2>Top TV Series</h2><span>See all</span></div>
-            <div class="anime-row" id="tvSeries"></div> <!-- id="tvSeries" තිබිය යුතුමයි -->
-        </section>
+   <div class="main-content" style="background: #000; padding-bottom: 80px;">
+    <!-- 1. Latest Anime -->
+    <section class="row-section">
+        <div class="row-header"><h2>✨ Latest Anime</h2><span style="color: red;">See all</span></div>
+        <div class="anime-row" id="latestAnime"></div>
+    </section>
 
-        <!-- Section 2 -->
-        <section class="row-section">
-            <div class="row-header"><h2>Top Movies</h2><span>See all</span></div>
-            <div class="anime-row" id="topMovies"></div> <!-- id="topMovies" තිබිය යුතුමයි -->
+    <!-- 2. Trending -->
+    <section class="row-section">
+        <div class="row-header"><h2>🔥 Trending</h2><span style="color: red;">See all</span></div>
+        <div class="anime-row" id="trendingAnime"></div>
+    </section>
 
-        </section>
+    <!-- 3. Most Popular -->
+    <section class="row-section">
+        <div class="row-header"><h2>🏆 Most Popular</h2><span style="color: red;">See all</span></div>
+        <div class="anime-row" id="popularAnime"></div>
+    </section>
 
-        <!-- Section 3 -->
-        <section class="row-section">
-            <div class="row-header"><h2>Most Popular</h2><span>See all</span></div>
-            <div class="anime-row" id="mostPopular"></div> <!-- id="mostPopular" තිබිය යුතුමයි -->
-        </section>
-    </div>
+    <!-- 4. TV Anime Series -->
+    <section class="row-section">
+        <div class="row-header"><h2>📺 TV Anime Series</h2><span style="color: red;">See all</span></div>
+        <div class="anime-row" id="tvSeriesList"></div>
+    </section>
 
-    <!-- Bottom Navigation -->
+    <!-- 5. New Episodes -->
+    <section class="row-section">
+        <div class="row-header"><h2>🎬 New Episodes</h2><span style="color: red;">See all</span></div>
+        <div class="anime-row" id="recentEpisodes"></div>
+    </section>
+</div>
+
+  <!-- Bottom Navigation -->
     <div class="bottom-nav">
         <div class="nav-item active"><i class="fas fa-home"></i><span>Home</span></div>
         <div class="nav-item"><i class="fas fa-calendar-alt"></i><span>Schedule</span></div>
