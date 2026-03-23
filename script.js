@@ -126,15 +126,26 @@ async function showDetails(id) {
         });
         const json = await response.json();
         const anime = json.data.Media;
-        document.getElementById('modal-body').innerHTML = `
-            <span style="position:absolute; right:15px; top:10px; font-size:30px; cursor:pointer; color:red; font-weight:bold;" onclick="closeModal()">&times;</span>
-            <div style="display:flex; flex-direction:column; align-items:center; gap:10px;">
+                modalBody.innerHTML = `
+            <span style="position:absolute; right:15px; top:10px; font-size:30px; cursor:pointer; color:red; font-weight:bold; z-index:100;" onclick="closeModal()">&times;</span>
+            <div style="display:flex; flex-direction:column; align-items:center; gap:12px;">
                 <img src="${anime.coverImage.large}" style="width:100%; max-height:250px; object-fit:cover; border-radius:10px;">
                 <h2 style="margin:0; text-align:center; font-size:18px;">${anime.title.english || anime.title.romaji}</h2>
-                <p style="color:#ff416c; font-weight:bold;">⭐ ${anime.averageScore / 10} | 📺 Episodes: ${anime.episodes || 'N/A'}</p>
-                <div style="font-size:13px; color:#ccc; max-height:120px; overflow-y:auto; padding:0 10px; line-height:1.4;">${anime.description}</div>
-                <a href="${anime.siteUrl}" target="_blank" style="background:red; color:white; padding:10px 20px; border-radius:5px; text-decoration:none; font-weight:bold; margin-top:10px;">WATCH NOW</a>
-            </div>`;
+                <div style="display:flex; gap:15px; font-weight:bold; color:#ff416c;">
+                    <span>⭐ ${anime.averageScore / 10}</span>
+                    <span>📺 Episodes: ${anime.episodes || 'N/A'}</span>
+                </div>
+                <p style="font-size:13px; color:#ccc; max-height:120px; overflow-y:auto; line-height:1.4; padding:0 10px;">${anime.description}</p>
+                
+                <!-- මෙන්න මෙතන තමයි අපේ අලුත් ප්ලේයර් එක වැඩ කරන බොත්තම තියෙන්නේ -->
+                <button onclick="playAnime('https://www.w3schools.com', '', '${anime.title.english || anime.title.romaji}')" 
+                        style="background:red; color:white; padding:10px 20px; border-radius:5px; border:none; cursor:pointer; font-weight:bold; margin-top:10px; width:100%;">
+                    WATCH NOW (IN-SITE)
+                </button>
+                <a href="${anime.siteUrl}" target="_blank" style="color:#ccc; font-size:12px; text-decoration:none; margin-top:5px;">View on AniList</a>
+            </div>
+        `;
+
     } catch (e) { console.error(e); }
 }
 
