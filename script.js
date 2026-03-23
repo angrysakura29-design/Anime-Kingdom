@@ -2,11 +2,12 @@ window.onload = async () => {
     console.log("Anime Kingdom loading with AniList API...");
     
     // ඔබේ වෙබ් අඩවියේ ඇති සෑම කොටසකටම අදාළ දත්ත ලබා ගැනීම
-    const sections = [
-        ['TRENDING_DESC', 'latestAnime', 10],      // Trending කොටසට
-        ['POPULARITY_DESC', 'popularAnime', 10],   // Most Popular කොටසට
-        ['SCORE_DESC', 'tvSeriesList', 10],        // TV Anime Series කොටසට
-        ['START_DATE_DESC', 'recentEpisodes', 10]  // New Episodes කොටසට
+        const sections = [
+        ['TRENDING_DESC', 'latestAnime', 2],      // උඩම ඇති පින්තූර 2 සඳහා
+        ['POPULARITY_DESC', 'trendingAnime', 10], // Trending කොටස සඳහා
+        ['SCORE_DESC', 'popularAnime', 10],      // Most Popular සඳහා
+        ['UPDATED_AT_DESC', 'tvSeriesList', 10],  // TV Anime Series සඳහා
+        ['START_DATE_DESC', 'recentEpisodes', 10] // New Episodes සඳහා
     ];
 
     for (const [sort, id, limit] of sections) {
