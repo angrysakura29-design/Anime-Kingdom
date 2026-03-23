@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ANIME KINGDOM</title>
     <link rel="stylesheet" href="style.css">
-    <!-- Font Awesome Icons සඳහා -->
+    <!-- Font Awesome Icons සඳහා නිවැරදි Link එක -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com">
 </head>
 <body>
@@ -31,14 +31,14 @@
     </div>
 
     <!-- සෙවුම් ප්‍රතිඵල සහ See All පෙන්වන තැන -->
-    <div id="results-container" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; padding: 20px;"></div>
+    <div id="results-container" style="display: none; flex-wrap: wrap; justify-content: center; gap: 15px; padding: 20px;"></div>
 
     <div class="main-content" style="background: #000; padding-bottom: 80px;">
         <!-- 1. Latest Anime -->
         <section class="row-section">
             <div class="row-header">
                 <h2>✨ Latest Anime</h2>
-                <span class="see-all" style="color: red; cursor: pointer;" onclick="showSeeAll('TRENDING_DESC', 'Latest Anime')">See all</span>
+                <span class="see-all" style="color: red; cursor: pointer;" onclick="showSeeAll('START_DATE_DESC', 'Latest Anime')">See all</span>
             </div>
             <div class="anime-row" id="latestAnime"></div>
         </section>
@@ -47,7 +47,7 @@
         <section class="row-section">
             <div class="row-header">
                 <h2>🔥 Trending</h2>
-                <span class="see-all" style="color: red; cursor: p ointer;" onclick="showSeeAll('TRENDING_DESC', 'Trending Anime')">See all</span>
+                <span class="see-all" style="color: red; cursor: pointer;" onclick="showSeeAll('TRENDING_DESC', 'Trending Anime')">See all</span>
             </div>
             <div class="anime-row" id="trendingAnime"></div>
         </section>
@@ -74,7 +74,7 @@
         <section class="row-section">
             <div class="row-header">
                 <h2>🎬 New Episodes</h2>
-                <span class="see-all" style="color: red; cursor: pointer;" onclick="showSeeAll('UPDATED_AT_DESC', 'New Episodes')">See all</span>
+                <span class="see-all" style="color: red; cursor: pointer;" onclick="showSeeAll('UPDATED_AT_DESC', 'New Episodes') )">See all</span>
             </div>
             <div id="recentEpisodes" class="anime-row"></div>
         </section>
@@ -83,7 +83,7 @@
     <!-- ඇනිමේ විස්තර සහ Episodes පෙන්වන Modal (Pop-up) -->
     <div id="anime-modal" style="display: none; position: fixed; z-index: 10000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); justify-content: center; align-items: center; overflow-y: auto; padding: 20px;">
         <div id="modal-body" style="background: #111; color: white; width: 95%; max-width: 600px; padding: 20px; border-radius: 15px; position: relative;">
-            <!-- මෙතනට දත්ත JavaScript මගින් පිරවේ -->
+            <!-- දත්ත මෙතැනට JavaScript මගින් පිරවේ -->
         </div>
     </div>
 
