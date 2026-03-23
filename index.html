@@ -1,220 +1,164 @@
 <!DOCTYPE html>
 <html lang="si">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ANIME KINGDOM | ඔබේ ඇනිමේ තෝතැන්න</title>
+    
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com">
 
-<title>ANIME KINGDOM</title>
-
-<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
-
-<style>
-body{margin:0;background:#0b0b0f;color:#fff;font-family:sans-serif}
-
-.top-nav{background:#000;padding:15px;text-align:center;font-size:24px;font-weight:bold}
-
-.hero{
-height:250px;
-background:url("https://wallpaperaccess.com/full/7053702.jpg") center/cover;
-display:flex;
-align-items:center;
-justify-content:center
-}
-
-.search-container{background:#111;padding:5px;border-radius:30px}
-
-input{background:transparent;border:none;color:white;padding:10px;outline:none}
-
-button{background:#e50914;color:white;border:none;padding:10px 20px;border-radius:20px;cursor:pointer}
-
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:20px;padding:20px}
-
-.card{background:#1a1a22;border-radius:12px;overflow:hidden;cursor:pointer}
-
-.card img{width:100%;height:230px;object-fit:cover}
-
-.modal{
-display:none;
-position:fixed;
-inset:0;
-background:#0b0b0f;
-z-index:1000;
-overflow:auto
-}
-
-.back-btn{
-position:fixed;
-top:15px;
-left:15px;
-background:#e50914;
-padding:10px 20px;
-border-radius:25px
-}
-
-.ep-btn{margin:5px;padding:10px;background:#1a1a22;border:1px solid #333;color:white;border-radius:8px}
-
-#video-modal{
-display:none;
-position:fixed;
-inset:0;
-background:black;
-z-index:2000;
-align-items:center;
-justify-content:center;
-flex-direction:column
-}
-
-video{width:90%;max-width:900px}
-</style>
+    <style>
+        :root { --accent: #e50914; --bg: #0b0b0f; --card-bg: #1a1a22; }
+        body { margin: 0; background: var(--bg); color: #fff; font-family: 'Segoe UI', sans-serif; overflow-x: hidden; }
+        .top-nav { background: #000; padding: 15px; text-align: center; font-size: 24px; font-weight: bold; border-bottom: 1px solid #222; }
+        .hero { height: 250px; background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url("https://wallpaperaccess.com/full/7053702.jpg") center/cover; display: flex; align-items: center; justify-content: center; }
+        .search-container { background: rgba(255,255,255,0.1); padding: 5px; border-radius: 30px; border: 1px solid #333; display: flex; }
+        input { background: transparent; border: none; color: white; padding: 10px 15px; outline: none; width: 200px; }
+        button { background: var(--accent); color: white; border: none; padding: 10px 20px; border-radius: 20px; cursor: pointer; font-weight: bold; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 20px; padding: 20px; }
+        .card { background: var(--card-bg); border-radius: 12px; overflow: hidden; cursor: pointer; transition: 0.3s; }
+        .card:hover { transform: scale(1.05); box-shadow: 0 5px 15px rgba(229, 9, 20, 0.3); }
+        .card img { width: 100%; height: 230px; object-fit: cover; }
+        .modal { display: none; position: fixed; inset: 0; background: var(--bg); z-index: 1000; overflow: auto; padding-top: 80px; }
+        .back-btn { position: fixed; top: 15px; left: 15px; background: var(--accent); color: white; padding: 10px 20px; border-radius: 25px; cursor: pointer; border: none; font-weight: bold; z-index: 1100; }
+        .ep-grid { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; padding: 20px; }
+        .ep-btn { padding: 10px 20px; background: #1a1a22; border: 1px solid var(--accent); color: white; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.2s; }
+        .ep-btn:hover { background: var(--accent); transform: scale(1.1); }
+        #video-modal { display: none; position: fixed; inset: 0; background: black; z-index: 2000; align-items: center; justify-content: center; flex-direction: column; }
+        video { width: 95%; max-width: 900px; border: 1px solid #333; }
+        .close-v { position: absolute; top: 20px; right: 20px; font-size: 40px; color: white; cursor: pointer; }
+    </style>
 </head>
-
 <body>
 
-<div class="top-nav">ANIME KINGDOM</div>
+    <div class="top-nav">ANIME <span style="color:var(--accent)">KINGDOM</span></div>
 
-<div class="hero">
-<div class="search-container">
-<input id="searchInput" placeholder="Search anime...">
-<button onclick="searchAnime()">SEARCH</button>
-</div>
-</div>
+    <div class="hero">
+        <div class="search-container">
+            <input id="searchInput" placeholder="Search anime...">
+            <button onclick="searchAnime()">SEARCH</button>
+        </div>
+    </div>
 
-<div id="grid" class="grid"></div>
+    <div id="grid" class="grid"></div>
 
-<div id="modal" class="modal">
-<button class="back-btn" onclick="closeModal()">BACK</button>
-<h2 id="title" style="text-align:center;margin-top:80px"></h2>
-<div id="episodes" style="text-align:center"></div>
-</div>
+    <!-- Details Modal -->
+    <div id="modal" class="modal">
+        <button class="back-btn" onclick="closeModal()"><i class="fas fa-arrow-left"></i> BACK</button>
+        <h2 id="title" style="text-align:center; margin-bottom: 20px;"></h2>
+        <div id="episodes" class="ep-grid"></div>
+    </div>
 
-<div id="video-modal">
-<span onclick="closeVideo()" style="position:absolute;top:20px;right:20px;font-size:40px;cursor:pointer">&times;</span>
-<video id="player" controls></video>
-</div>
+    <!-- Video Modal -->
+    <div id="video-modal">
+        <span class="close-v" onclick="closeVideo()">&times;</span>
+        <video id="player" controls></video>
+        <h4 id="video-title" style="color:white; margin-top:15px;"></h4>
+    </div>
 
-<script>
+    <script>
+        // ස්ථාවර API මූලාශ්‍ර සහ Proxy භාවිතය
+        const PROXY = "https://corsproxy.io?";
+        const API_URL = "https://api.consumet.org/anime/gogoanime";
 
-const API="https://api.consumet.org/anime/gogoanime";
+        window.onload = loadPopular;
 
-window.onload=loadPopular;
+        async function loadPopular() {
+            try {
+                const res = await fetch("https://graphql.anilist.co", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        query: `query { Page(perPage: 12) { media(sort: TRENDING_DESC, type: ANIME) { title { english romaji } coverImage { large } } } }`
+                    })
+                });
+                const data = await res.json();
+                document.getElementById("grid").innerHTML = data.data.Page.media.map(a => `
+                    <div class="card" onclick="showDetails('${a.title.english || a.title.romaji}')">
+                        <img src="${a.coverImage.large}">
+                    </div>
+                `).join("");
+            } catch (e) { console.error(e); }
+        }
 
-async function loadPopular(){
+        async function showDetails(name) {
+            const modal = document.getElementById("modal");
+            const epDiv = document.getElementById("episodes");
+            modal.style.display = "block";
+            document.getElementById("title").innerText = name;
+            epDiv.innerHTML = "<p>Episodes පූරණය වෙමින්...</p>";
 
-const res=await fetch("https://graphql.anilist.co",{
-method:"POST",
-headers:{"Content-Type":"application/json"},
-body:JSON.stringify({
-query:`query{
-Page(perPage:12){
-media(sort:TRENDING_DESC,type:ANIME){
-title{english romaji}
-coverImage{large}
-}
-}}`
-})
-});
+            try {
+                // සර්ච් කරලා ID එක ලබා ගැනීම (Proxy හරහා)
+                const searchRes = await fetch(`${PROXY}${encodeURIComponent(API_URL + "/" + name)}`);
+                const sData = await searchRes.json();
+                const anime = sData.results[0];
 
-const data=await res.json();
+                if (!anime) {
+                    epDiv.innerHTML = "Episodes සොයාගත නොහැකි විය ❌";
+                    return;
+                }
 
-document.getElementById("grid").innerHTML=
-data.data.Page.media.map(a=>`
-<div class="card"
-onclick="showDetails('${a.title.english||a.title.romaji}')">
-<img src="${a.coverImage.large}">
-</div>
-`).join("");
-}
+                // Episode ලැයිස්තුව ලබා ගැනීම
+                const infoRes = await fetch(`${PROXY}${encodeURIComponent(API_URL + "/info/" + anime.id)}`);
+                const iData = await infoRes.json();
 
-// DETAILS
-async function showDetails(name){
+                epDiv.innerHTML = iData.episodes.map(ep => `
+                    <button class="ep-btn" onclick="playVideo('${ep.id}', '${name} - EP ${ep.number}')">
+                        EP ${ep.number}
+                    </button>
+                `).join("");
+            } catch (e) {
+                epDiv.innerHTML = "සර්වර් දෝෂයකි. නැවත උත්සාහ කරන්න ❌";
+            }
+        }
 
-document.getElementById("modal").style.display="block";
-document.getElementById("title").innerText=name;
+        async function playVideo(id, fullTitle) {
+            try {
+                const res = await fetch(`${PROXY}${encodeURIComponent(API_URL + "/watch/" + id)}`);
+                const data = await res.json();
+                const link = data.sources.find(s => s.quality === 'default' || s.quality === '720p')?.url || data.sources[0].url;
 
-const epDiv=document.getElementById("episodes");
-epDiv.innerHTML="Loading episodes...";
+                document.getElementById("video-modal").style.display = "flex";
+                document.getElementById("video-title").innerText = fullTitle;
+                const player = document.getElementById("player");
 
-try{
+                if (Hls.isSupported()) {
+                    const hls = new Hls();
+                    hls.loadSource(link);
+                    hls.attachMedia(player);
+                    hls.on(Hls.Events.MANIFEST_PARSED, () => player.play());
+                } else {
+                    player.src = link;
+                    player.play();
+                }
+            } catch (e) { alert("වීඩියෝව පූරණය කළ නොහැක!"); }
+        }
 
-const s=await fetch(`${API}/${encodeURIComponent(name)}`);
-const sData=await s.json();
+        async function searchAnime() {
+            const q = document.getElementById("searchInput").value;
+            if(!q) return;
+            const grid = document.getElementById("grid");
+            grid.innerHTML = "<p>සොයමින් පවතී...</p>";
 
-const anime=sData.results[0];
+            try {
+                const res = await fetch(`${PROXY}${encodeURIComponent(API_URL + "/" + q)}`);
+                const data = await res.json();
+                grid.innerHTML = data.results.map(a => `
+                    <div class="card" onclick="showDetails('${a.title}')">
+                        <img src="${a.image}">
+                    </div>
+                `).join("");
+            } catch (e) { alert("සෙවීමේදී දෝෂයක් ඇති විය."); }
+        }
 
-const i=await fetch(`${API}/info/${anime.id}`);
-const iData=await i.json();
-
-epDiv.innerHTML=iData.episodes.map(ep=>`
-<button class="ep-btn"
-onclick="playVideo('${ep.id}')">
-EP ${ep.number}
-</button>
-`).join("");
-
-}catch{
-epDiv.innerHTML="Episodes load failed ❌";
-}
-}
-
-// VIDEO
-async function playVideo(id){
-
-try{
-
-const res=await fetch(`${API}/watch/${id}`);
-const data=await res.json();
-
-const link=data.sources[0].url;
-
-document.getElementById("video-modal").style.display="flex";
-
-const player=document.getElementById("player");
-
-if(Hls.isSupported()){
-const hls=new Hls();
-hls.loadSource(link);
-hls.attachMedia(player);
-hls.on(Hls.Events.MANIFEST_PARSED,()=>player.play());
-}else{
-player.src=link;
-player.play();
-}
-
-}catch{
-alert("Video error");
-}
-}
-
-// SEARCH
-async function searchAnime(){
-
-const q=document.getElementById("searchInput").value;
-if(!q)return;
-
-const res=await fetch(`${API}/${encodeURIComponent(q)}`);
-const data=await res.json();
-
-document.getElementById("grid").innerHTML=
-data.results.map(a=>`
-<div class="card"
-onclick="showDetails('${a.title}')">
-<img src="${a.image}">
-</div>
-`).join("");
-}
-
-function closeModal(){
-document.getElementById("modal").style.display="none";
-}
-
-function closeVideo(){
-document.getElementById("video-modal").style.display="none";
-const p=document.getElementById("player");
-p.pause();
-p.src="";
-}
-
-</script>
-
+        function closeModal() { document.getElementById("modal").style.display = "none"; }
+        function closeVideo() {
+            document.getElementById("video-modal").style.display = "none";
+            const p = document.getElementById("player");
+            p.pause(); p.src = "";
+        }
+    </script>
 </body>
 </html>
