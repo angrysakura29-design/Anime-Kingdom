@@ -7,79 +7,105 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com">
     
     <style>
-        /* --- උඹ දීපු CSS එක (Match කළා) --- */
+        /* --- උඹේ Premium CSS එක --- */
         :root { --accent: #e50914; --bg-dark: #0b0b0f; --card-bg: #1a1a22; --text-white: #ffffff; }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: 'Segoe UI', sans-serif; background-color: var(--bg-dark); color: var(--text-white); overflow-x: hidden; padding-bottom: 80px; }
+        
         .top-nav { display: flex; justify-content: center; padding: 15px 0; background: rgba(0,0,0,0.9); position: sticky; top: 0; z-index: 1000; backdrop-filter: blur(10px); }
         .logo { font-size: 26px; font-weight: 900; letter-spacing: 3px; text-transform: uppercase; }
-        .brand-text { color: var(--accent); }
-        .hero-banner { position: relative; width: 100%; min-height: 350px; background: #000; display: flex; align-items: center; justify-content: center; overflow: hidden; }
-        .banner-img { position: absolute; width: 100%; height: 100%; object-fit: cover; opacity: 0.5; filter: brightness(0.6); }
+
+        /* Banner Section */
+        .hero-banner { position: relative; width: 100%; min-height: 400px; background: #000; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .banner-img { position: absolute; width: 100%; height: 100%; object-fit: cover; opacity: 0.6; filter: brightness(0.7); }
         .hero-info { position: relative; z-index: 10; text-align: center; width: 90%; max-width: 800px; }
-        .search-container { display: flex; justify-content: center; margin: 25px auto; max-width: 500px; width: 100%; }
-        #searchInput { flex: 1; height: 50px; background: rgba(0, 0, 0, 0.7); border: 2px solid var(--accent); border-right: none; padding: 0 20px; color: white; border-radius: 5px 0 0 5px; outline: none; font-size: 16px; }
-        .search-container button { height: 50px; padding: 0 25px; background: var(--accent); color: white; border: 2px solid var(--accent); cursor: pointer; border-radius: 0 5px 5px 0; font-weight: bold; }
-        .row-section { padding: 20px 0 0 15px; }
-        .row-header h2 { font-size: 20px; border-left: 4px solid var(--accent); padding-left: 12px; margin-bottom: 15px; }
-        .anime-row { display: flex; overflow-x: auto; gap: 15px; padding: 10px 5px; scrollbar-width: none; }
+        .hero-info h1 { font-size: clamp(28px, 6vw, 48px); font-weight: 800; text-transform: uppercase; margin-bottom: 15px; text-shadow: 2px 2px 20px rgba(0,0,0,1); }
+
+        /* Search Bar */
+        .search-container { display: flex; justify-content: center; margin: 25px auto; max-width: 550px; width: 95%; }
+        #searchInput { flex: 1; height: 55px; background: rgba(0, 0, 0, 0.8); border: 2px solid var(--accent); border-right: none; padding: 0 20px; color: white; border-radius: 30px 0 0 300px; outline: none; font-size: 16px; }
+        .search-btn { height: 55px; padding: 0 35px; background: var(--accent); color: white; border: 2px solid var(--accent); cursor: pointer; border-radius: 0 30px 30px 0; font-weight: bold; font-size: 16px; transition: 0.3s; }
+        .search-btn:hover { background: #ff0000; }
+
+        /* Rows */
+        .row-section { padding: 25px 0 0 20px; }
+        .row-header h2 { font-size: 22px; border-left: 5px solid var(--accent); padding-left: 15px; margin-bottom: 20px; }
+        .anime-row { display: flex; overflow-x: auto; gap: 20px; padding: 10px 5px; scrollbar-width: none; }
         .anime-row::-webkit-scrollbar { display: none; }
-        .card { position: relative; min-width: 160px; max-width: 160px; background: var(--card-bg); border-radius: 10px; overflow: hidden; transition: 0.4s; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
-        .card:hover { transform: scale(1.08); z-index: 10; }
-        .card img { width: 100%; height: 230px; object-fit: cover; }
-        .card-title { font-size: 13px; padding: 10px 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-align: center; }
-        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 2000; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
-        .modal-content { background: var(--card-bg); width: 95%; max-width: 500px; padding: 30px; border-radius: 15px; position: relative; text-align: center; border: 1px solid #333; }
-        .ep-grid { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-top: 20px; max-height: 200px; overflow-y: auto; }
-        .ep-btn { background: #222; color: white; border: 1px solid #444; padding: 8px 15px; border-radius: 5px; cursor: pointer; font-weight: bold; margin: 2px; }
-        .ep-btn:hover { background: var(--accent); border-color: white; }
+
+        /* Cards */
+        .card { position: relative; min-width: 170px; max-width: 170px; background: var(--card-bg); border-radius: 12px; overflow: hidden; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); cursor: pointer; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
+        .card:hover { transform: scale(1.1); z-index: 10; box-shadow: 0 0 25px rgba(229, 9, 20, 0.5); }
+        .card img { width: 100%; height: 240px; object-fit: cover; }
+        .card-title { font-size: 14px; padding: 12px 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-align: center; font-weight: 600; }
+        .tag-hd { position: absolute; top: 10px; right: 10px; background: var(--accent); color: white; font-size: 11px; padding: 3px 8px; border-radius: 5px; font-weight: bold; }
+
+        /* Modal & Player */
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.96); z-index: 2000; flex-direction: column; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(10px); }
+        .modal-content { background: var(--card-bg); width: 95%; max-width: 550px; padding: 35px; border-radius: 20px; text-align: center; position: relative; border: 1px solid #333; }
+        .ep-grid { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin-top: 25px; max-height: 250px; overflow-y: auto; padding: 10px; }
+        .ep-btn { background: #222; color: white; border: 1px solid #444; padding: 10px 18px; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.2s; }
+        .ep-btn:hover { background: var(--accent); border-color: white; transform: scale(1.1); }
+
         #video-modal { display: none; position: fixed; inset: 0; background: #000; z-index: 3000; flex-direction: column; align-items: center; justify-content: center; }
-        .player-box { width: 95%; max-width: 1000px; aspect-ratio: 16/9; position: relative; border: 2px solid #333; }
+        .player-box { width: 98%; max-width: 1100px; aspect-ratio: 16/9; position: relative; border: 2px solid #333; border-radius: 15px; overflow: hidden; }
         iframe { width: 100%; height: 100%; border: none; }
-        .close-modal-x, .close-player-btn { background: none; border: none; color: white; font-size: 30px; cursor: pointer; }
-        .close-player-btn { position: absolute; top: -50px; right: 0; }
-        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: #000; display: flex; padding: 12px 0; border-top: 1px solid #222; z-index: 9999; }
-        .nav-item { flex: 1; color: #888; font-size: 12px; display: flex; flex-direction: column; align-items: center; cursor: pointer; }
-        .nav-item i { font-size: 20px; margin-bottom: 4px; }
+        .close-x { position: absolute; top: -55px; right: 0; color: white; font-size: 40px; cursor: pointer; background: none; border: none; }
+
+        /* Bottom Nav */
+        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: #000; display: flex; padding: 15px 0; border-top: 1px solid #222; z-index: 9999; }
+        .nav-item { flex: 1; color: #888; font-size: 13px; display: flex; flex-direction: column; align-items: center; cursor: pointer; }
+        .nav-item i { font-size: 22px; margin-bottom: 5px; }
         .nav-item.active { color: var(--accent); }
-        .loader { display: none; text-align: center; padding: 20px; color: var(--accent); font-weight: bold; }
     </style>
 </head>
 <body>
 
-    <nav class="top-nav"><div class="logo">ANIME<span class="brand-text">KINGDOM</span></div></nav>
+    <nav class="top-nav">
+        <div class="logo">ANIME<span style="color:var(--accent)">KINGDOM</span></div>
+    </nav>
 
     <div class="hero-banner">
-        <img src="https://images.alphacoders.com" class="banner-img">
+        <!-- උඹ ඉල්ලපු Banner Image එක -->
+        <img src="IMG_20260322_225449_963.jpg" class="banner-img" onerror="this.src='https://images.alphacoders.com'">
         <div class="hero-info">
-            <h1>UNLIMITED <span class="brand-text">ANIME</span> STREAMING</h1>
+            <h1>UNLIMITED <span style="color:var(--accent)">ANIME</span> STREAMING</h1>
             <div class="search-container">
-                <input type="text" id="searchInput" placeholder="Search anime name..." onkeypress="if(event.key === 'Enter') searchAnime()">
-                <button onclick="searchAnime()">සොයන්න</button>
+                <input type="text" id="searchInput" placeholder="Search anime name..." onkeyup="searchAnime()">
+                <button class="search-btn" onclick="searchAnime()">සොයන්න</button>
             </div>
         </div>
     </div>
 
+    <!-- Trending Row -->
     <div class="row-section">
-        <div class="row-header"><h2 id="rowTitle">Trending Now</h2></div>
-        <div id="mainLoader" class="loader">පූරණය වෙමින්...</div>
-        <div class="anime-row" id="animeGrid"></div>
+        <div class="row-header"><h2>Trending Now</h2></div>
+        <div class="anime-row" id="trendingGrid"></div>
     </div>
 
+    <!-- Popular Movies Row -->
+    <div class="row-section">
+        <div class="row-header"><h2>Popular Movies</h2></div>
+        <div class="anime-row" id="movieGrid"></div>
+    </div>
+
+    <!-- Episode Modal -->
     <div id="anime-modal" class="modal">
         <div class="modal-content">
-            <button class="close-modal-x" onclick="closeModal()">&times;</button>
-            <h2 id="modalTitle"></h2>
+            <button onclick="closeModal()" style="position:absolute; top:15px; right:20px; background:none; border:none; color:white; font-size:30px; cursor:pointer;">&times;</button>
+            <h2 id="modalTitle" style="margin-bottom:10px;"></h2>
+            <p style="color:var(--accent); font-size:14px; font-weight:bold;">Select Episode to Watch</p>
             <div id="episode-list" class="ep-grid"></div>
         </div>
     </div>
 
+    <!-- Video Player Modal -->
     <div id="video-modal">
         <div class="player-box">
-            <button class="close-player-btn" onclick="closeVideo()">&times;</button>
+            <button class="close-x" onclick="closeVideo()">&times;</button>
             <iframe id="videoFrame" src="" allowfullscreen allow="autoplay; encrypted-media"></iframe>
         </div>
-        <h3 id="playingTitle" style="margin-top:20px; color:white; text-align:center;"></h3>
+        <h3 id="playingTitle" style="margin-top:25px; color:white;"></h3>
     </div>
 
     <div class="bottom-nav">
@@ -89,83 +115,76 @@
     </div>
 
     <script>
-        const PROXY = "https://api.allorigins.win";
-        const JIKAN_API = "https://api.jikan.moe";
+        /* --- ඇනිමේ දත්ත (මෙතනට උඹට කැමති ඕනම ඇනිමේ එකක් ලේසියෙන්ම එකතු කරන්න පුළුවන්) --- */
+        const animeData = [
+            { title: "Solo Leveling", img: "https://artworks.thetvdb.com", episodes: 12 },
+            { title: "One Piece", img: "https://www.crunchyroll.com", episodes: 1100 },
+            { title: "Jujutsu Kaisen", img: "https://m.media-amazon.com", episodes: 24 },
+            { title: "Naruto Shippuden", img: "https://m.media-amazon.com", episodes: 500 },
+            { title: "Demon Slayer", img: "https://m.media-amazon.com", episodes: 26 },
+            { title: "Attack on Titan", img: "https://m.media-amazon.com", episodes: 87 },
+            { title: "Bleach TYBW", img: "https://m.media-amazon.com", episodes: 26 },
+            { title: "Dragon Ball Super", img: "https://m.media-amazon.com", episodes: 131 }
+        ];
 
-        window.onload = () => loadAnime(`${JIKAN_API}/top/anime?limit=15`);
+        const movieData = [
+            { title: "Demon Slayer: Mugen Train", img: "https://m.media-amazon.com", episodes: 1 },
+            { title: "One Piece Film: Red", img: "https://m.media-amazon.com", episodes: 1 },
+            { title: "Jujutsu Kaisen 0", img: "https://m.media-amazon.com", episodes: 1 }
+        ];
 
-        async function searchAnime() {
-            const query = document.getElementById('searchInput').value;
-            if(!query) return;
-            document.getElementById('rowTitle').innerText = `'${query}' සඳහා ප්‍රතිඵල`;
-            loadAnime(`${JIKAN_API}/anime?q=${encodeURIComponent(query)}&limit=15`);
+        window.onload = () => {
+            renderList(animeData, 'trendingGrid');
+            renderList(movieData, 'movieGrid');
+        };
+
+        function renderList(list, gridId) {
+            const grid = document.getElementById(gridId);
+            grid.innerHTML = list.map(anime => `
+                <div class="card" onclick="openEpisodes('${anime.title}', ${anime.episodes})">
+                    <div class="tag-hd">HD</div>
+                    <img src="${anime.img}" loading="lazy">
+                    <div class="card-title">${anime.title}</div>
+                </div>
+            `).join('');
         }
 
-        async function loadAnime(url) {
-            const loader = document.getElementById('mainLoader');
-            const grid = document.getElementById('animeGrid');
-            grid.innerHTML = "";
-            loader.style.display = "block";
-
-            try {
-                // Proxy එකක් අවශ්‍ය නැහැ Jikan වලට
-                const res = await fetch(url);
-                const data = await res.json();
-                if(data.data) renderCards(data.data);
-            } catch (e) { 
-                console.error(e);
-                grid.innerHTML = "<p>දත්ත පූරණය කිරීමේ දෝෂයක්!</p>";
-            } finally {
-                loader.style.display = "none";
-            }
-        }
-
-        function renderCards(list) {
-            const grid = document.getElementById('animeGrid');
-            grid.innerHTML = list.map(anime => {
-                const title = anime.title_english || anime.title;
-                const safeTitle = title.replace(/'/g, "");
-                return `
-                <div class="card" onclick="openDetails('${safeTitle}')">
-                    <img src="${anime.images.jpg.large_image_url}" loading="lazy">
-                    <div class="card-title">${title}</div>
-                </div>`;
-            }).join('');
-        }
-
-        async function openDetails(title) {
+        function openEpisodes(title, epCount) {
             const modal = document.getElementById('anime-modal');
             const epList = document.getElementById('episode-list');
             document.getElementById('modalTitle').innerText = title;
-            modal.style.display = "flex";
-            epList.innerHTML = "<p>Episodes පූරණය වෙමින්...</p>";
-
-            try {
-                // Anify වෙනුවට කෙලින්ම Embed Player එකට Episodes ලබා ගැනීමට Vidsrc API භාවිතා කරයි
-                // නමුත් පහසුම ක්‍රමය වන්නේ Embed එකේම ඇති Episode list එක භාවිතා කිරීමයි
-                // එනිසා මෙහිදී Episode 1 පෙන්වා ඉතිරිය Player එකෙන් පාලනය කිරීමට ඉඩ දෙයි
-                epList.innerHTML = `
-                    <button class="ep-btn" onclick="playVideo('${title}', 1)">Watch Episode 1</button>
-                    <p style="width:100%; font-size:12px; margin-top:10px; color:#888;">වෙනත් Episodes ප්ලේයර් එක ඇතුළෙන් තෝරන්න.</p>
-                `;
-            } catch (e) {
-                epList.innerHTML = "<p>දෝෂයකි!</p>";
+            
+            let btns = "";
+            for(let i=1; i<=epCount; i++) {
+                btns += `<button class="ep-btn" onclick="startPlay('${title}', ${i})">EP ${i}</button>`;
             }
+            epList.innerHTML = btns;
+            modal.style.display = "flex";
         }
 
-        function playVideo(title, epNum) {
-            const modal = document.getElementById('video-modal');
-            const frame = document.getElementById('videoFrame');
-            // වඩාත් ස්ථාවර Vidsrc Embed URL එක (Proxy අවශ්‍ය නැත)
-            frame.src = `https://vidsrc.to{encodeURIComponent(title)}/${epNum}`;
-            document.getElementById('playingTitle').innerText = `${title} - Episode ${epNum}`;
-            modal.style.display = "flex";
+        function startPlay(title, epNum) {
+            const playerModal = document.getElementById('video-modal');
+            const iframe = document.getElementById('videoFrame');
+            // Embed Player එක භාවිතා කරයි (100% වැඩ කරන ක්‍රමය)
+            iframe.src = `https://vidsrc.to{encodeURIComponent(title)}/${epNum}`;
+            document.getElementById('playingTitle').innerText = `නරඹමින්: ${title} - Episode ${epNum}`;
+            playerModal.style.display = "flex";
+        }
+
+        function searchAnime() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const filtered = animeData.filter(a => a.title.toLowerCase().includes(query));
+            const filteredMovies = movieData.filter(a => a.title.toLowerCase().includes(query));
+            
+            renderList(filtered, 'trendingGrid');
+            renderList(filteredMovies, 'movieGrid');
+            document.getElementById('statusTitle').innerText = query ? "Search Results" : "Trending Now";
         }
 
         function closeModal() { document.getElementById('anime-modal').style.display = "none"; }
-        function closeVideo() {
+        function closeVideo() { 
             document.getElementById('videoFrame').src = "";
-            document.getElementById('video-modal').style.display = "none";
+            document.getElementById('video-modal').style.display = "none"; 
         }
     </script>
 </body>
