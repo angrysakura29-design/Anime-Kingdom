@@ -295,3 +295,16 @@ body {
     padding: 10px;
     gap: 15px;
 }
+.nav-item {
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent; /* Mobile වල click කරන විට එන නිල් පාට ඉවත් කරයි */
+    user-select: none; /* අකුරු select වීම වළක්වයි, එවිට Google search එක එන්නේ නැත */
+    touch-action: manipulation; /* Mobile touch වඩාත් හොඳින් වැඩ කිරීමට */
+}
+
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    z-index: 9999; /* සැමවිටම උඩින්ම පෙනීමට */
+    background: #000; /* පසුබිම කළු කිරීමට */
+}
