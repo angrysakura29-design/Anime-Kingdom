@@ -2,26 +2,27 @@
 
 function startPlay(title) {
     const modal = document.getElementById('video-modal');
-    const iframe = document.getElementById('videoFrame');
+    const wrapper = document.getElementById('iframeWrapper');
     
-    // 1. කලින් තිබුණු ඕනෑම src එකක් ඉවත් කරන්න
-    iframe.src = "";
+    // වැරදීමක් වෙන්න බැරි විදියට ලින්ක් එක මෙහෙම හදමු
+    // vidsrc.me එක GitHub Pages වලට වඩාත් ස්ථාවරයි
+    const baseUrl = "https://vidsrc.me";
+    const finalUrl = baseUrl + encodeURIComponent(title);
     
-    // 2. ප්ලේයර් එකේ ආරක්ෂක සීමාවන් (CORS) මඟහැරීමට referrerpolicy එකතු කිරීම
-    // මෙය අනිවාර්යයි, නැතිනම් GitHub එකෙන් block කරයි!
-    iframe.setAttribute('referrerpolicy', 'no-referrer');
+    wrapper.innerHTML = `
+        <iframe 
+            src="${finalUrl}" 
+            referrerpolicy="no-referrer" 
+            allowfullscreen 
+            allow="autoplay; encrypted-media">
+        </iframe>
+    `;
     
-    // 3. GitHub Pages වල වඩාත් ස්ථාවර vidsrc.xyz Domain එක භාවිතා කිරීම
-    const embedUrl = `https://vidsrc.xyz{encodeURIComponent(title)}`;
-    
-    // 4. වීඩියෝව පූරණය කිරීම
-    iframe.src = embedUrl;
-    
-    // 5. මාතෘකාව පෙන්වීම සහ Modal එක විවෘත කිරීම
     document.getElementById('playingTitle').innerText = "Watching: " + title;
     modal.style.display = "flex";
-    document.body.style.overflow = "hidden"; // පිටුව scroll වීම නවත්වයි
+    document.body.style.overflow = "hidden";
 }
+
 
 // ප්ලේයර් එක වැසීම (Close Video)
 function closeVideo() {
