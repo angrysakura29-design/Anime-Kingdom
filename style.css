@@ -102,57 +102,63 @@ body { background: var(--bg); color: white; font-family: sans-serif; margin: 0; 
 .nav-item.active { color: var(--accent); }
 .nav-item i { display: block; font-size: 20px; margin-bottom: 2px; }
 
-/* Welcome Text සහ Brand Text සැකසුම් */
-.hero-info h1 {
-    font-size: 28px;
-    font-weight: 800;
-    color: white;
-    text-transform: uppercase;
-}
+/* --- Advanced Search Bar Section --- */
 
-.brand-text {
-    color: #e50914; /* Anime Kingdom යන වචනය රතු පැහැයෙන් */
-}
-
-.hero-info p {
-    font-size: 15px;
-    margin: 10px 0 25px;
-    color: #ccc;
-}
-
-/* Search Bar එකේ සැකසුම් */
 .search-container {
     display: flex;
-    justify-content: center;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.1); /* මඳක් විනිවිද පෙනෙන (Glass effect) */
+    backdrop-filter: blur(10px);        /* පසුබිම Blur කිරීමට */
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50px;
     width: 90%;
-    max-width: 500px;
-    margin: 0 auto;
-    background: #fff;
-    border-radius: 30px; /* දෙපැත්ත රවුම් කිරීමට */
-    overflow: hidden;
-    padding: 5px;
+    max-width: 550px;
+    margin: 20px auto;
+    padding: 8px 12px;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37); /* ලස්සන හෙවනැල්ලක් (Shadow) */
+    transition: all 0.3s ease;
+}
+
+/* Mouse එක ගෙන ගිය විට සිදුවන වෙනස */
+.search-container:hover {
+    background: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 10px 40px 0 rgba(229, 9, 20, 0.2); /* රතු පැහැති මෘදු ආලෝකයක් */
+    transform: translateY(-2px);
 }
 
 .hero-search {
+    flex: 1;
+    background: transparent; /* සුදු පැහැය වෙනුවට විනිවිද පෙනෙන ලෙස */
     border: none;
-    padding: 12px 20px;
-    width: 75%;
     outline: none;
-    font-size: 14px;
+    padding: 12px 20px;
+    font-size: 16px;
+    color: #fff; /* අකුරු සුදු පැහැයෙන් */
+}
+
+/* Placeholder අකුරු වල පැහැය */
+.hero-search::placeholder {
+    color: rgba(255, 255, 255, 0.6);
 }
 
 .search-btn {
     background: #e50914;
     color: white;
     border: none;
-    padding: 10px 20px;
-    border-radius: 25px;
+    padding: 12px 25px;
+    border-radius: 40px;
+    font-weight: 700;
     cursor: pointer;
-    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
     transition: 0.3s;
+    box-shadow: 0 4px 15px rgba(229, 9, 20, 0.3);
 }
 
 .search-btn:hover {
-    background: #b2070f;
+    background: #ff0000;
+    transform: scale(1.05); /* මඳක් විශාල වීමට */
+    box-shadow: 0 6px 20px rgba(229, 9, 20, 0.5);
 }
+
 
