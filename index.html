@@ -65,7 +65,7 @@
     <div id="anime-modal" class="modal"><div class="modal-content" id="modal-body"></div></div>
 
     <div id="video-modal" class="modal">
-        <span onclick="closeVideo()" style="position:absolute; right:20px; top:20px; font-size:40px; color:white; cursor:pointer;">&times;</span>
+        <span onclick="closeVideo()" style="position:absolute; right:20px; top:20px; font-size:40px; color:white; cursor:pointer; z-index:1001;">&times;</span>
         <video id="main-player" controls></video>
         <h3 id="video-title" style="margin-top:15px; color:white; text-align:center;"></h3>
     </div>
@@ -77,7 +77,8 @@
     </div>
 
     <script>
-        const ANIFY_API = "https://api.anify.tv";
+        // වඩාත් ස්ථාවර API සේවාදායකය
+        const API_SERVER = "https://consumet-api-production-e852.up.railway.app";
 
         window.onload = () => {
             loadHome();
@@ -105,13 +106,13 @@
         function renderCards(list, id) {
             const container = document.getElementById(id);
             container.innerHTML = list.map(anime => `
-                <div class="card" onclick="showDetails('${anime.id}', '${anime.title.english || anime.title.romaji}')">
+                <div class="card" onclick="showDetails('${anime.title.english || anime.title.romaji}')">
                     <img src="${anime.coverImage.large}">
                     <div class="card-title">${anime.title.english || anime.title.romaji}</div>
                 </div>`).join('');
         }
 
-        async function showDetails(anilistId, title) {
+        async function showDetails(title) {
             const modal = document.getElementById('anime-modal');
             const modalBody = document.getElementById('modal-body');
             modal.style.display = "flex";
@@ -121,55 +122,66 @@
                 <div id="episode-list" class="ep-grid"><p>Episodes පූරණය වෙමින්...</p></div>`;
             
             try {
-                // Anify හරහා තොරතුරු ලබා ගැනීම
-                const res = await fetch(`${ANIFY_API}/info/${anilistId}`);
-                const data = await res.json();
+                // පියවර 1: ඇනිමේ එක මුලින්ම සර්ච් කරන්න
+                const searchRes = await fetch(`${API_SERVER}/${encodeURIComponent(title)}`);
+                const searchData = await searchRes.json();
                 
-                // ඇනිමේ එකේ episodes තිබේදැයි පරීක්ෂා කිරීම
-                const episodes = data.episodes?.data || [];
-                
+                // ඇනිමේ එකේ ID එක ලබා ගැනීම
+                const animeId = searchData.results && searchData.results.length > 0 ? searchData.results[0].id : null;
+
+                if (!animeId) {
+                    document.getElementById('episode-list').innerHTML = "<p style='color:red;'>Episodes සොයාගත නොහැකි විය!</p>";
+                    return;
+                }
+
+                // පියවර 2: ID එකෙන් Episodes විස්තර ලබා ගැනීම
+                const infoRes = await fetch(`${API_SERVER}/info/${animeId}`);
+                const infoData = await infoRes.json();
+                const episodes = infoData.episodes || [];
+
                 if (episodes.length === 0) {
-                    document.getElementById('episode-list').innerHTML = "<p style='color:red;'>Episodes කිසිවක් සොයාගත නොහැකි විය!</p>";
+                    document.getElementById('episode-list').innerHTML = "<p style='color:red;'>Episodes නොමැත.</p>";
                     return;
                 }
 
                 document.getElementById('episode-list').innerHTML = episodes.map(ep => 
-                    `<button class="ep-btn" onclick="startStream('${anilistId}', ${ep.number}, '${title}')">EP ${ep.number}</button>`
+                    `<button class="ep-btn" onclick="startStream('${ep.id}', '${title} - EP ${ep.number}')">EP ${ep.number}</button>`
                 ).join('');
+
             } catch (e) {
-                document.getElementById('episode-list').innerHTML = "<p style='color:red;'>දත්ත ලබා ගැනීමේදී ගැටලුවක් මතු විය.</p>";
+                console.error(e);
+                document.getElementById('episode-list').innerHTML = "<p style='color:red;'>දත්ත ලබා ගැනීමේදී සර්වර් දෝෂයක් මතු විය.</p>";
             }
         }
 
-        async function startStream(id, epNumber, title) {
+        async function startStream(epId, fullTitle) {
             try {
-                // Streaming sources ලබා ගැනීම
-                const res = await fetch(`${ANIFY_API}/sources?id=${id}&episodeNumber=${epNumber}&subType=sub&type=ANIME`);
+                const res = await fetch(`${API_SERVER}/watch/${epId}`);
                 const data = await res.json();
                 
-                // හොඳම වීඩියෝ ලින්ක් එක තෝරා ගැනීම
-                const videoUrl = data.sources?.[0]?.url || data.sources?.url;
+                // වීඩියෝ ලින්ක් එක ලබා ගැනීම (m3u8 source)
+                const source = data.sources.find(s => s.quality === '720p' || s.quality === 'default') || data.sources[0];
 
-                if (!videoUrl) {
-                    alert("වීඩියෝව සොයාගත නොහැකි විය!");
+                if (!source || !source.url) {
+                    alert("වීඩියෝව පූරණය කළ නොහැක!");
                     return;
                 }
 
                 const vModal = document.getElementById('video-modal');
                 const player = document.getElementById('main-player');
                 vModal.style.display = "flex";
-                document.getElementById('video-title').innerText = `${title} - EP ${epNumber}`;
+                document.getElementById('video-title').innerText = fullTitle;
 
                 if (Hls.isSupported()) {
                     const hls = new Hls();
-                    hls.loadSource(videoUrl);
+                    hls.loadSource(source.url);
                     hls.attachMedia(player);
                     hls.on(Hls.Events.MANIFEST_PARSED, () => player.play());
-                } else {
-                    player.src = videoUrl;
+                } else if (player.canPlayType('application/vnd.apple.mpegurl')) {
+                    player.src = source.url;
                     player.play();
                 }
-            } catch (e) { alert("වීඩියෝව පූරණය කළ නොහැක!"); }
+            } catch (e) { alert("වීඩියෝ දෝෂයකි!"); }
         }
 
         function closeModal() { document.getElementById('anime-modal').style.display = "none"; }
