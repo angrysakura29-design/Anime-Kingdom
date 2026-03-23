@@ -11,33 +11,49 @@
     <style>
         :root { --accent: #e50914; --bg: #0b0b0f; --card-bg: #1a1a22; }
         body { margin: 0; background: var(--bg); color: #fff; font-family: 'Segoe UI', sans-serif; overflow-x: hidden; }
-        .top-nav { background: #000; padding: 15px; text-align: center; font-size: 24px; font-weight: bold; border-bottom: 1px solid #222; }
+        
+        /* Logo වර්ණ වෙනස් කිරීම */
+        .top-nav { background: #000; padding: 15px; text-align: center; font-size: 26px; font-weight: bold; border-bottom: 1px solid #222; letter-spacing: 2px; }
+        .logo-anime { color: #fff; }
+        .logo-kingdom { color: var(--accent); }
+
         .hero { height: 250px; background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url("https://wallpaperaccess.com/full/7053702.jpg") center/cover; display: flex; align-items: center; justify-content: center; }
-        .search-container { background: rgba(255,255,255,0.1); padding: 5px; border-radius: 30px; border: 1px solid #333; display: flex; }
-        input { background: transparent; border: none; color: white; padding: 10px 15px; outline: none; width: 200px; }
-        button { background: var(--accent); color: white; border: none; padding: 10px 20px; border-radius: 20px; cursor: pointer; font-weight: bold; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 20px; padding: 20px; }
-        .card { background: var(--card-bg); border-radius: 12px; overflow: hidden; cursor: pointer; transition: 0.3s; }
-        .card:hover { transform: scale(1.05); box-shadow: 0 5px 15px rgba(229, 9, 20, 0.3); }
+        .search-container { background: rgba(255,255,255,0.1); padding: 5px; border-radius: 30px; border: 1px solid #333; display: flex; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+        input { background: transparent; border: none; color: white; padding: 10px 20px; outline: none; width: 250px; font-size: 16px; }
+        .search-btn { background: var(--accent); color: white; border: none; padding: 10px 25px; border-radius: 25px; cursor: pointer; font-weight: bold; transition: 0.3s; }
+        .search-btn:hover { background: #fff; color: var(--accent); }
+
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 20px; padding: 30px 20px; }
+        
+        /* ඇනිමේ නම පෙන්වන කාඩ්පත */
+        .card { background: var(--card-bg); border-radius: 12px; overflow: hidden; cursor: pointer; transition: 0.3s; position: relative; border: 1px solid #222; }
+        .card:hover { transform: translateY(-10px); border-color: var(--accent); }
         .card img { width: 100%; height: 230px; object-fit: cover; }
+        .card-info { padding: 10px; text-align: center; }
+        .card-title { font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
         .modal { display: none; position: fixed; inset: 0; background: var(--bg); z-index: 1000; overflow: auto; padding-top: 80px; }
-        .back-btn { position: fixed; top: 15px; left: 15px; background: var(--accent); color: white; padding: 10px 20px; border-radius: 25px; cursor: pointer; border: none; font-weight: bold; z-index: 1100; }
+        .back-btn { position: fixed; top: 15px; left: 15px; background: var(--accent); color: white; padding: 10px 20px; border-radius: 25px; cursor: pointer; border: none; font-weight: bold; z-index: 1100; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
+        
         .ep-grid { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; padding: 20px; }
-        .ep-btn { padding: 10px 20px; background: #1a1a22; border: 1px solid var(--accent); color: white; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.2s; }
+        .ep-btn { padding: 12px 20px; background: #1a1a22; border: 1px solid var(--accent); color: white; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.2s; }
         .ep-btn:hover { background: var(--accent); transform: scale(1.1); }
+
         #video-modal { display: none; position: fixed; inset: 0; background: black; z-index: 2000; align-items: center; justify-content: center; flex-direction: column; }
-        video { width: 95%; max-width: 900px; border: 1px solid #333; }
-        .close-v { position: absolute; top: 20px; right: 20px; font-size: 40px; color: white; cursor: pointer; }
+        video { width: 95%; max-width: 900px; border: 2px solid var(--accent); border-radius: 10px; }
+        .close-v { position: absolute; top: 20px; right: 20px; font-size: 45px; color: white; cursor: pointer; }
     </style>
 </head>
 <body>
 
-    <div class="top-nav">ANIME <span style="color:var(--accent)">KINGDOM</span></div>
+    <div class="top-nav">
+        <span class="logo-anime">ANIME</span> <span class="logo-kingdom">KINGDOM</span>
+    </div>
 
     <div class="hero">
         <div class="search-container">
             <input id="searchInput" placeholder="Search anime...">
-            <button onclick="searchAnime()">SEARCH</button>
+            <button class="search-btn" onclick="searchAnime()">SEARCH</button>
         </div>
     </div>
 
@@ -46,7 +62,7 @@
     <!-- Details Modal -->
     <div id="modal" class="modal">
         <button class="back-btn" onclick="closeModal()"><i class="fas fa-arrow-left"></i> BACK</button>
-        <h2 id="title" style="text-align:center; margin-bottom: 20px;"></h2>
+        <h2 id="title" style="text-align:center; margin-bottom: 20px; padding: 0 20px;"></h2>
         <div id="episodes" class="ep-grid"></div>
     </div>
 
@@ -54,13 +70,13 @@
     <div id="video-modal">
         <span class="close-v" onclick="closeVideo()">&times;</span>
         <video id="player" controls></video>
-        <h4 id="video-title" style="color:white; margin-top:15px;"></h4>
+        <h4 id="video-title" style="color:white; margin-top:20px; text-align: center;"></h4>
     </div>
 
     <script>
-        // ස්ථාවර API මූලාශ්‍ර සහ Proxy භාවිතය
+        // API සහ Proxy (වැදගත්: corsproxy.io භාවිතය CORS Error මඟහරවයි)
         const PROXY = "https://corsproxy.io?";
-        const API_URL = "https://api.consumet.org/anime/gogoanime";
+        const API_URL = "https://api-consumet-org-five.vercel.app";
 
         window.onload = loadPopular;
 
@@ -74,12 +90,24 @@
                     })
                 });
                 const data = await res.json();
-                document.getElementById("grid").innerHTML = data.data.Page.media.map(a => `
-                    <div class="card" onclick="showDetails('${a.title.english || a.title.romaji}')">
-                        <img src="${a.coverImage.large}">
+                renderAnimeCards(data.data.Page.media);
+            } catch (e) { console.error("Home Load Error:", e); }
+        }
+
+        function renderAnimeCards(list, fromSearch = false) {
+            const grid = document.getElementById("grid");
+            grid.innerHTML = list.map(a => {
+                const title = fromSearch ? a.title : (a.title.english || a.title.romaji);
+                const image = fromSearch ? a.image : a.coverImage.large;
+                return `
+                    <div class="card" onclick="showDetails('${title.replace(/'/g, "\\'")}')">
+                        <img src="${image}" alt="${title}">
+                        <div class="card-info">
+                            <div class="card-title">${title}</div>
+                        </div>
                     </div>
-                `).join("");
-            } catch (e) { console.error(e); }
+                `;
+            }).join("");
         }
 
         async function showDetails(name) {
@@ -90,13 +118,13 @@
             epDiv.innerHTML = "<p>Episodes පූරණය වෙමින්...</p>";
 
             try {
-                // සර්ච් කරලා ID එක ලබා ගැනීම (Proxy හරහා)
+                // සර්ච් කරලා ID එක ලබා ගැනීම
                 const searchRes = await fetch(`${PROXY}${encodeURIComponent(API_URL + "/" + name)}`);
                 const sData = await searchRes.json();
                 const anime = sData.results[0];
 
                 if (!anime) {
-                    epDiv.innerHTML = "Episodes සොයාගත නොහැකි විය ❌";
+                    epDiv.innerHTML = "<p style='color:red;'>Episodes සොයාගත නොහැකි විය ❌</p>";
                     return;
                 }
 
@@ -105,12 +133,12 @@
                 const iData = await infoRes.json();
 
                 epDiv.innerHTML = iData.episodes.map(ep => `
-                    <button class="ep-btn" onclick="playVideo('${ep.id}', '${name} - EP ${ep.number}')">
+                    <button class="ep-btn" onclick="playVideo('${ep.id}', '${name} - Episode ${ep.number}')">
                         EP ${ep.number}
                     </button>
                 `).join("");
             } catch (e) {
-                epDiv.innerHTML = "සර්වර් දෝෂයකි. නැවත උත්සාහ කරන්න ❌";
+                epDiv.innerHTML = "<p style='color:red;'>සර්වර් දෝෂයකි. නැවත උත්සාහ කරන්න ❌</p>";
             }
         }
 
@@ -118,7 +146,7 @@
             try {
                 const res = await fetch(`${PROXY}${encodeURIComponent(API_URL + "/watch/" + id)}`);
                 const data = await res.json();
-                const link = data.sources.find(s => s.quality === 'default' || s.quality === '720p')?.url || data.sources[0].url;
+                const link = data.sources.find(s => s.quality === '720p' || s.quality === 'default')?.url || data.sources[0].url;
 
                 document.getElementById("video-modal").style.display = "flex";
                 document.getElementById("video-title").innerText = fullTitle;
@@ -140,17 +168,21 @@
             const q = document.getElementById("searchInput").value;
             if(!q) return;
             const grid = document.getElementById("grid");
-            grid.innerHTML = "<p>සොයමින් පවතී...</p>";
+            grid.innerHTML = "<p style='text-align:center; width:100%;'>Searching...</p>";
 
             try {
+                // Search එක නිවැරදි කර ඇත
                 const res = await fetch(`${PROXY}${encodeURIComponent(API_URL + "/" + q)}`);
                 const data = await res.json();
-                grid.innerHTML = data.results.map(a => `
-                    <div class="card" onclick="showDetails('${a.title}')">
-                        <img src="${a.image}">
-                    </div>
-                `).join("");
-            } catch (e) { alert("සෙවීමේදී දෝෂයක් ඇති විය."); }
+                
+                if (data.results && data.results.length > 0) {
+                    renderAnimeCards(data.results, true);
+                } else {
+                    grid.innerHTML = "<p style='text-align:center; width:100%;'>No Results Found.</p>";
+                }
+            } catch (e) { 
+                grid.innerHTML = "<p style='text-align:center; width:100%; color:red;'>Search error. Try again.</p>";
+            }
         }
 
         function closeModal() { document.getElementById("modal").style.display = "none"; }
