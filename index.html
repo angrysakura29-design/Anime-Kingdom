@@ -64,23 +64,22 @@
     </section>
 </div>
 
-  <!-- Bottom Navigation එක මේ විදිහට වෙනස් කරන්න -->
-<div class="bottom-nav">
-    <div class="nav-item active" onclick="goHome()">
+  <!-- Bottom Navigation එක සම්පූර්ණයෙන්ම මේ කේතයෙන් Replace කරන්න -->
+<div class="bottom-nav" style="cursor: pointer; user-select: none;">
+    <div class="nav-item active" onclick="goHome(); event.stopPropagation();">
         <i class="fas fa-home"></i><span>Home</span>
     </div>
-    <div class="nav-item" onclick="alert('Schedule එක ළඟදීම පැමිණේ!')">
+    <div class="nav-item" onclick="alert('Schedule එක ළඟදීම පැමිණේ!'); event.stopPropagation();">
         <i class="fas fa-calendar-alt"></i><span>Schedule</span>
     </div>
-    <div class="nav-item" onclick="showMyList()">
+    <div class="nav-item" onclick="showMyList(); event.stopPropagation();">
         <i class="fas fa-list"></i><span>My List</span>
     </div>
-    <div class="nav-item" onclick="showProfile()">
+    <div class="nav-item" onclick="showProfile(); event.stopPropagation();">
         <i class="fas fa-user"></i><span>Profile</span>
     </div>
 </div>
 
-
-    <script src="script.js"></script>
+   <script src="script.js"></script>
 </body>
 </html>
