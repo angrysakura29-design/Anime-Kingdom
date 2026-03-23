@@ -1,153 +1,65 @@
-/* --- මූලික සැකසුම් (General Styles) --- */
-:root {
-    --accent: #e50914; 
-    --bg-dark: #0b0b0f;
-    --card-bg: #1a1a22;
+/* --- කලින් තිබූ CSS වලට අමතරව මේවා එකතු කරන්න --- */
+
+/* Modal Backdrop (පසුබිම) */
+#anime-modal, #video-modal {
+    background: rgba(0, 0, 0, 0.95) !important;
+    backdrop-filter: blur(5px);
 }
 
-body {
-    margin: 0;
-    font-family: 'Segoe UI', Tahoma, sans-serif;
-    background-color: var(--bg-dark);
-    color: white;
-    overflow-x: hidden;
-    padding-bottom: 80px; 
+/* Modal Body සැකසුම */
+#modal-body {
+    border: 1px solid #333;
+    box-shadow: 0 0 30px rgba(229, 9, 20, 0.2);
+    animation: slideUp 0.3s ease-out;
 }
 
-/* --- Navigation & Logo --- */
-.top-nav {
+@keyframes slideUp {
+    from { transform: translateY(50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+/* Episode Buttons */
+#episode-list button {
+    transition: 0.2s;
+    font-weight: bold;
+    min-width: 60px;
+}
+
+#episode-list button:hover {
+    background: var(--accent) !important;
+    border-color: white !important;
+    transform: translateY(-2px);
+}
+
+/* Video Player එක Responsive කිරීමට */
+#main-player {
+    width: 95%;
+    max-width: 800px;
+    border: 2px solid var(--accent);
+    border-radius: 10px;
+    outline: none;
+}
+
+/* Row Headers (Latest, Trending title එක ලස්සන කිරීමට) */
+.row-header {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
-    padding: 15px 0;
-    background-color: #000;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
+    padding: 0 15px;
+    margin-top: 20px;
 }
 
-.logo { font-size: 24px; font-weight: bold; letter-spacing: 2px; }
-
-/* --- Banner Section --- */
-.hero-banner { width: 100%; text-align: center; background: #000; }
-.banner-img { width: 100%; max-height: 250px; object-fit: cover; display: block; }
-.hero-info { padding: 20px; }
-.hero-info h1 { font-size: 22px; font-weight: 800; text-transform: uppercase; margin-bottom: 5px; }
-.brand-text { color: var(--accent); }
-
-/* --- Search Bar --- */
-#searchInput {
-    background: #222;
-    border: 1px solid var(--accent);
-    padding: 10px;
-    color: white;
-    border-radius: 5px;
-    width: 200px;
+.row-header h2 {
+    font-size: 18px;
+    border-left: 4px solid var(--accent);
+    padding-left: 10px;
 }
 
-/* --- ඇනිමේ පේළිය (Horizontal Scroll) --- */
-.anime-row {
-    display: flex !important;
-    flex-wrap: nowrap !important; 
-    overflow-x: auto !important; 
-    gap: 15px;
-    padding: 15px 5px;
-    width: 100%;
-    scrollbar-width: none;
-    scroll-behavior: smooth;
+/* Scrollbar එක ලස්සන කිරීමට (Optional) */
+.anime-row::-webkit-scrollbar {
+    height: 3px;
 }
-.anime-row::-webkit-scrollbar { display: none; }
-
-/* --- ඇනිමේ කාඩ්පත් (Card Style) --- */
-.card {
-    position: relative;
-    min-width: 150px;
-    max-width: 150px;
-    background: var(--card-bg);
-    border-radius: 12px;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    flex-shrink: 0;
-    transition: transform 0.3s ease;
-    border: 1px solid #222;
-    cursor: pointer;
+.anime-row::-webkit-scrollbar-thumb {
+    background: #333;
+    border-radius: 10px;
 }
-
-.card:hover { transform: scale(1.05); border-color: var(--accent); }
-
-.card img {
-    width: 100%;
-    height: 220px;
-    object-fit: cover;
-    display: block;
-}
-
-/* Tags (HD & Rating) */
-.tag-hd {
-    position: absolute; top: 8px; right: 8px;
-    background: var(--accent); color: white;
-    font-size: 10px; padding: 3px 8px; border-radius: 4px;
-    font-weight: bold; z-index: 5;
-}
-
-.tag-rating {
-    position: absolute; top: 8px; left: 8px;
-    background: white; color: black;
-    font-size: 10px; padding: 3px 8px; border-radius: 4px;
-    font-weight: bold; z-index: 5;
-}
-
-.card-title {
-    color: white; font-size: 13px; padding: 10px 8px;
-    white-space: nowrap; overflow: hidden;
-    text-overflow: ellipsis; text-align: center;
-}
-
-/* --- සෙවුම් ප්‍රතිඵල සහ See All Grid (මෙය අත්‍යවශ්‍යයි) --- */
-#results-container {
-    display: none; /* JS මගින් flex කරනු ලබයි */
-    flex-direction: column;
-    width: 100%;
-    background: var(--bg-dark);
-}
-
-/* See All පින්තූර පහළට පිළිවෙළකට පෙන්වීමට */
-#see-all-grid {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 15px;
-    padding: 20px 10px;
-    width: 100%;
-}
-
-/* See All පේජ් එකේ කාඩ්පත්වල ප්‍රමාණය ස්ථාවරව තබා ගැනීමට */
-#see-all-grid .card {
-    min-width: 140px;
-    max-width: 140px;
-}
-
-/* --- Bottom Navigation --- */
-.bottom-nav {
-    position: fixed;
-    bottom: 0; left: 0; width: 100%;
-    background-color: #000;
-    display: flex;
-    justify-content: space-around;
-    padding: 12px 0;
-    border-top: 1px solid #222;
-    z-index: 9999;
-}
-
-.nav-item {
-    color: #888;
-    font-size: 11px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    flex: 1;
-    cursor: pointer;
-    user-select: none;
-}
-.nav-item.active { color: var(--accent); }
