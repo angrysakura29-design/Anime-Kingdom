@@ -203,3 +203,69 @@ body {
     grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
     gap: 15px;
 }
+/* --- Advanced Search Box Design --- */
+.search-box-section {
+    text-align: center;
+    margin: 40px 0;
+    padding: 20px;
+}
+
+.search-wrapper {
+    display: inline-flex;
+    background: rgba(255, 255, 255, 0.05); /* මදක් විනිවිද පෙනෙන කළු පැහැය */
+    backdrop-filter: blur(10px); /* Blur effect එකක් ලබා දෙයි */
+    border-radius: 50px;
+    padding: 8px;
+    border: 1px solid rgba(255, 65, 108, 0.3);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    transition: 0.3s;
+}
+
+.search-wrapper:focus-within {
+    border-color: #ff416c;
+    box-shadow: 0 0 15px rgba(255, 65, 108, 0.5);
+}
+
+#searchInput {
+    background: transparent;
+    border: none;
+    padding: 12px 25px;
+    color: white;
+    outline: none;
+    width: 300px;
+    font-size: 16px;
+}
+
+.search-wrapper button {
+    background: linear-gradient(45deg, #ff416c, #ff4b2b);
+    border: none;
+    color: white;
+    padding: 12px 30px;
+    border-radius: 50px;
+    cursor: pointer;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: 0.3s;
+}
+
+.search-wrapper button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 5px 15px rgba(255, 65, 108, 0.4);
+}
+
+/* සෙවුම් ප්‍රතිඵල (Results Grid) සඳහා CSS */
+#results-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 25px;
+    padding: 40px 5%;
+    justify-content: center;
+}
+
+/* ඇනිමේ කාඩ් එකක් මතට මවුස් එක ගෙන යන විට වන වෙනස */
+.anime-card:hover {
+    transform: translateY(-10px);
+    border-color: #ff416c !important;
+    transition: 0.3s;
+}
