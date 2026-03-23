@@ -1,3 +1,5 @@
+const CONSUMET_API = "https://consumet-api-production-e852.up.railway.app";
+
 window.onload = async () => {
     console.log("Anime Kingdom loading...");
     loadHomePage();
@@ -52,7 +54,6 @@ async function fetchAniListData(sortType, containerId, limit) {
     } catch (e) { console.error("Loading Error:", e); }
 }
 
-// පින්තූර කාඩ්පත් HTML එකට එක් කිරීම
 function renderAnimeCards(list, container) {
     if (!list) return;
     container.innerHTML = ""; 
@@ -67,39 +68,6 @@ function renderAnimeCards(list, container) {
                 <div style="font-size: 11px; color: #ff416c; text-align: center; padding-bottom: 8px;">⭐ ${score}</div>
             </div>`;
     });
-}
-
-// "See all" පෙන්වීම
-async function showSeeAll(sortType, titleText) {
-    const resultsContainer = document.getElementById('results-container');
-    const mainContent = document.querySelector('.main-content');
-
-    if(mainContent) mainContent.style.display = 'none';
-    resultsContainer.style.display = "flex";
-    resultsContainer.style.flexDirection = "column";
-    
-    resultsContainer.innerHTML = `
-        <div style="width:100%; display:flex; justify-content:space-between; align-items:center; padding:15px; border-bottom:1px solid #333; margin-bottom:20px;">
-            <h2 style="color:white; margin:0; font-size:22px;">${titleText}</h2>
-            <button onclick="goHome()" style="background:red; color:white; border:none; padding:10px 20px; border-radius:5px; cursor:pointer; font-weight:bold;">BACK</button>
-        </div>
-        <div id="see-all-grid" style="display:flex; flex-wrap:wrap; justify-content:center; gap:15px; width:100%;">
-            <p style="color:white; text-align:center; width:100%; padding:50px;">සොයමින් පවතී... (Loading...)</p>
-        </div>
-    `;
-
-    const query = `query ($sort: [MediaSort]) { Page(page: 1, perPage: 50) { media(sort: $sort, type: ANIME, isAdult: false) { id title { romaji english } coverImage { large } averageScore } } }`;
-
-    try {
-        const response = await fetch('https://graphql.anilist.co', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ query: query, variables: { sort: [sortType] } })
-        });
-        const json = await response.json();
-        renderAnimeCards(json.data.Page.media, document.getElementById('see-all-grid'));
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    } catch (e) { console.error(e); }
 }
 
 // විස්තර පෙන්වීම (Detail Pop-up)
@@ -121,60 +89,136 @@ async function showDetails(id) {
         });
         const json = await response.json();
         const anime = json.data.Media;
+        const title = anime.title.english || anime.title.romaji;
 
         modalBody.innerHTML = `
             <span style="position:absolute; right:15px; top:10px; font-size:30px; cursor:pointer; color:red; font-weight:bold; z-index:100;" onclick="closeModal()">&times;</span>
             <div style="display:flex; flex-direction:column; align-items:center; gap:12px;">
-                <img src="${anime.coverImage.large}" style="width:100%; max-height:250px; object-fit:cover; border-radius:10px;">
-                <h2 style="margin:0; text-align:center; font-size:18px;">${anime.title.english || anime.title.romaji}</h2>
+                <img src="${anime.coverImage.large}" style="width:100%; max-height:200px; object-fit:cover; border-radius:10px;">
+                <h2 style="margin:0; text-align:center; font-size:18px;">${title}</h2>
                 <div style="display:flex; gap:15px; font-weight:bold; color:#ff416c;">
                     <span>⭐ ${anime.averageScore / 10}</span>
                     <span>📺 Episodes: ${anime.episodes || 'N/A'}</span>
                 </div>
-                <div style="font-size:13px; color:#ccc; max-height:120px; overflow-y:auto; line-height:1.4; padding:0 10px;">${anime.description}</div>
-                <button onclick="playAnime('https://www.w3schools.com', '', '${anime.title.english || anime.title.romaji}')" 
-                        style="background:red; color:white; padding:10px 20px; border-radius:5px; border:none; cursor:pointer; font-weight:bold; margin-top:10px; width:100%;">
-                    WATCH NOW (IN-SITE)
-                </button>
-                <a href="${anime.siteUrl}" target="_blank" style="color:#ccc; font-size:12px; text-decoration:none; margin-top:5px;">View on AniList</a>
+                <div style="font-size:12px; color:#ccc; max-height:80px; overflow-y:auto; padding:0 10px;">${anime.description}</div>
+                
+                <div id="episode-list" style="width:100%; margin-top:10px;">
+                    <p style="text-align:center; font-size:12px; color:yellow;">Loading Episodes...</p>
+                </div>
             </div>
         `;
+        
+        loadEpisodes(title); // Episodes load කිරීම ආරම්භ කරයි
+
     } catch (e) { console.error(e); }
 }
 
-// වීඩියෝ ප්ලේයර් එකේ වැඩ
+// Consumet API හරහා Episodes ලබාගැනීම
+async function loadEpisodes(title) {
+    const epContainer = document.getElementById('episode-list');
+    try {
+        // 1. Search Anime ID
+        const searchRes = await fetch(`${CONSUMET_API}/${title}`);
+        const searchData = await searchRes.json();
+        const animeId = searchData.results[0]?.id;
+
+        if(!animeId) {
+            epContainer.innerHTML = "<p style='color:red; text-align:center;'>වීඩියෝව සොයාගත නොහැකි විය!</p>";
+            return;
+        }
+
+        // 2. Get Episode List
+        const infoRes = await fetch(`${CONSUMET_API}/info/${animeId}`);
+        const infoData = await infoRes.json();
+        
+        epContainer.innerHTML = `<h3 style="font-size:14px; margin-bottom:10px;">Episodes:</h3>
+                                 <div style="display:flex; flex-wrap:wrap; gap:8px; justify-content:center; max-height:150px; overflow-y:auto;"></div>`;
+        const listDiv = epContainer.querySelector('div');
+
+        infoData.episodes.forEach(ep => {
+            listDiv.innerHTML += `<button onclick="startStreaming('${ep.id}', '${title} - Ep ${ep.number}')" 
+                style="background:#333; color:white; border:1px solid #444; padding:5px 10px; border-radius:4px; cursor:pointer; font-size:12px;">
+                EP ${ep.number}
+            </button>`;
+        });
+
+    } catch (e) { epContainer.innerHTML = "Error loading episodes."; }
+}
+
+// Streaming Link එක ලබාගෙන ප්ලේ කිරීම
+async function startStreaming(episodeId, fullTitle) {
+    try {
+        const res = await fetch(`${CONSUMET_API}/watch/${episodeId}`);
+        const data = await res.json();
+        const streamLink = data.sources.find(s => s.quality === '720p' || s.quality === 'default')?.url || data.sources[0].url;
+        
+        playAnime(streamLink, "", fullTitle);
+    } catch (e) { alert("වීඩියෝව ප්ලේ කිරීමට නොහැක!"); }
+}
+
+// HLS Support සහිත Video Player එක
 function playAnime(videoUrl, subUrl, title) {
     const vModal = document.getElementById('video-modal');
     const player = document.getElementById('main-player');
-    const source = document.getElementById('video-source');
-    const sub = document.getElementById('video-sub');
     const vTitle = document.getElementById('video-title');
 
-    if(!vModal || !player || !source) return;
-
-    source.src = videoUrl; 
-    if(sub) sub.src = subUrl;      
-    if(vTitle) vTitle.innerText = title;
-
-    player.load(); 
     vModal.style.display = "flex";
-    player.play();
+    vTitle.innerText = title;
+
+    // HLS.js පාවිච්චි කර .m3u8 ප්ලේ කිරීම
+    if (Hls.isSupported()) {
+        const hls = new Hls();
+        hls.loadSource(videoUrl);
+        hls.attachMedia(player);
+        hls.on(Hls.Events.MANIFEST_PARSED, () => player.play());
+    } else if (player.canPlayType('application/vnd.apple.mpegurl')) {
+        player.src = videoUrl;
+        player.play();
+    }
 }
 
 function closeVideo() {
     const vModal = document.getElementById('video-modal');
     const player = document.getElementById('main-player');
-    if(player) player.pause();
-    if(vModal) vModal.style.display = "none";
+    if(player) { player.pause(); player.src = ""; }
+    vModal.style.display = "none";
 }
 
 function searchAnime() {
     const queryText = document.getElementById('searchInput').value;
     if (!queryText) return alert("කරුණාකර නමක් ටයිප් කරන්න!");
-    showSeeAll('SEARCH', 'Results: ' + queryText);
+    showSeeAll('SEARCH', 'Results: ' + queryText, queryText);
+}
+
+async function showSeeAll(sortType, titleText, searchKeyword = null) {
+    const resultsContainer = document.getElementById('results-container');
+    const mainContent = document.querySelector('.main-content');
+
+    if(mainContent) mainContent.style.display = 'none';
+    resultsContainer.style.display = "flex";
+    resultsContainer.style.flexDirection = "column";
+    resultsContainer.innerHTML = `<div style="width:100%; display:flex; justify-content:space-between; align-items:center; padding:15px; border-bottom:1px solid #333; margin-bottom:20px;">
+            <h2 style="color:white; margin:0; font-size:22px;">${titleText}</h2>
+            <button onclick="goHome()" style="background:red; color:white; border:none; padding:10px 20px; border-radius:5px; cursor:pointer; font-weight:bold;">BACK</button>
+        </div>
+        <div id="see-all-grid" style="display:flex; flex-wrap:wrap; justify-content:center; gap:15px; width:100%;"><p style="color:white; text-align:center; width:100%; padding:50px;">සොයමින් පවතී...</p></div>`;
+
+    const query = searchKeyword 
+        ? `query ($search: String) { Page(page: 1, perPage: 50) { media(search: $search, type: ANIME, isAdult: false) { id title { romaji english } coverImage { large } averageScore } } }`
+        : `query ($sort: [MediaSort]) { Page(page: 1, perPage: 50) { media(sort: $sort, type: ANIME, isAdult: false) { id title { romaji english } coverImage { large } averageScore } } }`;
+
+    const variables = searchKeyword ? { search: searchKeyword } : { sort: [sortType] };
+
+    try {
+        const response = await fetch('https://graphql.anilist.co', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ query: query, variables: variables })
+        });
+        const json = await response.json();
+        renderAnimeCards(json.data.Page.media, document.getElementById('see-all-grid'));
+    } catch (e) { console.error(e); }
 }
 
 function goHome() { loadHomePage(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
 function closeModal() { document.getElementById('anime-modal').style.display = "none"; }
-function showMyList() { alert("My List feature ළඟදීම පැමිණේ!"); }
-function showProfile() { alert("Login System ළඟදීම පැමිණේ!"); }
