@@ -208,3 +208,73 @@ body {
 
 .nav-item.active { color: var(--accent); }
 .nav-item i { font-size: 20px; margin-bottom: 4px; }
+/* Anime Card ප්‍රධාන සැකසුම */
+.card {
+    position: relative; /* Labels පින්තූරය මත තැබීමට මෙය අත්‍යවශ්‍යයි */
+    min-width: 160px;
+    background: transparent;
+    border-radius: 12px;
+    overflow: hidden;
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    transition: 0.3s;
+}
+
+/* ඇනිමේ පින්තූරය සහ එහි රාමුව */
+.card-img-wrapper {
+    position: relative;
+    width: 100%;
+    height: 230px;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid #333;
+}
+
+.card-img-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* වම් පැත්තේ සුදු පැහැති Rating Tag එක (උදා: PG-13) */
+.tag-rating {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: white;
+    color: black;
+    font-size: 10px;
+    padding: 3px 8px;
+    border-radius: 5px;
+    font-weight: bold;
+    z-index: 5;
+}
+
+/* දකුණු පැත්තේ රතු පැහැති HD Tag එක */
+.tag-hd {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: #e50914; /* රතු පැහැය */
+    color: white;
+    font-size: 10px;
+    padding: 3px 8px;
+    border-radius: 5px;
+    font-weight: bold;
+    z-index: 5;
+}
+
+/* පින්තූරයට යටින් ඇති නම */
+.card-title {
+    color: white;
+    font-size: 15px;
+    margin-top: 10px;
+    text-align: left;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; /* නම දිග වැඩි නම් තිත් පෙන්වයි */
+}
