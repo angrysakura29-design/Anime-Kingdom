@@ -150,3 +150,28 @@ function goHome() { loadHomePage(); window.scrollTo({ top: 0, behavior: 'smooth'
 function closeModal() { document.getElementById('anime-modal').style.display = "none"; }
 function showMyList() { alert("My List feature ළඟදීම පැමිණේ!"); }
 function showProfile() { alert("Login System ළඟදීම පැමිණේ!"); }
+// වීඩියෝව ප්ලේ කරන Function එක
+function playAnime(videoUrl, subUrl, title) {
+    const vModal = document.getElementById('video-modal');
+    const player = document.getElementById('main-player');
+    const source = document.getElementById('video-source');
+    const sub = document.getElementById('video-sub');
+    const vTitle = document.getElementById('video-title');
+
+    // ප්ලේයර් එකට දත්ත ඇතුළත් කිරීම
+    source.src = videoUrl; 
+    sub.src = subUrl;      
+    vTitle.innerText = title;
+
+    player.load(); // වීඩියෝව අලුතින් load කරන්න
+    vModal.style.display = "flex";
+    player.play(); // ප්ලේ කිරීම ආරම්භ කරන්න
+}
+
+// ප්ලේයර් එක වසා දැමීම
+function closeVideo() {
+    const vModal = document.getElementById('video-modal');
+    const player = document.getElementById('main-player');
+    player.pause(); // වීඩියෝව නවත්වන්න
+    vModal.style.display = "none";
+}
