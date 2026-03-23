@@ -17,14 +17,12 @@ async function loadHomePage() {
     const mainContent = document.querySelector('.main-content');
     const resultsContainer = document.getElementById('results-container');
     
-    // 1. මුල් පිටුවේ පේළි පෙන්වන්න, See all ප්‍රතිඵල හංගන්න
     if(mainContent) mainContent.style.display = 'block';
     if(resultsContainer) {
         resultsContainer.style.display = 'none';
         resultsContainer.innerHTML = "";
     }
 
-    // 2. සෑම කාණ්ඩයකටම ඇනිමේ 10 බැගින් ලබා ගැනීම
     const sections = [
         ['START_DATE_DESC', 'latestAnime', 10],      
         ['TRENDING_DESC', 'trendingAnime', 10], 
@@ -35,7 +33,6 @@ async function loadHomePage() {
 
     for (const [sort, id, limit] of sections) {
         await fetchAniListData(sort, id, limit);
-        // API Rate limit නොවීමට කුඩා විරාමයක්
         await new Promise(res => setTimeout(res, 200)); 
     }
 }
@@ -58,12 +55,11 @@ async function fetchAniListData(sortType, containerId, limit) {
     } catch (e) { console.error("Error loading " + containerId, e); }
 }
 
-// "See all" Click කළ විට කාණ්ඩයේ සියලුම ඇනිමේ පෙන්වීම
+// "See all" Click කළ විට
 async function showSeeAll(sortType, titleText) {
     const resultsContainer = document.getElementById('results-container');
     const mainContent = document.querySelector('.main-content');
 
-    // මුල් පිටුව සඟවා See all grid එක විවෘත කරන්න
     if(mainContent) mainContent.style.display = 'none';
     resultsContainer.style.display = "flex";
     resultsContainer.style.flexDirection = "column";
@@ -93,7 +89,7 @@ async function showSeeAll(sortType, titleText) {
     } catch (e) { console.error(e); }
 }
 
-// කාඩ්පත් HTML එකට එක් කිරීමේ පොදු Function එක
+// කාඩ්පත් HTML එකට එක් කිරීම
 function renderAnimeCards(list, container) {
     if (!list) return;
     container.innerHTML = ""; 
@@ -113,8 +109,9 @@ function renderAnimeCards(list, container) {
 // ඇනිමේ විස්තර පෙන්වීම (Episodes & Description)
 async function showDetails(id) {
     const modal = document.getElementById('anime-modal');
+    const modalBody = document.getElementById('modal-body'); // මෙතැන හරිගස්සා ඇත
     modal.style.display = "flex";
-    document.getElementById('modal-body').innerHTML = "<p style='text-align:center; color:white;'>Loading Details...</p>";
+    modalBody.innerHTML = "<p style='text-align:center; color:white;'>Loading Details...</p>";
 
     const query = `query ($id: Int) { Media (id: $id) { title { romaji english } description episodes coverImage { large } averageScore siteUrl } }`;
 
@@ -126,7 +123,8 @@ async function showDetails(id) {
         });
         const json = await response.json();
         const anime = json.data.Media;
-                modalBody.innerHTML = `
+
+        modalBody.innerHTML = `
             <span style="position:absolute; right:15px; top:10px; font-size:30px; cursor:pointer; color:red; font-weight:bold; z-index:100;" onclick="closeModal()">&times;</span>
             <div style="display:flex; flex-direction:column; align-items:center; gap:12px;">
                 <img src="${anime.coverImage.large}" style="width:100%; max-height:250px; object-fit:cover; border-radius:10px;">
@@ -135,9 +133,8 @@ async function showDetails(id) {
                     <span>⭐ ${anime.averageScore / 10}</span>
                     <span>📺 Episodes: ${anime.episodes || 'N/A'}</span>
                 </div>
-                <p style="font-size:13px; color:#ccc; max-height:120px; overflow-y:auto; line-height:1.4; padding:0 10px;">${anime.description}</p>
+                <div style="font-size:13px; color:#ccc; max-height:120px; overflow-y:auto; line-height:1.4; padding:0 10px;">${anime.description}</div>
                 
-                <!-- මෙන්න මෙතන තමයි අපේ අලුත් ප්ලේයර් එක වැඩ කරන බොත්තම තියෙන්නේ -->
                 <button onclick="playAnime('https://www.w3schools.com', '', '${anime.title.english || anime.title.romaji}')" 
                         style="background:red; color:white; padding:10px 20px; border-radius:5px; border:none; cursor:pointer; font-weight:bold; margin-top:10px; width:100%;">
                     WATCH NOW (IN-SITE)
@@ -145,22 +142,9 @@ async function showDetails(id) {
                 <a href="${anime.siteUrl}" target="_blank" style="color:#ccc; font-size:12px; text-decoration:none; margin-top:5px;">View on AniList</a>
             </div>
         `;
-
     } catch (e) { console.error(e); }
 }
 
-// සෙවුම් කාර්යය
-function searchAnime() {
-    const queryText = document.getElementById('searchInput').value;
-    if (!queryText) return alert("කරුණාකර නමක් ටයිප් කරන්න!");
-    showSeeAll('SEARCH', 'Results: ' + queryText);
-}
-
-// පොදු Navigation Functions
-function goHome() { loadHomePage(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
-function closeModal() { document.getElementById('anime-modal').style.display = "none"; }
-function showMyList() { alert("My List feature ළඟදීම පැමිණේ!"); }
-function showProfile() { alert("Login System ළඟදීම පැමිණේ!"); }
 // වීඩියෝව ප්ලේ කරන Function එක
 function playAnime(videoUrl, subUrl, title) {
     const vModal = document.getElementById('video-modal');
@@ -179,25 +163,19 @@ function playAnime(videoUrl, subUrl, title) {
 }
 
 function closeVideo() {
-    document.getElementById('video-modal').style.display = "none";
-    document.getElementById('main-player').pause();
-}
-
-
-    // ප්ලේයර් එකට දත්ත ඇතුළත් කිරීම
-    source.src = videoUrl; 
-    sub.src = subUrl;      
-    vTitle.innerText = title;
-
-    player.load(); // වීඩියෝව අලුතින් load කරන්න
-    vModal.style.display = "flex";
-    player.play(); // ප්ලේ කිරීම ආරම්භ කරන්න
-}
-
-// ප්ලේයර් එක වසා දැමීම
-function closeVideo() {
     const vModal = document.getElementById('video-modal');
     const player = document.getElementById('main-player');
-    player.pause(); // වීඩියෝව නවත්වන්න
+    player.pause();
     vModal.style.display = "none";
 }
+
+function searchAnime() {
+    const queryText = document.getElementById('searchInput').value;
+    if (!queryText) return alert("කරුණාකර නමක් ටයිප් කරන්න!");
+    showSeeAll('SEARCH', 'Results: ' + queryText);
+}
+
+function goHome() { loadHomePage(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+function closeModal() { document.getElementById('anime-modal').style.display = "none"; }
+function showMyList() { alert("My List feature ළඟදීම පැමිණේ!"); }
+function showProfile() { alert("Login System ළඟදීම පැමිණේ!"); }
