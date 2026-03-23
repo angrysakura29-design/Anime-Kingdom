@@ -5,33 +5,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ANIME KINGDOM | ඔබේ ඇනිමේ තෝතැන්න</title>
     
-    <!-- වීඩියෝ ප්ලේ වීමට අවශ්‍ය HLS Library එක -->
     <script src="https://cdn.jsdelivr.net"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com">
 
     <style>
         :root { 
-            --accent: #e50914; /* රතු පැහැය */
-            --bg: #ffffff;    /* සුදු පසුබිම */
-            --text: #1a1a1a;  /* තද පැහැති අකුරු */
-            --card-bg: #f4f4f4; 
+            --accent: #e50914; /* රතු */
+            --bg: #0b0b0f;    /* තද කළු පසුබිම */
+            --text: #ffffff;  /* සුදු අකුරු */
+            --card-bg: #1a1a22; /* කාඩ්පත් සඳහා තද අළු පැහැය */
         }
 
         body { 
             margin: 0; 
-            font-family: 'Segoe UI', Tahoma, sans-serif; 
+            font-family: 'Segoe UI', sans-serif; 
             background-color: var(--bg); 
             color: var(--text); 
             overflow-x: hidden; 
         }
 
-        /* Top Navigation */
+        /* Navigation */
         .top-nav { 
             display: flex; 
             justify-content: center; 
             padding: 15px 0; 
             background: #000; 
-            color: white;
+            border-bottom: 1px solid #222;
             position: sticky; 
             top: 0; 
             z-index: 1000; 
@@ -48,21 +47,20 @@
             background: #000; 
             overflow: hidden; 
         }
-        .hero-img { position: absolute; width: 100%; height: 100%; object-fit: cover; opacity: 0.6; }
+        .hero-img { position: absolute; width: 100%; height: 100%; object-fit: cover; opacity: 0.4; filter: brightness(0.6); }
         .hero-info { position: relative; z-index: 10; text-align: center; width: 90%; }
-        .hero-info h1 { color: white; text-shadow: 2px 2px 10px #000; font-size: 28px; margin-bottom: 20px; }
 
         /* Search Bar */
         .search-box { 
             display: flex; 
             max-width: 500px; 
             margin: 0 auto; 
-            background: white; 
+            background: rgba(255,255,255,0.1); 
             border-radius: 30px; 
             padding: 5px; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2); 
+            border: 1px solid rgba(255,255,255,0.2);
         }
-        .search-box input { flex: 1; background: transparent; border: none; padding: 10px 20px; outline: none; font-size: 16px; }
+        .search-box input { flex: 1; background: transparent; border: none; padding: 10px 20px; outline: none; font-size: 16px; color: white; }
         .search-box button { background: var(--accent); border: none; padding: 10px 25px; border-radius: 25px; color: white; font-weight: bold; cursor: pointer; }
 
         /* Anime Grid */
@@ -78,28 +76,27 @@
             overflow: hidden; 
             cursor: pointer; 
             transition: 0.3s; 
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
-        .card:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(229, 9, 20, 0.2); }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(229, 9, 20, 0.3); }
         .card img { width: 100%; height: 230px; object-fit: cover; }
-        .card-title { padding: 12px; font-size: 14px; text-align: center; font-weight: bold; }
+        .card-title { padding: 12px; font-size: 13px; text-align: center; color: #eee; }
 
-        /* Details Modal (පින්තූරයේ පරිදි) */
+        /* Details Modal (Dark Mode) */
         .modal { 
             display: none; 
             position: fixed; 
             inset: 0; 
-            background: white; 
+            background: var(--bg); 
             z-index: 2000; 
             flex-direction: column; 
             overflow-y: auto; 
         }
         .modal-header { position: relative; height: 250px; background: #000; }
-        .modal-banner { width: 100%; height: 100%; object-fit: cover; opacity: 0.7; }
+        .modal-banner { width: 100%; height: 100%; object-fit: cover; opacity: 0.5; }
         .back-btn { 
             position: absolute; top: 20px; left: 20px; 
-            background: rgba(255,255,255,0.9); color: black; 
-            padding: 10px 14px; border-radius: 50%; cursor: pointer; font-size: 18px;
+            background: rgba(0,0,0,0.6); color: white; 
+            padding: 10px 14px; border-radius: 50%; cursor: pointer; 
         }
         
         .modal-body { 
@@ -107,51 +104,35 @@
             margin-top: -40px; 
             position: relative; 
             z-index: 10; 
-            background: white; 
+            background: var(--bg); 
             border-radius: 40px 40px 0 0; 
         }
-        .anime-meta h1 { font-size: 24px; margin-bottom: 5px; color: var(--text); }
-        
         .action-btns { display: flex; gap: 12px; margin: 20px 0; }
-        .btn-watch { 
-            background: var(--accent); color: white; padding: 14px; 
-            border-radius: 12px; font-weight: bold; cursor: pointer; 
-            flex: 1; text-align: center; font-size: 16px;
-        }
-        .btn-list { 
-            background: #eee; color: black; padding: 14px; 
-            border-radius: 12px; font-weight: bold; cursor: pointer; 
-            flex: 1; text-align: center; font-size: 16px;
-        }
+        .btn-watch { background: var(--accent); color: white; padding: 14px; border-radius: 12px; font-weight: bold; cursor: pointer; flex: 1; text-align: center; }
+        .btn-list { background: #1a1a22; color: white; border: 1px solid #333; padding: 14px; border-radius: 12px; font-weight: bold; cursor: pointer; flex: 1; text-align: center; }
 
         /* Episodes List */
         .ep-item { 
             display: flex; 
             align-items: center; 
-            background: #f9f9f9; 
+            background: #16161d; 
             padding: 12px; 
             border-radius: 12px; 
             margin-bottom: 12px; 
             cursor: pointer; 
-            border: 1px solid #eee;
+            border: 1px solid #222;
         }
-        .ep-item:hover { background: #fff5f5; border-color: var(--accent); }
+        .ep-item:hover { background: #222; border-color: var(--accent); }
         .ep-number { 
             width: 40px; height: 40px; 
             background: var(--accent); color: white; 
             display: flex; align-items: center; justify-content: center; 
             border-radius: 10px; font-weight: bold; margin-right: 15px;
         }
-        .ep-info h4 { margin: 0; font-size: 15px; }
 
-        /* Video Player Modal */
-        #video-modal { 
-            display:none; position:fixed; inset:0; 
-            background:#000; z-index:3000; 
-            flex-direction:column; align-items:center; justify-content:center; 
-        }
-        #main-player { width: 100%; max-width: 900px; aspect-ratio: 16/9; }
-        .close-video { position:absolute; top:20px; right:20px; color:white; font-size:35px; cursor:pointer; }
+        /* Video Player */
+        #video-modal { display:none; position:fixed; inset:0; background:#000; z-index:3000; flex-direction:column; align-items:center; justify-content:center; }
+        #main-player { width: 100%; max-width: 900px; aspect-ratio: 16/9; border: 1px solid #222; }
     </style>
 </head>
 <body>
@@ -163,7 +144,6 @@
     <div class="hero">
         <img src="IMG_20260322_225449_963.jpg" class="hero-img">
         <div class="hero-info">
-            <h1>ඔබේ ප්‍රියතම ඇනිමේ සොයන්න</h1>
             <div class="search-box">
                 <input type="text" id="searchInput" placeholder="ඇනිමේ නම සොයන්න...">
                 <button onclick="searchAnime()">සොයන්න</button>
@@ -179,30 +159,25 @@
     <!-- Details Page -->
     <div id="anime-modal" class="modal">
         <div class="modal-header">
-            <div class="back-btn" onclick="closeModal()"><i class="fas fa-chevron-left"></i></div>
+            <div class="back-btn" onclick="closeModal()"><i class="fas fa-arrow-left"></i></div>
             <img id="modalBanner" class="modal-banner">
         </div>
         <div class="modal-body">
-            <div class="anime-meta">
-                <h1 id="modalTitle"></h1>
-                <p id="modalYear" style="color:var(--accent); font-weight: bold;">⭐ Premium Quality</p>
-            </div>
+            <h1 id="modalTitle" style="font-size: 24px; margin-bottom: 20px;"></h1>
             <div class="action-btns">
-                <div class="btn-watch" onclick="scrollToEpisodes()"><i class="fas fa-play"></i> Watch Now</div>
+                <div class="btn-watch"><i class="fas fa-play"></i> Watch Now</div>
                 <div class="btn-list"><i class="fas fa-plus"></i> Watchlist</div>
             </div>
-            <div class="ep-section">
-                <h4 style="margin-bottom: 15px;">Episode List</h4>
-                <div id="episodeList"></div>
-            </div>
+            <h4>Episode List</h4>
+            <div id="episodeList"></div>
         </div>
     </div>
 
     <!-- Video Player -->
     <div id="video-modal">
-        <span class="close-video" onclick="closeVideo()">&times;</span>
+        <span onclick="closeVideo()" style="position:absolute; top:20px; right:20px; color:white; font-size:35px; cursor:pointer;">&times;</span>
         <video id="main-player" controls></video>
-        <h4 id="videoTitle" style="color:white; margin-top:20px; text-align: center;"></h4>
+        <h4 id="videoTitle" style="color:white; margin-top:20px;"></h4>
     </div>
 
     <script>
@@ -211,15 +186,13 @@
         window.onload = () => { loadPopular(); };
 
         async function loadPopular() {
-            try {
-                const res = await fetch('https://graphql.anilist.co', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ query: `query { Page(perPage: 15) { media(sort: TRENDING_DESC, type: ANIME) { id title { english romaji } coverImage { large } bannerImage } } }` })
-                });
-                const data = await res.json();
-                renderCards(data.data.Page.media);
-            } catch (e) { console.error("Error:", e); }
+            const res = await fetch('https://graphql.anilist.co', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ query: `query { Page(perPage: 15) { media(sort: TRENDING_DESC, type: ANIME) { id title { english romaji } coverImage { large } bannerImage } } }` })
+            });
+            const data = await res.json();
+            renderCards(data.data.Page.media);
         }
 
         function renderCards(list) {
@@ -236,31 +209,22 @@
             document.getElementById('modalTitle').innerText = title;
             document.getElementById('modalBanner').src = banner;
             modal.style.display = "flex";
-            document.getElementById('episodeList').innerHTML = "<p>Episodes සොයමින් පවතී...</p>";
+            document.getElementById('episodeList').innerHTML = "<p>Loading episodes...</p>";
 
             try {
                 const sRes = await fetch(`${API_BASE}/${encodeURIComponent(title)}`);
                 const sData = await sRes.json();
-                const animeId = sData.results[0]?.id;
-
-                if (!animeId) {
-                    document.getElementById('episodeList').innerHTML = "<p style='color:red;'>දත්ත සොයාගත නොහැක.</p>";
-                    return;
-                }
-
+                const animeId = sData.results?.id;
                 const iRes = await fetch(`${API_BASE}/info/${animeId}`);
                 const iData = await iRes.json();
                 
                 document.getElementById('episodeList').innerHTML = iData.episodes.map(ep => `
                     <div class="ep-item" onclick="playVideo('${ep.id}', '${title} - EP ${ep.number}')">
                         <div class="ep-number">${ep.number}</div>
-                        <div class="ep-info">
-                            <h4>Episode ${ep.number}</h4>
-                        </div>
-                        <i class="fas fa-play-circle" style="color:var(--accent); font-size: 20px; margin-left: auto;"></i>
+                        <div class="ep-info"><h4>Episode ${ep.number}</h4></div>
                     </div>`).join('');
             } catch (e) {
-                document.getElementById('episodeList').innerHTML = "<p style='color:red;'>සර්වර් දෝෂයකි. (Server Busy)</p>";
+                document.getElementById('episodeList').innerHTML = "<p style='color:red;'>දත්ත ලබා ගැනීමේ දෝෂයකි.</p>";
             }
         }
 
@@ -269,16 +233,14 @@
                 const res = await fetch(`${API_BASE}/watch/${epId}`);
                 const data = await res.json();
                 const link = data.sources.find(s => s.quality === '720p' || s.quality === 'default')?.url;
-
                 const player = document.getElementById('main-player');
                 document.getElementById('video-modal').style.display = "flex";
                 document.getElementById('videoTitle').innerText = title;
-
                 if (Hls.isSupported()) {
                     const hls = new Hls(); hls.loadSource(link); hls.attachMedia(player);
                     hls.on(Hls.Events.MANIFEST_PARSED, () => player.play());
                 } else { player.src = link; player.play(); }
-            } catch (e) { alert("වීඩියෝව පූරණය කළ නොහැක!"); }
+            } catch (e) { alert("වීඩියෝ දෝෂයකි!"); }
         }
 
         function closeModal() { document.getElementById('anime-modal').style.display = "none"; }
@@ -286,7 +248,6 @@
 
         async function searchAnime() {
             const q = document.getElementById('searchInput').value;
-            if(!q) return;
             const res = await fetch('https://graphql.anilist.co', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
