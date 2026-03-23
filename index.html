@@ -4,33 +4,68 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ANIME KINGDOM | ඔබේ ඇනිමේ තෝතැන්න</title>
-    <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com">
+    
+    <style>
+        /* --- උඹ දීපු CSS එක (Match කළා) --- */
+        :root { --accent: #e50914; --bg-dark: #0b0b0f; --card-bg: #1a1a22; --text-white: #ffffff; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', sans-serif; background-color: var(--bg-dark); color: var(--text-white); overflow-x: hidden; padding-bottom: 80px; }
+        .top-nav { display: flex; justify-content: center; padding: 15px 0; background: rgba(0,0,0,0.9); position: sticky; top: 0; z-index: 1000; backdrop-filter: blur(10px); }
+        .logo { font-size: 26px; font-weight: 900; letter-spacing: 3px; text-transform: uppercase; }
+        .brand-text { color: var(--accent); }
+        .hero-banner { position: relative; width: 100%; min-height: 350px; background: #000; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .banner-img { position: absolute; width: 100%; height: 100%; object-fit: cover; opacity: 0.5; filter: brightness(0.6); }
+        .hero-info { position: relative; z-index: 10; text-align: center; width: 90%; max-width: 800px; }
+        .search-container { display: flex; justify-content: center; margin: 25px auto; max-width: 500px; width: 100%; }
+        #searchInput { flex: 1; height: 50px; background: rgba(0, 0, 0, 0.7); border: 2px solid var(--accent); border-right: none; padding: 0 20px; color: white; border-radius: 5px 0 0 5px; outline: none; font-size: 16px; }
+        .search-container button { height: 50px; padding: 0 25px; background: var(--accent); color: white; border: 2px solid var(--accent); cursor: pointer; border-radius: 0 5px 5px 0; font-weight: bold; }
+        .row-section { padding: 20px 0 0 15px; }
+        .row-header h2 { font-size: 20px; border-left: 4px solid var(--accent); padding-left: 12px; margin-bottom: 15px; }
+        .anime-row { display: flex; overflow-x: auto; gap: 15px; padding: 10px 5px; scrollbar-width: none; }
+        .anime-row::-webkit-scrollbar { display: none; }
+        .card { position: relative; min-width: 160px; max-width: 160px; background: var(--card-bg); border-radius: 10px; overflow: hidden; transition: 0.4s; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+        .card:hover { transform: scale(1.08); z-index: 10; }
+        .card img { width: 100%; height: 230px; object-fit: cover; }
+        .card-title { font-size: 13px; padding: 10px 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-align: center; }
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 2000; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
+        .modal-content { background: var(--card-bg); width: 95%; max-width: 500px; padding: 30px; border-radius: 15px; position: relative; text-align: center; border: 1px solid #333; }
+        .ep-grid { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-top: 20px; max-height: 200px; overflow-y: auto; }
+        .ep-btn { background: #222; color: white; border: 1px solid #444; padding: 8px 15px; border-radius: 5px; cursor: pointer; font-weight: bold; margin: 2px; }
+        .ep-btn:hover { background: var(--accent); border-color: white; }
+        #video-modal { display: none; position: fixed; inset: 0; background: #000; z-index: 3000; flex-direction: column; align-items: center; justify-content: center; }
+        .player-box { width: 95%; max-width: 1000px; aspect-ratio: 16/9; position: relative; border: 2px solid #333; }
+        iframe { width: 100%; height: 100%; border: none; }
+        .close-modal-x, .close-player-btn { background: none; border: none; color: white; font-size: 30px; cursor: pointer; }
+        .close-player-btn { position: absolute; top: -50px; right: 0; }
+        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: #000; display: flex; padding: 12px 0; border-top: 1px solid #222; z-index: 9999; }
+        .nav-item { flex: 1; color: #888; font-size: 12px; display: flex; flex-direction: column; align-items: center; cursor: pointer; }
+        .nav-item i { font-size: 20px; margin-bottom: 4px; }
+        .nav-item.active { color: var(--accent); }
+        .loader { display: none; text-align: center; padding: 20px; color: var(--accent); font-weight: bold; }
+    </style>
 </head>
 <body>
 
-    <nav class="top-nav">
-        <div class="logo">ANIME<span class="brand-text">KINGDOM</span></div>
-    </nav>
+    <nav class="top-nav"><div class="logo">ANIME<span class="brand-text">KINGDOM</span></div></nav>
 
     <div class="hero-banner">
         <img src="https://images.alphacoders.com" class="banner-img">
         <div class="hero-info">
             <h1>UNLIMITED <span class="brand-text">ANIME</span> STREAMING</h1>
             <div class="search-container">
-                <input type="text" id="searchInput" placeholder="ඇනිමේ නම මෙතැන ලියන්න..." onkeypress="if(event.key === 'Enter') searchAnime()">
+                <input type="text" id="searchInput" placeholder="Search anime name..." onkeypress="if(event.key === 'Enter') searchAnime()">
                 <button onclick="searchAnime()">සොයන්න</button>
             </div>
         </div>
     </div>
 
     <div class="row-section">
-        <div class="row-header"><h2 id="rowTitle">Trending Anime</h2></div>
-        <div id="loader" class="loader">පූරණය වෙමින්...</div>
+        <div class="row-header"><h2 id="rowTitle">Trending Now</h2></div>
+        <div id="mainLoader" class="loader">පූරණය වෙමින්...</div>
         <div class="anime-row" id="animeGrid"></div>
     </div>
 
-    <!-- Episode Modal -->
     <div id="anime-modal" class="modal">
         <div class="modal-content">
             <button class="close-modal-x" onclick="closeModal()">&times;</button>
@@ -39,13 +74,12 @@
         </div>
     </div>
 
-    <!-- Player Modal -->
     <div id="video-modal">
         <div class="player-box">
             <button class="close-player-btn" onclick="closeVideo()">&times;</button>
-            <iframe id="videoFrame" src="" allowfullscreen></iframe>
+            <iframe id="videoFrame" src="" allowfullscreen allow="autoplay; encrypted-media"></iframe>
         </div>
-        <h3 id="playingTitle" style="margin-top:20px; color:white; text-align: center;"></h3>
+        <h3 id="playingTitle" style="margin-top:20px; color:white; text-align:center;"></h3>
     </div>
 
     <div class="bottom-nav">
@@ -54,6 +88,85 @@
         <div class="nav-item"><i class="fas fa-bookmark"></i>Watchlist</div>
     </div>
 
-    <script src="script.js"></script>
+    <script>
+        const PROXY = "https://api.allorigins.win";
+        const JIKAN_API = "https://api.jikan.moe";
+
+        window.onload = () => loadAnime(`${JIKAN_API}/top/anime?limit=15`);
+
+        async function searchAnime() {
+            const query = document.getElementById('searchInput').value;
+            if(!query) return;
+            document.getElementById('rowTitle').innerText = `'${query}' සඳහා ප්‍රතිඵල`;
+            loadAnime(`${JIKAN_API}/anime?q=${encodeURIComponent(query)}&limit=15`);
+        }
+
+        async function loadAnime(url) {
+            const loader = document.getElementById('mainLoader');
+            const grid = document.getElementById('animeGrid');
+            grid.innerHTML = "";
+            loader.style.display = "block";
+
+            try {
+                // Proxy එකක් අවශ්‍ය නැහැ Jikan වලට
+                const res = await fetch(url);
+                const data = await res.json();
+                if(data.data) renderCards(data.data);
+            } catch (e) { 
+                console.error(e);
+                grid.innerHTML = "<p>දත්ත පූරණය කිරීමේ දෝෂයක්!</p>";
+            } finally {
+                loader.style.display = "none";
+            }
+        }
+
+        function renderCards(list) {
+            const grid = document.getElementById('animeGrid');
+            grid.innerHTML = list.map(anime => {
+                const title = anime.title_english || anime.title;
+                const safeTitle = title.replace(/'/g, "");
+                return `
+                <div class="card" onclick="openDetails('${safeTitle}')">
+                    <img src="${anime.images.jpg.large_image_url}" loading="lazy">
+                    <div class="card-title">${title}</div>
+                </div>`;
+            }).join('');
+        }
+
+        async function openDetails(title) {
+            const modal = document.getElementById('anime-modal');
+            const epList = document.getElementById('episode-list');
+            document.getElementById('modalTitle').innerText = title;
+            modal.style.display = "flex";
+            epList.innerHTML = "<p>Episodes පූරණය වෙමින්...</p>";
+
+            try {
+                // Anify වෙනුවට කෙලින්ම Embed Player එකට Episodes ලබා ගැනීමට Vidsrc API භාවිතා කරයි
+                // නමුත් පහසුම ක්‍රමය වන්නේ Embed එකේම ඇති Episode list එක භාවිතා කිරීමයි
+                // එනිසා මෙහිදී Episode 1 පෙන්වා ඉතිරිය Player එකෙන් පාලනය කිරීමට ඉඩ දෙයි
+                epList.innerHTML = `
+                    <button class="ep-btn" onclick="playVideo('${title}', 1)">Watch Episode 1</button>
+                    <p style="width:100%; font-size:12px; margin-top:10px; color:#888;">වෙනත් Episodes ප්ලේයර් එක ඇතුළෙන් තෝරන්න.</p>
+                `;
+            } catch (e) {
+                epList.innerHTML = "<p>දෝෂයකි!</p>";
+            }
+        }
+
+        function playVideo(title, epNum) {
+            const modal = document.getElementById('video-modal');
+            const frame = document.getElementById('videoFrame');
+            // වඩාත් ස්ථාවර Vidsrc Embed URL එක (Proxy අවශ්‍ය නැත)
+            frame.src = `https://vidsrc.to{encodeURIComponent(title)}/${epNum}`;
+            document.getElementById('playingTitle').innerText = `${title} - Episode ${epNum}`;
+            modal.style.display = "flex";
+        }
+
+        function closeModal() { document.getElementById('anime-modal').style.display = "none"; }
+        function closeVideo() {
+            document.getElementById('videoFrame').src = "";
+            document.getElementById('video-modal').style.display = "none";
+        }
+    </script>
 </body>
 </html>
