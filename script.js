@@ -1,18 +1,29 @@
-// ඇනිමේ 30 ක දත්ත ලැයිස්තුව (නම් සහ පින්තූර ලින්ක්)
-const animeData =;
+const tvData = [
+    { title: "One Piece", img: "https://s4.anilist.co", rate: "PG-13" },
+    { title: "Naruto", img: "https://s4.anilist.co", rate: "PG-13" },
+    { title: "Solo Leveling", img: "https://s4.anilist.co", rate: "R" },
+    { title: "Demon Slayer", img: "https://s4.anilist.co", rate: "HD" }
+];
 
-// ඇනිමේ පෝස්ටර් පෙන්වන Function එක
-function initApp() {
-    const grid = document.getElementById('animeGrid');
-    if (!grid) return;
+const movieData = [
+    { title: "A Silent Voice", img: "https://s4.anilist.co", rate: "HD" },
+    { title: "Your Name", img: "https://s4.anilist.co", rate: "PG-13" }
+];
 
-    grid.innerHTML = animeData.map(anime => `
-        <div class="anime-card">
-            <img src="${anime.image}" alt="${anime.title}" loading="lazy">
-            <h3>${anime.title}</h3>
+function renderRow(id, list) {
+    const container = document.getElementById(id);
+    container.innerHTML = list.map(a => `
+        <div class="card">
+            <span class="tag-rating">${a.rate}</span>
+            <span class="tag-hd">HD</span>
+            <img src="${a.img}">
+            <div class="card-title">${a.title}</div>
         </div>
     `).join('');
 }
 
-// වෙබ් අඩවිය Load වූ විගස ක්‍රියාත්මක කරන්න
-document.addEventListener('DOMContentLoaded', initApp);
+window.onload = () => {
+    renderRow('tvSeries', tvData);
+    renderRow('topMovies', movieData);
+    renderRow('mostPopular', tvData); // දැනට පරණ ඒවාම දැමුවා
+};
