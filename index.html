@@ -5,38 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ANIME KINGDOM</title>
     <link rel="stylesheet" href="style.css">
+    <!-- නිවැරදි Icon Link එක පහත දැක්වේ -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com">
 </head>
 <body>
 
-    <!-- Hero Section -->
-    <div class="hero-banner" id="heroBanner">
-        <div class="overlay"></div>
-        <nav class="top-nav">
-            <!-- මෙන්න මෙතන තමයි නම Capital අකුරින් තියෙන්නේ -->
-            <div class="logo">ANIME <span>KINGDOM</span></div>
-            <div class="nav-icons">
-                <i class="fas fa-search"></i>
-                <i class="fas fa-bell"></i>
-            </div>
-        </nav>
-        <div class="hero-info">
-            <h1 id="heroTitle">JUJUTSU KAISEN</h1>
-            <p class="genres">Action, Shounen, Supernatural</p>
-            <div class="hero-btns">
-                <button class="play-btn"><i class="fas fa-play"></i> Play</button>
-                <button class="list-btn"><i class="fas fa-plus"></i> My List</button>
-            </div>
+    <nav class="top-nav">
+        <div class="logo">ANIME <span>KINGDOM</span></div>
+        <div class="nav-icons">
+            <i class="fas fa-search"></i>
+            <i class="fas fa-bell"></i>
         </div>
-        <!-- Hero Banner (ලොකු පින්තූරය) -->
+    </nav>
+
+    <!-- Hero Banner (ලොකු පින්තූරය) -->
     <div class="hero-banner">
         <div class="overlay"></div>
         <div class="hero-info">
             <h1>JUJUTSU KAISEN</h1>
             <p class="genres">Action, Shounen, Supernatural</p>
             <div class="hero-btns">
-                <button class="play-btn">Play Now</button>
-                <button class="list-btn">+ My List</button>
+                <button class="play-btn"><i class="fas fa-play"></i> Play Now</button>
+                <button class="list-btn"><i class="fas fa-plus"></i> My List</button>
             </div>
         </div>
     </div>
@@ -49,7 +39,6 @@
             </div>
         </section>
     </div>
-
 
     <!-- Bottom Navigation -->
     <div class="bottom-nav">
@@ -64,7 +53,10 @@
         <div class="modal-content">
             <span class="close" onclick="closeModal()">&times;</span>
             <h2 id="modalTitle"></h2>
-            <select id="seasonSelect" onchange="loadEpisodes()"></select>
+            <div class="selector-box">
+                <label>Select Season:</label>
+                <select id="seasonSelect" onchange="loadEpisodes()"></select>
+            </div>
             <div class="episode-list" id="episodeList"></div>
         </div>
     </div>
