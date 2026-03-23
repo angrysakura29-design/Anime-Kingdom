@@ -2,15 +2,56 @@
 body { background: var(--bg); color: white; font-family: sans-serif; margin: 0; padding-bottom: 80px; }
 
 /* Banner */
-.hero-banner{
-height:400px;
-background:url("banner.jpg") center/cover no-repeat;
-position:relative;
+/* --- Banner Section --- */
+.hero-banner {
+    width: 100%;
+    display: flex;
+    flex-direction: column; /* එකක් යට එකක් සිටින සේ */
+    align-items: center;    /* මැදට ගැනීමට */
+    text-align: center;
+    background: #000;
+    padding-bottom: 10px;
 }
-.hero-info h1 { font-size: 26px; margin: 0; }
-.hero-btns button { padding: 10px 20px; border-radius: 20px; border: none; font-weight: bold; margin-top: 15px; cursor: pointer; }
-.play-btn { background: var(--accent); color: white; margin-right: 10px; }
+
+.banner-img {
+    width: 100%;
+    height: 220px;         /* පින්තූරය කුඩා කිරීමට */
+    object-fit: cover;
+    display: block;
+}
+
+.hero-info {
+    padding: 15px 0;
+    color: white;
+}
+
+.hero-info h1 {
+    font-size: 24px;       /* Jujutsu Kaisen අකුරු වල ප්‍රමාණය */
+    margin: 5px 0;
+}
+
+.hero-btns {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.hero-btns button {
+    padding: 8px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.play-btn { background: var(--accent); color: white; }
 .list-btn { background: rgba(255,255,255,0.2); color: white; }
+
+/* --- Anime Cards ඉහළට ගෙන ඒම --- */
+.anime-row {
+    margin-top: 5px; /* අකුරු වලට පසුව වැඩි ඉඩක් නැතිව Cards පටන් ගැනීමට */
+}
 
 /* Horizontal Scrolling Row */
 .row-header { display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; }
