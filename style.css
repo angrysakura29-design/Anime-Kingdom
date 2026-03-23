@@ -17,7 +17,7 @@ body {
 .hero-banner {
     width: 100%;
     height: 400px;
-    /* සැබෑ ලෙස වැඩ කරන පින්තූර ලින්ක් එකක් */
+    /* පින්තූරය සහ එය මත තද පැහැති Gradient එකක් එකතු කිරීම */
     background: linear-gradient(to top, #0d0d0f 15%, transparent 85%), 
                 url('https://static1.srcdn.com') center/cover no-repeat;
     position: relative;
@@ -25,6 +25,12 @@ body {
     flex-direction: column;
     justify-content: flex-end;
     padding-bottom: 40px;
+}
+
+.hero-info {
+    position: relative;
+    z-index: 5;
+    padding: 0 20px;
 }
 
 .overlay {
