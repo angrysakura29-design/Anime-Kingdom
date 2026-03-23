@@ -269,3 +269,39 @@ body {
     border-color: #ff416c !important;
     transition: 0.3s;
 }
+/* Bottom Navigation එක ලස්සනට පේළියකට සකස් කිරීම */
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #111; /* පසුබිම් වර්ණය */
+    display: flex;
+    justify-content: space-around; /* අයිතම අතර සමාන පරතරයක් තබයි */
+    align-items: center;
+    padding: 10px 0;
+    border-top: 1px solid #333;
+    z-index: 1000;
+}
+
+.nav-item {
+    color: white;
+    text-decoration: none;
+    font-size: 14px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+/* මවුස් එක ගෙන යන විට හෝ Active අවස්ථාවේ රතු පැහැය පෙන්වීමට */
+.nav-item:hover, .nav-item.active {
+    color: #ff416c;
+}
+
+/* Icon එකක් තියෙනවා නම් ඒක ලස්සන කරන්න */
+.nav-item i {
+    font-size: 20px;
+    margin-bottom: 5px;
+}
