@@ -15,11 +15,17 @@ body {
 
 /* Hero Banner */
 .hero-banner {
+    width: 100%;
     height: 400px;
-        background: url('https://static0.srcdn.com') center/cover no-repeat;
+    /* සැබෑ ලෙස වැඩ කරන පින්තූර ලින්ක් එකක් */
+    background: linear-gradient(to top, #0d0d0f 15%, transparent 85%), 
+                url('https://static1.srcdn.com') center/cover no-repeat;
     position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding-bottom: 40px;
 }
-
 
 .overlay {
     position: absolute; width: 100%; height: 100%;
