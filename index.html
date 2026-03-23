@@ -3,232 +3,101 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ANIME KINGDOM | ඔබේ ඇනිමේ පාරාදීසය</title>
 
-<!-- ✅ HLS Player -->
+<title>ANIME KINGDOM</title>
+
 <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 
-<!-- ✅ Icons -->
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
 <style>
-:root{
---accent:#e50914;
---bg:#0b0b0f;
---card-bg:#1a1a22;
---text:#fff;
-}
+body{margin:0;background:#0b0b0f;color:#fff;font-family:sans-serif}
 
-body{
-margin:0;
-font-family:'Segoe UI',sans-serif;
-background:var(--bg);
-color:var(--text);
-overflow-x:hidden;
-}
-
-.top-nav{
-display:flex;
-justify-content:center;
-padding:15px;
-background:#000;
-position:sticky;
-top:0;
-z-index:1000;
-}
-
-.logo{
-font-size:24px;
-font-weight:900;
-letter-spacing:2px;
-}
+.top-nav{background:#000;padding:15px;text-align:center;font-size:24px;font-weight:bold}
 
 .hero{
-position:relative;
-height:300px;
+height:250px;
+background:url("https://wallpaperaccess.com/full/7053702.jpg") center/cover;
 display:flex;
 align-items:center;
-justify-content:center;
-background:#000;
-overflow:hidden;
+justify-content:center
 }
 
-.hero-img{
-position:absolute;
-width:100%;
-height:100%;
-object-fit:cover;
-opacity:0.4;
-}
+.search-container{background:#111;padding:5px;border-radius:30px}
 
-.search-container{
-position:relative;
-z-index:10;
-display:flex;
-background:rgba(255,255,255,0.1);
-border-radius:30px;
-padding:5px;
-}
+input{background:transparent;border:none;color:white;padding:10px;outline:none}
 
-#searchInput{
-border:none;
-background:transparent;
-color:white;
-padding:10px;
-outline:none;
-}
+button{background:#e50914;color:white;border:none;padding:10px 20px;border-radius:20px;cursor:pointer}
 
-.search-btn{
-background:var(--accent);
-border:none;
-color:white;
-padding:10px 20px;
-border-radius:20px;
-cursor:pointer;
-}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:20px;padding:20px}
 
-.anime-grid{
-display:grid;
-grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
-gap:20px;
-padding:20px;
-}
+.card{background:#1a1a22;border-radius:12px;overflow:hidden;cursor:pointer}
 
-.card{
-background:var(--card-bg);
-border-radius:12px;
-overflow:hidden;
-cursor:pointer;
-transition:.3s;
-}
-
-.card:hover{
-transform:translateY(-6px);
-}
-
-.card img{
-width:100%;
-height:230px;
-object-fit:cover;
-}
-
-.card-title{
-padding:10px;
-text-align:center;
-font-size:13px;
-}
+.card img{width:100%;height:230px;object-fit:cover}
 
 .modal{
 display:none;
 position:fixed;
 inset:0;
-background:var(--bg);
-z-index:2000;
-flex-direction:column;
-overflow-y:auto;
+background:#0b0b0f;
+z-index:1000;
+overflow:auto
 }
 
 .back-btn{
-position:absolute;
-top:20px;
-left:20px;
-background:var(--accent);
-color:white;
+position:fixed;
+top:15px;
+left:15px;
+background:#e50914;
 padding:10px 20px;
-border:none;
-border-radius:30px;
-cursor:pointer;
+border-radius:25px
 }
 
-.modal-banner{
-width:100%;
-height:250px;
-object-fit:cover;
-opacity:0.5;
-}
-
-.ep-grid{
-display:flex;
-flex-wrap:wrap;
-gap:10px;
-justify-content:center;
-padding:20px;
-}
-
-.ep-btn{
-background:#1a1a22;
-color:white;
-border:1px solid #333;
-padding:10px;
-border-radius:8px;
-cursor:pointer;
-}
+.ep-btn{margin:5px;padding:10px;background:#1a1a22;border:1px solid #333;color:white;border-radius:8px}
 
 #video-modal{
 display:none;
 position:fixed;
 inset:0;
-background:#000;
-z-index:3000;
-flex-direction:column;
+background:black;
+z-index:2000;
 align-items:center;
 justify-content:center;
+flex-direction:column
 }
 
-#main-player{
-width:100%;
-max-width:900px;
-aspect-ratio:16/9;
-}
+video{width:90%;max-width:900px}
 </style>
 </head>
 
 <body>
 
-<nav class="top-nav">
-<div class="logo">ANIME<span style="color:#e50914">KINGDOM</span></div>
-</nav>
+<div class="top-nav">ANIME KINGDOM</div>
 
 <div class="hero">
-<img src="https://wallpaperaccess.com/full/7053702.jpg" class="hero-img">
 <div class="search-container">
 <input id="searchInput" placeholder="Search anime...">
-<button class="search-btn" onclick="searchAnime()">SEARCH</button>
+<button onclick="searchAnime()">SEARCH</button>
 </div>
 </div>
 
-<div id="popularAnime" class="anime-grid"></div>
+<div id="grid" class="grid"></div>
 
-<!-- DETAILS MODAL -->
-<div id="anime-modal" class="modal">
+<div id="modal" class="modal">
 <button class="back-btn" onclick="closeModal()">BACK</button>
-<img id="modalBanner" class="modal-banner">
-<h1 id="modalTitle" style="text-align:center;"></h1>
-<div id="episodeList" class="ep-grid"></div>
+<h2 id="title" style="text-align:center;margin-top:80px"></h2>
+<div id="episodes" style="text-align:center"></div>
 </div>
 
-<!-- VIDEO PLAYER -->
 <div id="video-modal">
-<span onclick="closeVideo()"
-style="position:absolute;top:20px;right:20px;font-size:40px;color:white;cursor:pointer;">&times;</span>
-<video id="main-player" controls></video>
-<h3 id="videoTitle" style="color:white;"></h3>
+<span onclick="closeVideo()" style="position:absolute;top:20px;right:20px;font-size:40px;cursor:pointer">&times;</span>
+<video id="player" controls></video>
 </div>
 
 <script>
 
-const CORS_PROXY="https://cors.isomorphic-git.org/";
-const API="https://api.consumet.org";
+const API="https://api.consumet.org/anime/gogoanime";
 
 window.onload=loadPopular;
 
-async function fetchAPI(path){
-const res=await fetch(CORS_PROXY+API+path);
-return res.json();
-}
-
-// 🔥 POPULAR
 async function loadPopular(){
 
 const res=await fetch("https://graphql.anilist.co",{
@@ -240,74 +109,66 @@ Page(perPage:12){
 media(sort:TRENDING_DESC,type:ANIME){
 title{english romaji}
 coverImage{large}
-bannerImage
 }
 }}`
 })
 });
 
 const data=await res.json();
-renderCards(data.data.Page.media);
-}
 
-// 🔥 CARDS
-function renderCards(list){
-
-const container=document.getElementById("popularAnime");
-
-container.innerHTML=list.map(a=>`
+document.getElementById("grid").innerHTML=
+data.data.Page.media.map(a=>`
 <div class="card"
-onclick="showDetails(
-'${a.title.english||a.title.romaji}',
-'${a.bannerImage||a.coverImage.large}'
-)">
+onclick="showDetails('${a.title.english||a.title.romaji}')">
 <img src="${a.coverImage.large}">
-<div class="card-title">${a.title.english||a.title.romaji}</div>
 </div>
 `).join("");
 }
 
-// 🔥 DETAILS
-async function showDetails(title,banner){
+// DETAILS
+async function showDetails(name){
 
-document.getElementById("anime-modal").style.display="flex";
-document.getElementById("modalTitle").innerText=title;
-document.getElementById("modalBanner").src=banner;
+document.getElementById("modal").style.display="block";
+document.getElementById("title").innerText=name;
 
-const epDiv=document.getElementById("episodeList");
-epDiv.innerHTML="Loading...";
+const epDiv=document.getElementById("episodes");
+epDiv.innerHTML="Loading episodes...";
 
 try{
 
-const sData=await fetchAPI(`/anime/gogoanime/${encodeURIComponent(title)}`);
+const s=await fetch(`${API}/${encodeURIComponent(name)}`);
+const sData=await s.json();
+
 const anime=sData.results[0];
 
-const iData=await fetchAPI(`/anime/gogoanime/info/${anime.id}`);
+const i=await fetch(`${API}/info/${anime.id}`);
+const iData=await i.json();
 
 epDiv.innerHTML=iData.episodes.map(ep=>`
 <button class="ep-btn"
-onclick="playVideo('${ep.id}','${title} EP ${ep.number}')">
+onclick="playVideo('${ep.id}')">
 EP ${ep.number}
 </button>
 `).join("");
 
 }catch{
-epDiv.innerHTML="Server error";
+epDiv.innerHTML="Episodes load failed ❌";
 }
 }
 
-// 🔥 VIDEO
-async function playVideo(id,title){
+// VIDEO
+async function playVideo(id){
 
 try{
 
-const data=await fetchAPI(`/anime/gogoanime/watch/${id}`);
+const res=await fetch(`${API}/watch/${id}`);
+const data=await res.json();
+
 const link=data.sources[0].url;
 
 document.getElementById("video-modal").style.display="flex";
-document.getElementById("videoTitle").innerText=title;
 
-const player=document.getElementById("main-player");
+const player=document.getElementById("player");
 
 if(Hls.isSupported()){
 const hls=new Hls();
@@ -324,41 +185,33 @@ alert("Video error");
 }
 }
 
-// 🔥 SEARCH
+// SEARCH
 async function searchAnime(){
 
 const q=document.getElementById("searchInput").value;
 if(!q)return;
 
-const res=await fetch("https://graphql.anilist.co",{
-method:"POST",
-headers:{"Content-Type":"application/json"},
-body:JSON.stringify({
-query:`query ($q:String){
-Page(perPage:20){
-media(search:$q,type:ANIME){
-title{english romaji}
-coverImage{large}
-bannerImage
-}
-}}`,
-variables:{q}
-})
-});
-
+const res=await fetch(`${API}/${encodeURIComponent(q)}`);
 const data=await res.json();
-renderCards(data.data.Page.media);
+
+document.getElementById("grid").innerHTML=
+data.results.map(a=>`
+<div class="card"
+onclick="showDetails('${a.title}')">
+<img src="${a.image}">
+</div>
+`).join("");
 }
 
 function closeModal(){
-document.getElementById("anime-modal").style.display="none";
+document.getElementById("modal").style.display="none";
 }
 
 function closeVideo(){
-const p=document.getElementById("main-player");
+document.getElementById("video-modal").style.display="none";
+const p=document.getElementById("player");
 p.pause();
 p.src="";
-document.getElementById("video-modal").style.display="none";
 }
 
 </script>
