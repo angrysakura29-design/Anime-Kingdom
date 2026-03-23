@@ -1,39 +1,40 @@
-// වෙබ් අඩවිය මුලින්ම load වන විට ක්‍රියාත්මක වන කොටස
 window.onload = async () => {
     console.log("Anime Kingdom loading with AniList API...");
     
-    // මුල් පිටුවේ පෙන්විය යුතු ඇනිමේ කාණ්ඩ (Sort Type, HTML ID, Limit)
+    // ඔබේ වෙබ් අඩවියේ ඇති සෑම කොටසකටම අදාළ දත්ත ලබා ගැනීම
     const sections = [
-        ['TRENDING_DESC', 'latestAnime', 10],   // Latest Anime කොටසට
-        ['POPULARITY_DESC', 'popularAnime', 10] // Popular Anime කොටසට (HTML එකේ තිබේ නම්)
+        ['TRENDING_DESC', 'latestAnime', 10],      // Trending කොටසට
+        ['POPULARITY_DESC', 'popularAnime', 10],   // Most Popular කොටසට
+        ['SCORE_DESC', 'tvSeriesList', 10],        // TV Anime Series කොටසට
+        ['START_DATE_DESC', 'recentEpisodes', 10]  // New Episodes කොටසට
     ];
 
     for (const [sort, id, limit] of sections) {
         await fetchAniListData(sort, id, limit);
+        // API එකට බරක් නොවීමට කුඩා විරාමයක්
         await new Promise(res => setTimeout(res, 500)); 
     }
 
-    // Search Bar එකේ Enter එබූ විට සෙවීම ආරම්භ කිරීමට
+    // සර්ච් බාර් එකේ Enter එබූ විට සෙවීම සඳහා
     const searchInput = document.getElementById('searchInput');
     if(searchInput) {
-        searchInput.addEventListener("keypress", function(event) {
-            if (event.key === "Enter") {
-                event.preventDefault();
-                searchAnime();
-            }
+        searchInput.addEventListener("keypress", (e) => { 
+            if (e.key === "Enter") searchAnime(); 
         });
     }
 };
 
-// AniList API එකෙන් දත්ත ලබා ගන්නා ප්‍රධාන Function එක
 async function fetchAniListData(sortType, containerId, limit) {
     const container = document.getElementById(containerId);
     if (!container) return;
 
+    // TV Series සඳහා පමණක් විශේෂ Filter එකක්
+    const isTV = containerId === 'tvSeriesList' ? ', format: TV' : '';
+
     const query = `
     query ($sort: [MediaSort], $limit: Int) {
       Page(page: 1, perPage: $limit) {
-        media(sort: $sort, type: ANIME, isAdult: false) {
+        media(sort: $sort, type: ANIME, isAdult: false ${isTV}) {
           id
           title { romaji english }
           coverImage { large }
@@ -46,10 +47,9 @@ async function fetchAniListData(sortType, containerId, limit) {
     try {
         const response = await fetch('https://graphql.anilist.co', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ query: query, variables: { sort: [sortType], limit: limit } })
         });
-
         const json = await response.json();
         renderAnimeCards(json.data.Page.media, container);
     } catch (error) {
@@ -57,21 +57,18 @@ async function fetchAniListData(sortType, containerId, limit) {
     }
 }
 
-// ඇනිමේ කාඩ්පත් HTML එකට එක් කරන පොදු Function එක
-function renderAnimeCards(animeList, container) {
-    container.innerHTML = ""; // පරණ දත්ත මකන්න
-
-    animeList.forEach(anime => {
+function renderAnimeCards(list, container) {
+    container.innerHTML = ""; 
+    list.forEach(anime => {
         const title = anime.title.english || anime.title.romaji;
         const score = anime.averageScore ? (anime.averageScore / 10).toFixed(1) : 'N/A';
         
         container.innerHTML += `
             <a href="${anime.siteUrl}" target="_blank" class="card">
-                <span class="tag-rating">PG</span>
                 <span class="tag-hd">HD</span>
                 <img src="${anime.coverImage.large}" alt="${title}" loading="lazy">
                 <div class="card-title">${title}</div>
-                <div style="font-size: 11px; color: #ff416c; padding: 0 5px 10px; text-align: center;">⭐ ${score}</div>
+                <div style="font-size: 11px; color: #ff416c; text-align: center; padding-bottom: 8px;">⭐ ${score}</div>
             </a>
         `;
     });
@@ -81,14 +78,9 @@ function renderAnimeCards(animeList, container) {
 async function searchAnime() {
     const queryText = document.getElementById('searchInput').value;
     const resultsContainer = document.getElementById('results-container');
-    
-    if (!queryText) return alert("කරුණාකර ඇනිමේ නමක් ඇතුළත් කරන්න!");
+    if (!queryText) return alert("කරුණාකර නමක් ටයිප් කරන්න!");
 
-    // සෙවුම් ප්‍රතිඵල පෙන්වන තැන "Searching..." ලෙස පෙන්වීමට
-    resultsContainer.innerHTML = "<p style='color:white; text-align:center; width:100%; padding:20px;'>සොයමින් පවතී (Searching...)</p>";
-    
-    // අවශ්‍ය නම් පහත පේළිය භාවිතා කර ලැයිස්තුවේ නම වෙනස් කරන්න
-    // document.querySelector('.row-header h2').innerText = "Search Results: " + queryText;
+    resultsContainer.innerHTML = "<p style='color:white; text-align:center; width:100%;'>Searching...</p>";
 
     const searchQuery = `
     query ($search: String) {
@@ -105,24 +97,13 @@ async function searchAnime() {
     try {
         const res = await fetch('https://graphql.anilist.co', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ query: searchQuery, variables: { search: queryText } })
         });
         const json = await res.json();
-        const results = json.data.Page.media;
-
-        if (results.length === 0) {
-            resultsContainer.innerHTML = "<p style='color:yellow; text-align:center; width:100%;'>ප්‍රතිඵල හමු නොවීය.</p>";
-            return;
-        }
-
-        renderAnimeCards(results, resultsContainer);
-        
-        // සර්ච් කළ පසු ස්වයංක්‍රීයව ප්‍රතිඵල පෙන්වන තැනට පේජ් එක Scroll වීමට
+        renderAnimeCards(json.data.Page.media, resultsContainer);
         resultsContainer.scrollIntoView({ behavior: 'smooth' });
-
     } catch (e) {
-        resultsContainer.innerHTML = "<p style='color:red; text-align:center; width:100%;'>සෙවීමේදී දෝෂයක් ඇති විය.</p>";
-        console.error(e);
+        resultsContainer.innerHTML = "<p style='color:red;'>Error searching.</p>";
     }
 }
