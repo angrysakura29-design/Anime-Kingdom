@@ -1,7 +1,9 @@
+// වෙබ් අඩවිය ආරම්භයේදී දත්ත පෙන්වීම
 window.onload = async () => {
     console.log("Anime Kingdom loading...");
-    loadHomePage();
+    await loadHomePage();
 
+    // සර්ච් බාර් එකේ Enter එබූ විට සෙවීම
     const searchInput = document.getElementById('searchInput');
     if(searchInput) {
         searchInput.addEventListener("keypress", (e) => { 
@@ -10,24 +12,19 @@ window.onload = async () => {
     }
 };
 
-// මුල් පිටුව Load කරන Function එක
+// මුල් පිටුව (Home) පෙන්වන ප්‍රධාන Function එක
 async function loadHomePage() {
     const mainContent = document.querySelector('.main-content');
     const resultsContainer = document.getElementById('results-container');
     
-    // මුල් පිටුවේ සඟවා තිබූ අංශ (Sections) නැවත පෙන්වීම
-    if(mainContent) {
-        mainContent.style.display = 'block';
-        // සියලුම row-section පෙන්වන්න
-        document.querySelectorAll('.row-section').forEach(el => el.style.display = 'block');
-    }
-    
-    // See all/Search ප්‍රතිඵල පෙන්වන තැන හංගන්න
+    // 1. මුල් පිටුවේ පේළි පෙන්වන්න, See all ප්‍රතිඵල හංගන්න
+    if(mainContent) mainContent.style.display = 'block';
     if(resultsContainer) {
         resultsContainer.style.display = 'none';
         resultsContainer.innerHTML = "";
     }
 
+    // 2. සෑම කාණ්ඩයකටම ඇනිමේ 10 බැගින් ලබා ගැනීම
     const sections = [
         ['START_DATE_DESC', 'latestAnime', 10],      
         ['TRENDING_DESC', 'trendingAnime', 10], 
@@ -38,11 +35,12 @@ async function loadHomePage() {
 
     for (const [sort, id, limit] of sections) {
         await fetchAniListData(sort, id, limit);
+        // API Rate limit නොවීමට කුඩා විරාමයක්
         await new Promise(res => setTimeout(res, 200)); 
     }
 }
 
-// AniList API දත්ත ලබා ගැනීම
+// AniList API එකෙන් දත්ත ලබාගෙන කාඩ්පත් සෑදීම
 async function fetchAniListData(sortType, containerId, limit) {
     const container = document.getElementById(containerId);
     if (!container) return;
@@ -57,14 +55,15 @@ async function fetchAniListData(sortType, containerId, limit) {
         });
         const json = await response.json();
         renderAnimeCards(json.data.Page.media, container);
-    } catch (e) { console.error(e); }
+    } catch (e) { console.error("Error loading " + containerId, e); }
 }
 
-// See all පෙන්වීම
+// "See all" Click කළ විට කාණ්ඩයේ සියලුම ඇනිමේ පෙන්වීම
 async function showSeeAll(sortType, titleText) {
     const resultsContainer = document.getElementById('results-container');
     const mainContent = document.querySelector('.main-content');
 
+    // මුල් පිටුව සඟවා See all grid එක විවෘත කරන්න
     if(mainContent) mainContent.style.display = 'none';
     resultsContainer.style.display = "flex";
     resultsContainer.style.flexDirection = "column";
@@ -75,7 +74,7 @@ async function showSeeAll(sortType, titleText) {
             <button onclick="goHome()" style="background:red; color:white; border:none; padding:10px 20px; border-radius:5px; cursor:pointer; font-weight:bold;">BACK</button>
         </div>
         <div id="see-all-grid" style="display:flex; flex-wrap:wrap; justify-content:center; gap:15px; width:100%;">
-            <p style="color:white; text-align:center; width:100%; padding:50px;">සොයමින් පවතී... (Loading...)</p>
+            <p style="color:white; text-align:center; width:100%; padding:50px;">Loading...</p>
         </div>
     `;
 
@@ -88,12 +87,13 @@ async function showSeeAll(sortType, titleText) {
             body: JSON.stringify({ query: query, variables: { sort: [sortType] } })
         });
         const json = await response.json();
-        renderAnimeCards(json.data.Page.media, document.getElementById('see-all-grid'));
+        const grid = document.getElementById('see-all-grid');
+        renderAnimeCards(json.data.Page.media, grid);
         window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (e) { console.error(e); }
 }
 
-// කාඩ්පත් සෑදීම
+// කාඩ්පත් HTML එකට එක් කිරීමේ පොදු Function එක
 function renderAnimeCards(list, container) {
     if (!list) return;
     container.innerHTML = ""; 
@@ -110,17 +110,11 @@ function renderAnimeCards(list, container) {
     });
 }
 
-// ආපසු මුල් පිටුවට (Home) යාමට
-function goHome() {
-    loadHomePage();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-// ඇනිමේ විස්තර පෙන්වීම (Episodes)
+// ඇනිමේ විස්තර පෙන්වීම (Episodes & Description)
 async function showDetails(id) {
     const modal = document.getElementById('anime-modal');
     modal.style.display = "flex";
-    document.getElementById('modal-body').innerHTML = "<p style='text-align:center;'>Loading...</p>";
+    document.getElementById('modal-body').innerHTML = "<p style='text-align:center; color:white;'>Loading Details...</p>";
 
     const query = `query ($id: Int) { Media (id: $id) { title { romaji english } description episodes coverImage { large } averageScore siteUrl } }`;
 
@@ -138,18 +132,21 @@ async function showDetails(id) {
                 <img src="${anime.coverImage.large}" style="width:100%; max-height:250px; object-fit:cover; border-radius:10px;">
                 <h2 style="margin:0; text-align:center; font-size:18px;">${anime.title.english || anime.title.romaji}</h2>
                 <p style="color:#ff416c; font-weight:bold;">⭐ ${anime.averageScore / 10} | 📺 Episodes: ${anime.episodes || 'N/A'}</p>
-                <p style="font-size:13px; color:#ccc; max-height:120px; overflow-y:auto; padding:0 10px;">${anime.description}</p>
-                <a href="${anime.siteUrl}" target="_blank" style="background:red; color:white; padding:10px 20px; border-radius:5px; text-decoration:none; font-weight:bold;">WATCH NOW</a>
+                <div style="font-size:13px; color:#ccc; max-height:120px; overflow-y:auto; padding:0 10px; line-height:1.4;">${anime.description}</div>
+                <a href="${anime.siteUrl}" target="_blank" style="background:red; color:white; padding:10px 20px; border-radius:5px; text-decoration:none; font-weight:bold; margin-top:10px;">WATCH NOW</a>
             </div>`;
     } catch (e) { console.error(e); }
 }
 
+// සෙවුම් කාර්යය
 function searchAnime() {
     const queryText = document.getElementById('searchInput').value;
     if (!queryText) return alert("කරුණාකර නමක් ටයිප් කරන්න!");
     showSeeAll('SEARCH', 'Results: ' + queryText);
 }
 
+// පොදු Navigation Functions
+function goHome() { loadHomePage(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
 function closeModal() { document.getElementById('anime-modal').style.display = "none"; }
 function showMyList() { alert("My List feature ළඟදීම පැමිණේ!"); }
 function showProfile() { alert("Login System ළඟදීම පැමිණේ!"); }
