@@ -45,9 +45,6 @@ body { background: var(--bg); color: white; font-family: sans-serif; margin: 0; 
     font-weight: bold;
 }
 
-.play-btn { background: var(--accent); color: white; }
-.list-btn { background: rgba(255,255,255,0.2); color: white; }
-
 /* --- Anime Cards ඉහළට ගෙන ඒම --- */
 .anime-row {
     margin-top: 5px; /* අකුරු වලට පසුව වැඩි ඉඩක් නැතිව Cards පටන් ගැනීමට */
@@ -104,3 +101,58 @@ body { background: var(--bg); color: white; font-family: sans-serif; margin: 0; 
 .nav-item { text-align: center; color: #777; font-size: 11px; }
 .nav-item.active { color: var(--accent); }
 .nav-item i { display: block; font-size: 20px; margin-bottom: 2px; }
+
+/* Welcome Text සහ Brand Text සැකසුම් */
+.hero-info h1 {
+    font-size: 28px;
+    font-weight: 800;
+    color: white;
+    text-transform: uppercase;
+}
+
+.brand-text {
+    color: #e50914; /* Anime Kingdom යන වචනය රතු පැහැයෙන් */
+}
+
+.hero-info p {
+    font-size: 15px;
+    margin: 10px 0 25px;
+    color: #ccc;
+}
+
+/* Search Bar එකේ සැකසුම් */
+.search-container {
+    display: flex;
+    justify-content: center;
+    width: 90%;
+    max-width: 500px;
+    margin: 0 auto;
+    background: #fff;
+    border-radius: 30px; /* දෙපැත්ත රවුම් කිරීමට */
+    overflow: hidden;
+    padding: 5px;
+}
+
+.hero-search {
+    border: none;
+    padding: 12px 20px;
+    width: 75%;
+    outline: none;
+    font-size: 14px;
+}
+
+.search-btn {
+    background: #e50914;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 25px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.search-btn:hover {
+    background: #b2070f;
+}
+
