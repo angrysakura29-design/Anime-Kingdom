@@ -239,3 +239,66 @@ body {
     gap: 15px;
     padding: 20px;
 }
+/* Card Container */
+.card {
+    position: relative; /* Tags තැබීමට මෙය අවශ්‍යයි */
+    min-width: 150px;
+    background: #1a1a1a;
+    border-radius: 12px;
+    padding: 0; /* ඇතුළත padding ඉවත් කළා */
+    overflow: hidden;
+    cursor: pointer;
+    transition: 0.3s;
+    text-decoration: none; /* Link අකුරු යට ඉරි ඉවත් කරයි */
+    display: block;
+}
+
+.card:hover {
+    transform: scale(1.03);
+}
+
+.card img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    display: block;
+}
+
+/* Tags (HD, Rating badges) */
+.tag-hd {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: #e50914;
+    color: white;
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: bold;
+}
+
+.tag-rating {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    background: rgba(255, 255, 255, 0.9);
+    color: #333;
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: bold;
+}
+
+.card-info {
+    padding: 10px;
+    text-align: left;
+}
+
+.card-title {
+    color: white;
+    font-size: 13px;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; /* දිගු නම් වලට තිත් තබයි */
+}
