@@ -30,7 +30,33 @@ body { background: var(--bg); color: white; font-family: sans-serif; margin: 0; 
 .tag-hd { position: absolute; top: 5px; right: 5px; background: var(--accent); font-size: 9px; padding: 2px 5px; border-radius: 3px; }
 .tag-rating { position: absolute; top: 5px; left: 5px; background: white; color: black; font-size: 9px; padding: 2px 5px; border-radius: 3px; font-weight: bold; }
 
-.card-title { font-size: 12px; padding: 5px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+/* ANIME KINGDOM ලෝගෝ මෝස්තරය */
+.logo {
+    font-family: 'Oswald', sans-serif; /* මෙය ඉතාමත් modern font එකකි */
+    font-size: 28px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #ffffff; /* ANIME කොටස සුදු පාටින් */
+    padding: 20px;
+    display: inline-block;
+    cursor: pointer;
+    /* අකුරු වලට ලස්සන පෙනුමක් ලබා දීමට */
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+}
+
+.logo span {
+    color: #ff3e3e; /* KINGDOM කොටස රතු පාටින් */
+    margin-left: 2px;
+    /* රතු පාට අකුරු වලට කුඩා Glow එකක් ලබා දීමට */
+    text-shadow: 0 0 10px rgba(255, 62, 62, 0.5);
+}
+
+/* උඩ තීරුව (Top Nav) පිරිසිදු කිරීමට */
+.top-nav {
+    background: linear-gradient(to bottom, rgba(0,0,0,0.9), transparent);
+    padding: 10px 0;
+}
 
 /* Bottom Nav */
 .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #121214; display: flex; justify-content: space-around; padding: 10px 0; border-top: 1px solid #222; }
