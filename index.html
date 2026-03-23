@@ -23,19 +23,14 @@
     <h1>WELCOME TO <span class="brand-text">ANIME KINGDOM</span></h1>
     <p>සෑම ඇනිමේ රසිකයෙකුටම ගැලපෙන අපූරු තෝතැන්න.</p>
 
-    <!-- Search Box Section Start -->
-<div style="text-align: center; margin: 30px 0;">
-    <div class="search-wrapper" style="display: inline-flex; background: #1a1a1a; border-radius: 50px; padding: 5px; border: 1px solid #333;">
-        <input type="text" id="searchInput" placeholder="Search Anime..." style="background: transparent; border: none; padding: 12px 20px; color: white; outline: none; width: 220px;">
-        <button onclick="searchAnime()" style="background: #ff416c; border: none; color: white; padding: 12px 25px; border-radius: 50px; cursor: pointer; font-weight: bold; transition: 0.3s;">
-            SEARCH
-        </button>
-    </div>
+    <!-- මෙය පමණක් ඇතුළත් කරන්න -->
+<div style="text-align: center; margin: 20px 0;">
+    <input type="text" id="searchInput" placeholder="Search Anime..." style="padding: 10px; width: 200px; border-radius: 5px; border: 1px solid red; background: #222; color: white;">
+    <button onclick="searchAnime()" style="padding: 10px 20px; background: red; color: white; border: none; cursor: pointer; border-radius: 5px; font-weight: bold;">SEARCH</button>
 </div>
 
-<!-- සෙවුම් ප්‍රතිඵල පෙන්වන ස්ථානය (මෙය අනිවාර්යයි) -->
-<div id="results-container" class="anime-row" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; padding: 20px;"></div>
-<!-- Search Box Section End -->
+<!-- ප්‍රතිඵල පෙන්වන තැන -->
+<div id="results-container" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; padding: 20px;"></div>
 
    <div class="main-content">
         <!-- Section 1 -->
