@@ -167,3 +167,75 @@ body {
     gap: 15px;
     padding: 20px;
 }
+/* --- Anime Row (පින්තූර පේළියට සැකසීම) --- */
+.row-section {
+    margin-bottom: 30px;
+    padding: 0 15px;
+}
+
+.row-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.row-header h2 {
+    font-size: 18px;
+    color: white;
+    margin: 0;
+}
+
+.row-header span {
+    font-size: 12px;
+    color: #ff416c; /* 'See all' සඳහා රතු පැහැය */
+    cursor: pointer;
+}
+
+/* පින්තූර 10 ම එක පේළියට ගෙන ඒම සහ Slide කිරීමේ පහසුකම */
+.anime-row {
+    display: flex;
+    overflow-x: auto; /* වමට දකුණට slide කිරීමට */
+    gap: 15px;
+    padding-bottom: 10px;
+    scrollbar-width: none; /* Scrollbar එක පෙන්වන්නේ නැත (Firefox) */
+    -ms-overflow-style: none; /* (IE/Edge) */
+}
+
+/* Chrome/Safari සඳහා Scrollbar එක ඉවත් කිරීම */
+.anime-row::-webkit-scrollbar {
+    display: none;
+}
+
+/* --- Anime Card (නිවැරදි ප්‍රමාණය) --- */
+.card {
+    min-width: 155px; /* කාඩ් එකක පළල */
+    background: #141414;
+    border-radius: 12px;
+    padding: 10px;
+    text-align: center;
+    flex-shrink: 0; /* කාඩ් එක කුඩා වීම වළක්වයි */
+    border: 1px solid #222;
+    transition: transform 0.3s ease;
+}
+
+.card:hover {
+    transform: scale(1.05); /* මවුස් එක ගෙන යන විට මදක් විශාල වේ */
+    border-color: #ff416c;
+}
+
+.card img {
+    width: 100%;
+    border-radius: 8px;
+    height: 215px;
+    object-fit: cover;
+}
+
+/* --- සෙවුම් ප්‍රතිඵල (Search Results) සඳහා --- */
+#results-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+    padding: 20px;
+}
